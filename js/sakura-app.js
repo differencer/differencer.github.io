@@ -1102,10 +1102,13 @@ var home = location.href,
         var valine = new Valine()
         valine.init({
           el: '#vcomments',
-          appId: mashiro_option.v_appId,
-          appKey: mashiro_option.v_appKey,
+          appId: "<%= theme.valine.appId %>",
+          appKey: "<%= theme.valine.appKey %>",
           path: window.location.pathname,
-          placeholder: '你是我一生只会遇见一次的惊喜 ...'
+          notify: false,
+          verify: true,
+          avatar: 'monsterid',//小怪物头像
+          placeholder: "你是我一生只会遇见一次的惊喜 ..."  
         })
       }
     },
