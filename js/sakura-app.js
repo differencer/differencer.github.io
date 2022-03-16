@@ -1104,13 +1104,14 @@ var home = location.href,
           el: '#vcomments',
           appId: "<%= theme.valine.appId %>",
           appKey: "<%= theme.valine.appKey %>",
+          verify: mashiro_option.verify,  //不要忘了最后的 ,
           path: window.location.pathname,
           notify: false,
-          verify: true,
           avatar: 'monsterid',//小怪物头像
           placeholder: "你是我一生只会遇见一次的惊喜 ..."  
         })
       }
+
     },
     MJ: function () {
       if (mashiro_option.mathjax == '1') {
