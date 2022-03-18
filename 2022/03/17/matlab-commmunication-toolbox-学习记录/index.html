@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   
-  <title itemprop="name">music | t&#39;blog</title>
+  <title itemprop="name">Get Started with Communications Toolbox -Communications Toolbox 学习系列（一） | t&#39;blog</title>
   
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -376,82 +376,183 @@
   </div>
 </header>
 
-        <div class="pattern-center-blank"></div>
-  
-    <div class="pattern-center ">
-      <div class="pattern-attachment-img">
-        <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.4/img/banner/music.jpg" class="lazyload" onerror="imgError(this,3)" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
-      </div>
-      <header class="pattern-header ">
-        <h1 class="entry-title">
-        喜欢的音乐</h1>
-      </header>
-    </div>
-  
-  <div id="content" class="site-content">
-    <article class="post-item post-301 page type-page status-publish has-post-thumbnail hentry">
-      
-<meting-js
-  server="netease"
-  type="playlist"
-  id="2731690811"
-  mutex="true">
-</meting-js>
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
+<div class="pattern-center-blank"></div>
 
-<meting-js
-  server="netease"
-  type="playlist"
-  id="419239189"
-  mutex="true">
-</meting-js>
+<div id="content" class="site-content">
+  <div id="primary" class="content-area">
+    <main id="main" class="site-main" role="main">
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+        
+          <header class="entry-header">
+            <h1 class="entry-title">Get Started with Communications Toolbox -Communications Toolbox 学习系列（一）</h1>
+            <p class="entry-census">differencer&nbsp;·&nbsp;2022-3-17&nbsp;·&nbsp;<span id="busuanzi_value_page_pv"></span>次阅读</p></p>
 
-      <!-- .entry-content -->
-      <!--
-  原来 ： -->
+            <hr>
+          </header>
+        
+        <div class="entry-content">
+          <p>说明：这个系列主要用来记录对matlab的<a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/help/comm/index.html">communication toolbox</a>（通信工具箱）的学习，并非教程！</p>
+<h1 id="matlab-简介"><a href="#matlab-简介" class="headerlink" title="matlab 简介"></a>matlab 简介</h1><p>作为一个工科生、特别是通信专业的学生如果不知道matlab 那就太让人匪夷所思了<br>matlab是美国mathworks公司旗下的一款产品，主要启用于工业仿真（据说最早是从美国一位大学教授为了授课而研发出来的，tql），其产品的核心竞争力就在于软件已经集成了大量的工具箱，就正如现在很多编程语言其强大之处不在于他的语言本身，而在于其强大的工具库，如python在数据处理、机器学习方面的、java在后端开发当中的…… 这个系列博文主要针对matlab在通信仿真当中常用到的Communications Toolbox工具箱 进行学习与记录。 </p>
+<h1 id="案例一：从QPSK、OFDM仿真开始"><a href="#案例一：从QPSK、OFDM仿真开始" class="headerlink" title="案例一：从QPSK、OFDM仿真开始"></a>案例一：从QPSK、OFDM仿真开始</h1><p><a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/help/comm/gs/qpsk-and-ofdm-with-matlab-system-objects-1.html">教程地址</a><br>这个教程,展示了怎样构建一个最基本的通信系统，<br>这个系统分别采用了QPSK调制和OFDM调制两种调制方式</p>
+<h2 id="参数配置"><a href="#参数配置" class="headerlink" title="参数配置"></a>参数配置</h2><p>一个通信仿真程序除了最基本的参数之外，就应该开门见山的写配置信息，</p>
+<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab"><span class="token comment">% QPSK参数</span>
+M <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>                 <span class="token comment">% Modulation alphabet ：调制阶数</span>
+k <span class="token operator">=</span> <span class="token function">log2</span><span class="token punctuation">(</span>M<span class="token punctuation">)</span><span class="token punctuation">;</span>           <span class="token comment">% Bits/symbol： 每符号对应的比特数</span>
+<span class="token comment">% OFDM参数</span>
+numSC <span class="token operator">=</span> <span class="token number">128</span><span class="token punctuation">;</span>           <span class="token comment">% Number of OFDM subcarriers ：OFDM子载波数量</span>
+cpLen <span class="token operator">=</span> <span class="token number">32</span><span class="token punctuation">;</span>            <span class="token comment">% OFDM cyclic prefix length：循环前缀长度</span>
+<span class="token comment">% </span>
+maxBitErrors <span class="token operator">=</span> <span class="token number">100</span><span class="token punctuation">;</span>    <span class="token comment">% Maximum number of bit errors：最大比特错误</span>
+maxNumBits <span class="token operator">=</span> <span class="token number">1e7</span><span class="token punctuation">;</span>      <span class="token comment">% Maximum number of bits transmitted ：最大传输比特数目</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-
-  
-  
-
-
-
-      <div class="single-reward">
-        <div class="reward-open">赏
-          <div class="reward-main">
-            <ul class="reward-row">
-              <li class="alipay-code"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/custom/donate/AliPayQR.jpg"></li>
-              <li class="wechat-code"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/custom/donate/WeChanQR.jpg"></li>
-            </ul>
+        </div>
+        <!-- .entry-content -->
+        <div class="single-reward">
+          <div class="reward-open">赏
+            <div class="reward-main">
+              <ul class="reward-row">
+                <li class="alipay-code"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/custom/donate/AliPayQR.jpg"></li>
+                <li class="wechat-code"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/custom/donate/WeChanQR.jpg"></li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-      <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
-      <footer class="post-footer">
-        <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
-        <div class="post-tags">
-        </div>
-        <div class="post-share">
-          <div class="social-share sharehidden share-component"></div>
-          <i class="iconfont show-share icon-forward"></i>
-        </div>
-      </footer><!-- .entry-footer -->
-    </article>
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
+      </article>
       <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
+        
+        
+          
+            <div class="post-nepre full next">
+          
+            <a href="/2022/03/17/%E6%97%A5%E6%BC%AB%EF%BC%88%E6%BC%AB%E7%94%BB%EF%BC%89%E8%AF%84%E9%89%B4/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/03/18/oaY8HWPGmsiruex.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://s2.loli.net/2022/03/18/oaY8HWPGmsiruex.jpg">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                日漫（漫画、动漫）评鉴</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
+      <!--
+  原来 ：
+<script src="//cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js"></script>
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "",
+        appKey: "",
+        path: window.location.pathname,
+        placeholder: "快来留言鸭~ ..."
+      })
+  }
+</script>
+ -->
+
+
+  <div id="vcomments"></div>
+  <!-- 先引入样式,从footer提前 -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js"></script>
+  <!-- 评论框美化 -->
+  <script>
+      new Valine({
+          el: '#vcomments',
+          appId: "DpQvbSVQXSeUV8lRSV5zHiOY-gzGzoHsz",
+          appKey: "j8tFI5wuIwD7gTt7KJe5ohod",
+         notify: 'false' === 'false',
+         verify: 'true' === 'true',
+         visitor: 'false' === 'false',
+          path: window.location.pathname,
+          verify: true,
+          avatar: 'monsterid',//小怪物头像
+          placeholder: "你是我一生只会遇见一次的惊喜 ..."  
+      });
+      //   自定义邮箱审核规则
+      document.body.addEventListener('click', function(e) {
+          if (e.target.classList.contains('vsubmit')) {
+              const email = document.querySelector('input[type=email]');
+              const nick = document.querySelector('input[name=nick]');
+              const reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+              if (!email.value || !nick.value || !reg.test(email.value)) {
+                  const str = `<div class="valert text-center"><div class="vtext">请填写正确的昵称和邮箱！</div></div>`;
+                  const vmark = document.querySelector('.vmark');
+                  vmark.innerHTML = str;
+                  vmark.style.display = 'block';
+                  setTimeout(function() {
+                      vmark.style.display = 'none';
+                      vmark.innerHTML = '';
+                  }, 2500);
+              }
+          }
+      });
+      // 点击回复直接评论,官方版本点击回复时都是跳回到页面上方的评论框进行回复，评论框是固定不动的
+      // 参考https://immmmm.com/valine-diy,用到jQuery
+      $(document).ready(function(){
+          //$('.vemoji-btn').text('😀');
+          $("#vcomments").on('click', 'span.vat',function(){
+              $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+              $('textarea#veditor').focus();
+          })
+      })
+  </script>
+  <!-- 今日诗词：随机返回一句古诗词名句的接口，宅到用来做 Valine 的 placeholder 显示内容 -->
+  <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+  <script type="text/javascript">
+      jinrishici.load(function(result) {
+          var jrsc_plac =  result.data.content + "\n「" + result.data.origin.title + "」" + result.data.origin.dynasty + " · " + result.data.origin.author
+          document.getElementById("veditor").setAttribute("placeholder",jrsc_plac);
+      });
+  </script>
+  
+  
+  
+
+
+
       <section class="author-profile">
         <div class="info" itemprop="author" itemscope="" itemtype="https://schema.org/Person">
-          <a href="/about/" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/custom/avatar.jpg" itemprop="image" alt="就是爱折腾" height="70" width="70"></a>
+          <a target="_blank" rel="noopener" href="https://www.baidu.com" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/custom/avatar.jpg" itemprop="image" alt="differencer" height="70" width="70"></a>
           <div class="meta">
             <span class="title">Author</span>
             <h3 itemprop="name">
-            <a href="/about/" itemprop="url" rel="author">就是爱折腾</a>
+            <a target="_blank" href="https://www.baidu.com" itemprop="url" rel="author noopener">differencer</a>
             </h3>
           </div>
         </div>
         <hr>
-        <p><i class="iconfont icon-write"></i>Better to ask the way than go astray</p>
+        <p><i class="iconfont icon-write"></i></p>
       </section>
+    </main><!-- #main -->
   </div><!-- #primary -->
 </div>
+
+
+
     </div>    
     <div class="ins-search">
     <div class="ins-search-mask"></div>
