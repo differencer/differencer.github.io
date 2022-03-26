@@ -413,12 +413,13 @@
         
         <div class="entry-content">
           <p>说明：这个系列主要用来记录对matlab的<a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/help/comm/index.html">communication toolbox</a>（通信工具箱）的学习，并非教程！</p>
-<h1 id="matlab-简介"><a href="#matlab-简介" class="headerlink" title="matlab 简介"></a>matlab 简介</h1><p>作为一个工科生、特别是通信专业的学生如果不知道matlab 那就太让人匪夷所思了<br>matlab是美国mathworks公司旗下的一款产品，主要启用于工业仿真（据说最早是从美国一位大学教授为了授课而研发出来的，tql），其产品的核心竞争力就在于软件已经集成了大量的工具箱，就正如现在很多编程语言其强大之处不在于他的语言本身，而在于其强大的工具库，如python在数据处理、机器学习方面的、java在后端开发当中的…… 这个系列博文主要针对matlab在通信仿真当中常用到的Communications Toolbox工具箱 进行学习与记录。 </p>
-<h1 id="案例一：从QPSK-amp-OFDM仿真开始"><a href="#案例一：从QPSK-amp-OFDM仿真开始" class="headerlink" title="案例一：从QPSK&amp;OFDM仿真开始"></a>案例一：从QPSK&amp;OFDM仿真开始</h1><p><a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/help/comm/gs/qpsk-and-ofdm-with-matlab-system-objects-1.html">教程地址</a><br>这个教程,展示了怎样构建一个最基本的通信系统，<br>这个系统采用了QPSK&amp;OFDM调制方式</p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>作为一个工科生、特别是通信专业的学生如果不知道matlab 那就太让人匪夷所思了<br>matlab是美国mathworks公司旗下的一款产品，主要启用于工业仿真（据说最早是从美国一位大学教授为了授课而研发出来的，tql），其产品的核心竞争力就在于软件已经集成了大量的工具箱，就正如现在很多编程语言其强大之处不在于他的语言本身，而在于其强大的工具库，如python在数据处理、机器学习方面的、java在后端开发当中的…… 这个系列博文主要针对matlab在通信仿真当中常用到的Communications Toolbox工具箱 进行学习与记录。 </p>
+<h1 id="案例一：从QPSK-amp-OFDM仿真开始"><a href="#案例一：从QPSK-amp-OFDM仿真开始" class="headerlink" title="案例一：从QPSK&amp;OFDM仿真开始"></a>案例一：从QPSK&amp;OFDM仿真开始</h1><p>通过一个案例讲解一般的仿真基本框架</p>
+<p><a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/help/comm/gs/qpsk-and-ofdm-with-matlab-system-objects-1.html">教程地址</a><br>这个教程,展示了怎样构建一个最基本的通信系统，<br>这个系统采用了QPSK&amp;OFDM调制方式</p>
 <blockquote>
 <p>简单来说，整体上是OFDM，但是每一个OFDM的子载波采用QPSK进行“预先”调制，具体理解的话可以试试看看北邮通信原理第四版P368-371,上面讲了两个OFDM的例子，子载波分别采用BPSK与MQAM调制</p>
 </blockquote>
-<h2 id="参数配置"><a href="#参数配置" class="headerlink" title="参数配置"></a>参数配置</h2><p>一个通信仿真程序除了最基本的参数之外，就应该开门见山的写配置信息，</p>
+<h2 id="参数配置"><a href="#参数配置" class="headerlink" title="参数配置"></a>参数配置</h2><h3 id="主要参数"><a href="#主要参数" class="headerlink" title="主要参数"></a>主要参数</h3><p>一个通信仿真程序除了最基本的参数之外，就应该开门见山的写配置信息，</p>
 <pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab"><span class="token comment">% QPSK参数</span>
 M <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>                 <span class="token comment">% Modulation alphabet ：调制阶数</span>
 k <span class="token operator">=</span> <span class="token function">log2</span><span class="token punctuation">(</span>M<span class="token punctuation">)</span><span class="token punctuation">;</span>           <span class="token comment">% Bits/symbol： 每符号对应的比特数</span>
@@ -429,23 +430,23 @@ cpLen <span class="token operator">=</span> <span class="token number">32</span>
 maxBitErrors <span class="token operator">=</span> <span class="token number">100</span><span class="token punctuation">;</span>    <span class="token comment">% Maximum number of bit errors：最大比特错误</span>
 maxNumBits <span class="token operator">=</span> <span class="token number">1e7</span><span class="token punctuation">;</span>      <span class="token comment">% Maximum number of bits transmitted ：最大传输比特数目</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="仿真”对象”"><a href="#仿真”对象”" class="headerlink" title="仿真”对象”"></a>仿真”对象”</h2><p>matlab自带了的很多类似的对象函数，目的是减少你重新建模的麻烦，这里更改一些对象的参数就能使用matlab自带的仿真对象</p>
+<h3 id="仿真”对象”"><a href="#仿真”对象”" class="headerlink" title="仿真”对象”"></a>仿真”对象”</h3><p>matlab自带了的很多类似的对象函数，目的是减少你重新建模的麻烦，这里更改一些对象的参数就能使用matlab自带的仿真对象</p>
 <p>下面是一些<strong>初始化</strong>对象的操作，对象的具体参数要在下一节调节</p>
-<h3 id="QPSK-调制解调器对象"><a href="#QPSK-调制解调器对象" class="headerlink" title="QPSK 调制解调器对象"></a>QPSK 调制解调器对象</h3><p>设成直接输入输出二进制 数据的 调制模式</p>
+<h4 id="QPSK-调制解调器对象"><a href="#QPSK-调制解调器对象" class="headerlink" title="QPSK 调制解调器对象"></a>QPSK 调制解调器对象</h4><p>设成直接输入输出二进制 数据的 调制模式</p>
 <pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab"><span class="token comment">% </span>
 qpskMod <span class="token operator">=</span> comm<span class="token punctuation">.</span><span class="token function">QPSKModulator</span><span class="token punctuation">(</span><span class="token string">'BitInput'</span><span class="token punctuation">,</span>true<span class="token punctuation">)</span><span class="token punctuation">;</span>
 qpskDemod <span class="token operator">=</span> comm<span class="token punctuation">.</span><span class="token function">QPSKDemodulator</span><span class="token punctuation">(</span><span class="token string">'BitOutput'</span><span class="token punctuation">,</span>true<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
-<h3 id="OFDM-调制解调器"><a href="#OFDM-调制解调器" class="headerlink" title="OFDM 调制解调器"></a>OFDM 调制解调器</h3><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">ofdmMod <span class="token operator">=</span> comm<span class="token punctuation">.</span><span class="token function">OFDMModulator</span><span class="token punctuation">(</span><span class="token string">'FFTLength'</span><span class="token punctuation">,</span>numSC<span class="token punctuation">,</span><span class="token string">'CyclicPrefixLength'</span><span class="token punctuation">,</span>cpLen<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<h4 id="OFDM-调制解调器"><a href="#OFDM-调制解调器" class="headerlink" title="OFDM 调制解调器"></a>OFDM 调制解调器</h4><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">ofdmMod <span class="token operator">=</span> comm<span class="token punctuation">.</span><span class="token function">OFDMModulator</span><span class="token punctuation">(</span><span class="token string">'FFTLength'</span><span class="token punctuation">,</span>numSC<span class="token punctuation">,</span><span class="token string">'CyclicPrefixLength'</span><span class="token punctuation">,</span>cpLen<span class="token punctuation">)</span><span class="token punctuation">;</span>
 ofdmDemod <span class="token operator">=</span> comm<span class="token punctuation">.</span><span class="token function">OFDMDemodulator</span><span class="token punctuation">(</span><span class="token string">'FFTLength'</span><span class="token punctuation">,</span>numSC<span class="token punctuation">,</span><span class="token string">'CyclicPrefixLength'</span><span class="token punctuation">,</span>cpLen<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<h3 id="信道"><a href="#信道" class="headerlink" title="信道"></a>信道</h3><p>将NoiseMethodAWGN 通道对象的属性设置为Variance并定义该VarianceSource属性，以便可以从输入端口设置噪声功率。</p>
+<h4 id="信道"><a href="#信道" class="headerlink" title="信道"></a>信道</h4><p>将NoiseMethodAWGN 通道对象的属性设置为Variance并定义该VarianceSource属性，以便可以从输入端口设置噪声功率。</p>
 <pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">channel <span class="token operator">=</span> comm<span class="token punctuation">.</span><span class="token function">AWGNChannel</span><span class="token punctuation">(</span><span class="token string">'NoiseMethod'</span><span class="token punctuation">,</span><span class="token string">'Variance'</span><span class="token punctuation">,</span> <span class="token punctuation">...</span>
     <span class="token string">'VarianceSource'</span><span class="token punctuation">,</span><span class="token string">'Input port'</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<h3 id="错误率计算器"><a href="#错误率计算器" class="headerlink" title="错误率计算器"></a>错误率计算器</h3><p>将ResetInputPort属性设置为true以使错误率计算器能够在模拟过程中被重置。</p>
+<h4 id="错误率计算器"><a href="#错误率计算器" class="headerlink" title="错误率计算器"></a>错误率计算器</h4><p>将ResetInputPort属性设置为true以使错误率计算器能够在模拟过程中被重置。</p>
 <pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">errorRate <span class="token operator">=</span> comm<span class="token punctuation">.</span><span class="token function">ErrorRate</span><span class="token punctuation">(</span> <span class="token string">'ResetInputPort'</span> <span class="token punctuation">,</span>true<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<h2 id="仿真对象的详细参数解释-或者配置"><a href="#仿真对象的详细参数解释-或者配置" class="headerlink" title="仿真对象的详细参数解释 或者配置"></a>仿真对象的详细参数解释 或者配置</h2><h3 id="OFDM-调制解调器对象"><a href="#OFDM-调制解调器对象" class="headerlink" title="OFDM 调制解调器对象"></a>OFDM 调制解调器对象</h3><p>用info 函数可以查看ofdmMod 对象的输入输出维度</p>
+<h3 id="仿真对象的详细参数解释-或者配置"><a href="#仿真对象的详细参数解释-或者配置" class="headerlink" title="仿真对象的详细参数解释 或者配置"></a>仿真对象的详细参数解释 或者配置</h3><h4 id="OFDM-调制解调器对象"><a href="#OFDM-调制解调器对象" class="headerlink" title="OFDM 调制解调器对象"></a>OFDM 调制解调器对象</h4><p>用info 函数可以查看ofdmMod 对象的输入输出维度</p>
 <pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">ofdmDims <span class="token operator">=</span> <span class="token function">info</span><span class="token punctuation">(</span>ofdmMod<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>显示</p>
 <blockquote>
@@ -461,12 +462,12 @@ numDC <span class="token operator">=</span> ofdmDims<span class="token punctuati
 <p>那么一帧OFDM数据（一个OFDM符号）所需要的比特数为： </p>
 <pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">frameSize <span class="token operator">=</span> <span class="token punctuation">[</span>k<span class="token operator">*</span>numDC <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p><strong><font color=red>现在理一下帧结构，OFDM帧包括数据帧与循环前缀部分（时域上的划分），在频域上，分为各种子载波，每一个数据子载波“承载”了一个QPSK映射的符号。</font></strong></p>
-<h3 id="信道（高斯白噪声）对象"><a href="#信道（高斯白噪声）对象" class="headerlink" title="信道（高斯白噪声）对象"></a>信道（高斯白噪声）对象</h3><p>设置信噪比向量（仿真多个信噪比）</p>
+<h4 id="信道（高斯白噪声）对象"><a href="#信道（高斯白噪声）对象" class="headerlink" title="信道（高斯白噪声）对象"></a>信道（高斯白噪声）对象</h4><p>设置信噪比向量（仿真多个信噪比）</p>
 <pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">EbNoVec <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">0</span><span class="token operator">:</span><span class="token number">10</span><span class="token punctuation">)</span> <span class="token operator">'</span><span class="token punctuation">;</span>
 snrVec <span class="token operator">=</span> EbNoVec <span class="token operator">+</span> <span class="token number">10</span> <span class="token operator">*</span> <span class="token function">log10</span> <span class="token punctuation">(</span>k<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">10</span> <span class="token operator">*</span> <span class="token function">log10</span> <span class="token punctuation">(</span>numDC <span class="token operator">/</span> numSC<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>这里不是特别理解？<br>按照最常用基本的理论<br>$$<br>SNR(dB)&#x3D;EbN0(dB)+10log_{10}(\frac{k}{sps})<br>$$<br>这个实验应该默认sps&#x3D;1？ k是每个符号对应的比特数 一般$k&#x3D;R·log_2M$, $R$是编码码率<br>将numDC &#x2F; numSC视为编码码率可以好理解一些，就是sps&#x3D;1 不是很理解，因为sps原本是每个符号的采样点数，OFDM 应该是整体一帧作为一个符号，不可能只采样一个点。如果把sps 理解为：<strong>采样增加倍数</strong>，这样似乎好理解一些。</p>
 <p>后面我再看看相关的书，如果有满意的解释我再修改</p>
-<h3 id="错误率计算器对象"><a href="#错误率计算器对象" class="headerlink" title="错误率计算器对象"></a>错误率计算器对象</h3><p>初始化BER向量（每一个信噪比一个BER）<br>初始化错误数据矩阵（暂时不知道，后面看看）</p>
+<h4 id="错误率计算器对象"><a href="#错误率计算器对象" class="headerlink" title="错误率计算器对象"></a>错误率计算器对象</h4><p>初始化BER向量（每一个信噪比一个BER）<br>初始化错误数据矩阵（暂时不知道，后面看看）</p>
 <pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">berVec <span class="token operator">=</span> <span class="token function">zeros</span><span class="token punctuation">(</span><span class="token function">length</span><span class="token punctuation">(</span>EbNoVec<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 errorStats <span class="token operator">=</span> <span class="token function">zeros</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
@@ -490,8 +491,60 @@ errorStats <span class="token operator">=</span> <span class="token function">ze
     <span class="token keyword">end</span>
     
     <span class="token function">berVec</span><span class="token punctuation">(</span>m<span class="token punctuation">,</span><span class="token operator">:</span><span class="token punctuation">)</span> <span class="token operator">=</span> errorStats<span class="token punctuation">;</span>                         <span class="token comment">% Save BER data</span>
+    
     errorStats <span class="token operator">=</span> <span class="token function">errorRate</span><span class="token punctuation">(</span>dataIn<span class="token punctuation">,</span>dataOut<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>         <span class="token comment">% Reset the error rate calculator</span>
-<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    <span class="token comment">% 重置错误率</span>
+<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>用awgn 函数计算 QPSK 的理论误码率（作为参照）</p>
+<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">berTheory <span class="token operator">=</span> <span class="token function">berawgn</span><span class="token punctuation">(</span>EbNoVec<span class="token punctuation">,</span><span class="token string">'psk'</span><span class="token punctuation">,</span>M<span class="token punctuation">,</span><span class="token string">'nondiff'</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>画图</p>
+<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">figure
+<span class="token function">semilogy</span><span class="token punctuation">(</span>EbNoVec<span class="token punctuation">,</span><span class="token function">berVec</span><span class="token punctuation">(</span><span class="token operator">:</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token string">'*'</span><span class="token punctuation">)</span>
+hold on
+<span class="token function">semilogy</span><span class="token punctuation">(</span>EbNoVec<span class="token punctuation">,</span>berTheory<span class="token punctuation">)</span>
+<span class="token function">legend</span><span class="token punctuation">(</span><span class="token string">'Simulation'</span><span class="token punctuation">,</span><span class="token string">'Theory'</span><span class="token punctuation">,</span><span class="token string">'Location'</span><span class="token punctuation">,</span><span class="token string">'Best'</span><span class="token punctuation">)</span>
+<span class="token function">xlabel</span><span class="token punctuation">(</span><span class="token string">'Eb/No (dB)'</span><span class="token punctuation">)</span>
+<span class="token function">ylabel</span><span class="token punctuation">(</span><span class="token string">'Bit Error Rate'</span><span class="token punctuation">)</span>
+grid on
+hold off<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h1 id="案例二：Parallel-Computing-ToolBox"><a href="#案例二：Parallel-Computing-ToolBox" class="headerlink" title="案例二：Parallel Computing ToolBox"></a>案例二：Parallel Computing ToolBox</h1><p>案例讲述了如何用Parallel Computing ToolBox 并行计算来加速一般的仿真实验。<br><a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/help/comm/gs/accelerating-ber-simulations-using-the-parallel-computing-toolbox.html">教程地址</a></p>
+<p>这个案例没啥太大价值，<br>其实就是 告诉你 <strong>matlab 的for 循环非常慢，可以用parfor代替</strong>。<br>简单来说，原来的for循环采用CPU的一个线程（具体是一个核，还是一个线程我也不知道，就不深入讨论了）来跑，现在，可以用parfor将计算任务分配到多个线程中，这些线程并行的计算来缩减仿真时间。</p>
+<p>当然这种方式是有一些限制条件的</p>
+<p>简单来说就是</p>
+<ul>
+<li>1、循环次数多一些的</li>
+<li>2、循环之间没有迭代关系的</li>
+<li>3、如果循环用到同一个数组、数组最好循环次数一一对应</li>
+</ul>
+<p>具体看看<a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/help/coder/ug/acceleration-of-matlab-algorithms-using-parallel-for-loops-parfor.html?lang=en">官方文档</a></p>
+<h1 id="案例三：Matlab-仿真AWGN信道下的16QAM-的BER曲线"><a href="#案例三：Matlab-仿真AWGN信道下的16QAM-的BER曲线" class="headerlink" title="案例三：Matlab 仿真AWGN信道下的16QAM 的BER曲线"></a>案例三：Matlab 仿真AWGN信道下的16QAM 的BER曲线</h1><h2 id="step-1：使用-MATLAB-检查-16-QAM"><a href="#step-1：使用-MATLAB-检查-16-QAM" class="headerlink" title="step 1：使用 MATLAB 检查 16-QAM"></a>step 1：使用 MATLAB 检查 16-QAM</h2><p>基本参数</p>
+<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">M <span class="token operator">=</span> <span class="token number">16</span><span class="token punctuation">;</span>      <span class="token comment">% Modulation order (alphabet size or number of points in signal constellation)</span>
+k <span class="token operator">=</span> <span class="token function">log2</span><span class="token punctuation">(</span>M<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% Number of bits per symbol</span>
+n <span class="token operator">=</span> <span class="token number">30000</span><span class="token punctuation">;</span>   <span class="token comment">% Number of bits to process</span>
+sps <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>     <span class="token comment">% Number of samples per symbol (oversampling factor)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="信源"><a href="#信源" class="headerlink" title="信源"></a>信源</h3><p>将rng函数设置为其默认状态或任何静态种子值，以便示例产生可重复的结果。然后使用该randi函数生成随机二进制数据。</p>
+<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">rng default<span class="token punctuation">;</span>
+dataIn <span class="token operator">=</span> <span class="token function">randi</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>n<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% Generate vector of binary data</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>检查生成的前40个二进制数据</p>
+<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab"><span class="token function">stem</span><span class="token punctuation">(</span><span class="token function">dataIn</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span><span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token string">'filled'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">title</span><span class="token punctuation">(</span><span class="token string">'Random Bits'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">xlabel</span><span class="token punctuation">(</span><span class="token string">'Bit Index'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">ylabel</span><span class="token punctuation">(</span><span class="token string">'Binary Value'</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="https://ww2.mathworks.cn/help/examples/comm/win64/Examine16QAMUsingMATLABExample_01.png"></p>
+<p>将二进制数据转化为多进制（16进制）数据 （因为我们用到的matlab调制器对象需要输入多进制数据），并画图检查</p>
+<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">dataSymbolsIn <span class="token operator">=</span> <span class="token function">bit2int</span> <span class="token punctuation">(</span>dataIn<span class="token punctuation">,</span> k<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+figure<span class="token punctuation">;</span>                    <span class="token comment">% Create new figure window.</span>
+<span class="token function">stem</span><span class="token punctuation">(</span><span class="token function">dataSymbolsIn</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">title</span><span class="token punctuation">(</span><span class="token string">'Random Symbols'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">xlabel</span><span class="token punctuation">(</span><span class="token string">'Symbol Index'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">ylabel</span><span class="token punctuation">(</span><span class="token string">'Integer Value'</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="https://ww2.mathworks.cn/help/examples/comm/win64/Examine16QAMUsingMATLABExample_02.png"></p>
+
         </div>
         <!-- .entry-content -->
         <div class="single-reward">
