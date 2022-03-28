@@ -679,7 +679,7 @@ rxFiltSignal <span class="token operator">=</span> <span class="token punctuatio
 <span class="token function">eyediagram</span><span class="token punctuation">(</span><span class="token function">rxFiltSignal</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span><span class="token number">2000</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <p>发射端眼图txFiltSignal<br><img src="https://ww2.mathworks.cn/help/examples/comm/win64/PulseShapingA16QAMSignalExample_02.png"><br>接收端（未经过滤波）眼图rxSignal<br><img src="https://ww2.mathworks.cn/help/examples/comm/win64/PulseShapingA16QAMSignalExample_03.png"></p>
 <p>接收端（经过滤波）眼图rxFiltSignal<br><img src="https://ww2.mathworks.cn/help/examples/comm/win64/PulseShapingA16QAMSignalExample_04.png"></p>
-<p>接受前后的星座图，不知道接受前这个星座图怎么算的？</p>
+<p>接受前后的星座图，不知道接受前后这个星座图的能量是怎么算的？ 下面这个为什么乘了一个 sqrt(sps)?</p>
 <pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">scatplot <span class="token operator">=</span> <span class="token function">scatterplot</span><span class="token punctuation">(</span><span class="token function">sqrt</span><span class="token punctuation">(</span>sps<span class="token punctuation">)</span><span class="token operator">*</span><span class="token punctuation">...</span>
     <span class="token function">rxSignal</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span>sps<span class="token operator">*</span><span class="token number">5e3</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token punctuation">...</span>
     sps<span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -767,7 +767,7 @@ dataOut <span class="token operator">=</span> <span class="token punctuation">..
     ber<span class="token punctuation">,</span>numErrors<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>哦吼吼 写（抄了）好多了，这一节就先到这里，后面的再继续写<br>到这里，已经对一个通信仿真系统基本流程已经了解差不多了</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>哦吼吼 写（抄了）好多了，这一节就先到这里，后面的再继续写<br>到这里，已经对一个通信仿真系统基本流程已经了解差不多了<br>其实里面还有很多不懂得地方，后面搞懂了以后再写写，修改修改（尽量不咕）</p>
 
         </div>
         <!-- .entry-content -->
@@ -796,9 +796,26 @@ dataOut <span class="token operator">=</span> <span class="token punctuation">..
       <div class="toc" style="background: none;"></div>
       <section class="post-squares nextprev">
         
+          
+            <div class="post-nepre half previous">
+          
+            <a href="/2022/03/27/matlab-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%BA%8C/" rel="prev">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/03/18/eyjk9Mdng4VTfS8.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://s2.loli.net/2022/03/18/eyjk9Mdng4VTfS8.jpg">
+              </div>
+              <span class="label">
+              Previous Post</span>
+              <div class="info">
+                <h3>
+                Get Started with Communications Toolbox -Communications Toolbox 学习系列（二）</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
         
           
-            <div class="post-nepre full next">
+            <div class="post-nepre half next">
           
             <a href="/2022/03/17/%E6%97%A5%E6%BC%AB%EF%BC%88%E6%BC%AB%E7%94%BB%EF%BC%89%E8%AF%84%E9%89%B4/" rel="next">
               <div class="background">
