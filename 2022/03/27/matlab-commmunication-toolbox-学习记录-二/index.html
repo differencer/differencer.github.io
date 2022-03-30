@@ -429,7 +429,29 @@
 <li>$N$是子载波的数量 或者说是QAM符号流的数量</li>
 </ul>
 <p>公式也可以简写为<br>$$<br>s(k)&#x3D;\sum_{m&#x3D;0}^{N-1} a_{m, n} e^{j 2 \pi\left(\frac{m k}{N}\right)}<br>$$</p>
-<p>者数学上恰好与$a_{m, n}$的离散傅里叶反变换不谋而合。</p>
+<p>这数学上恰好与$a_{m, n}$的离散傅里叶反变换不谋而合。</p>
+<h2 id="没有循环前缀的OFDM-仿真"><a href="#没有循环前缀的OFDM-仿真" class="headerlink" title="没有循环前缀的OFDM 仿真"></a>没有循环前缀的OFDM 仿真</h2><p>首先，OFDM符号我们采用 OFDM 子载波数据用QAM调制的方案，将这些数据作为子载波前面的系数，然后利用快速傅里叶反变换（IFFT），将并行传输的数据 转换为一个个相互正交的子载波的叠加。因为每一个子载波传输的数据非常少（一个OFDM符号周期才传输一个QAM符号），所以每个子载波都是窄带的，所以大概里经历平坦衰落，接收端的均衡器均衡器每个子载波仅需要一个抽头。</p>
+<p>这是一个16QAM+OFDM的程序仿真</p>
+<h3 id="信源端"><a href="#信源端" class="headerlink" title="信源端"></a>信源端</h3><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">bps <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>    <span class="token comment">% Bits per symbol</span>
+M <span class="token operator">=</span> <span class="token number">2</span><span class="token operator">^</span>bps<span class="token punctuation">;</span>  <span class="token comment">% 16QAM</span>
+nFFT <span class="token operator">=</span> <span class="token number">128</span><span class="token punctuation">;</span> <span class="token comment">% Number of FFT bins</span>
+
+txsymbols <span class="token operator">=</span> <span class="token function">randi</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span> M<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>nFFT<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+txgrid <span class="token operator">=</span> <span class="token function">qammod</span><span class="token punctuation">(</span>txsymbols<span class="token punctuation">,</span>M<span class="token punctuation">,</span>UnitAveragePower<span class="token operator">=</span>true<span class="token punctuation">)</span><span class="token punctuation">;</span>
+txout <span class="token operator">=</span> <span class="token function">ifft</span><span class="token punctuation">(</span>txgrid<span class="token punctuation">,</span>nFFT<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">stem</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span>nFFT<span class="token punctuation">,</span><span class="token function">real</span><span class="token punctuation">(</span>txout<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="https://ww2.mathworks.cn/help/examples/comm/win64/BasicOFDMWithNoCyclicPrefixExample_01.png"></p>
+<h3 id="信道"><a href="#信道" class="headerlink" title="信道"></a>信道</h3><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">rxin <span class="token operator">=</span> <span class="token function">awgn</span><span class="token punctuation">(</span>txout<span class="token punctuation">,</span><span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+rxgrid <span class="token operator">=</span> <span class="token function">fft</span><span class="token punctuation">(</span>rxin<span class="token punctuation">,</span>nFFT<span class="token punctuation">)</span><span class="token punctuation">;</span> 
+rxsymbols <span class="token operator">=</span> <span class="token function">qamdemod</span><span class="token punctuation">(</span>rxgrid<span class="token punctuation">,</span>M<span class="token punctuation">,</span>UnitAveragePower<span class="token operator">=</span>true<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token keyword">if</span> <span class="token function">isequal</span><span class="token punctuation">(</span>txsymbols<span class="token punctuation">,</span>rxsymbols<span class="token punctuation">)</span> 
+    <span class="token function">disp</span><span class="token punctuation">(</span> "恢复的符号与传输的符号匹配。" <span class="token punctuation">)</span>
+ <span class="token keyword">else</span> 
+    <span class="token function">disp</span><span class="token punctuation">(</span> "恢复的符号与传输的符号不匹配。" <span class="token punctuation">)</span>
+ <span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>IFFT 的所有 bin（应该是指输入系数） 都填充有用数据。在实际系统中，边缘端子载波通常留空以用作保护带，并且一些子载波 可用于发送特定的导频信号。保护带和导频信号的组合有助于同步和均衡。   </p>
+<h2 id="均衡、卷积、以及循环前缀"><a href="#均衡、卷积、以及循环前缀" class="headerlink" title="均衡、卷积、以及循环前缀"></a>均衡、卷积、以及循环前缀</h2><p>这个例子介绍了频域均衡，并展示了如何将循环卷积转换为线性卷积</p>
+<p>。当考虑线性信道模型时，接收信号是发射信号与信道脉冲响应的卷积。</p>
 
         </div>
         <!-- .entry-content -->
