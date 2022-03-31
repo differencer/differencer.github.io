@@ -415,7 +415,7 @@
           <p>少说废话，现在开始看看下一个案例吧！</p>
 <p>这篇只写一个案例，因为这个案例还是比较复杂的，分成了多个步骤</p>
 <h1 id="案例：matlab-仿真OFDM系统"><a href="#案例：matlab-仿真OFDM系统" class="headerlink" title="案例：matlab 仿真OFDM系统"></a>案例：matlab 仿真OFDM系统</h1><p>正交频分复用 (OFDM) 是现代无线通信系统（如 5G 和 LTE 蜂窝以及 WiFi）使用的多载波数字调制技术。<br>与单载波 QAM 等其他技术相比，OFDM 的优势包括支持更高的数据速率和更简单的接收器设计。<br>具体而言，使用带有循环前缀 (CP) 的 OFDM 可以实现基于快速傅里叶变换 (FFT) 的均衡和同步，与用于在单载波 QAM 中接收可比数据速率的技术相比，这简化了接收。</p>
-<h2 id="OFDM-介绍"><a href="#OFDM-介绍" class="headerlink" title="OFDM 介绍"></a>OFDM 介绍</h2><p>正交频分复用 (OFDM) 通过将调制的高带宽信号载波划分到许多调制的窄带子载波上来实现高数据速率传输。对于 OFDM 传输，窄带子载波的使用降低了对频率选择性衰落的敏感度。许多最新的无线和电信标准都使用多载波 OFDM 调制格式。<br>在单载波系统中支持高数据速率需要宽带载波，有较短的符号持续时间。宽带载波通过频率选择性多径信道过滤宽带宽载波会严重降低信号质量，因为信道脉冲响应在时间上跨越多个符号并使信号容易受到符号间干扰 (ISI) 的影响。</p>
+<h2 id="1、OFDM-介绍"><a href="#1、OFDM-介绍" class="headerlink" title="1、OFDM 介绍"></a>1、OFDM 介绍</h2><p>正交频分复用 (OFDM) 通过将调制的高带宽信号载波划分到许多调制的窄带子载波上来实现高数据速率传输。对于 OFDM 传输，窄带子载波的使用降低了对频率选择性衰落的敏感度。许多最新的无线和电信标准都使用多载波 OFDM 调制格式。<br>在单载波系统中支持高数据速率需要宽带载波，有较短的符号持续时间。宽带载波通过频率选择性多径信道过滤宽带宽载波会严重降低信号质量，因为信道脉冲响应在时间上跨越多个符号并使信号容易受到符号间干扰 (ISI) 的影响。</p>
 <p>为了避免在传输许多并行低带宽信号时出现 ISI，各个子载波必须相互正交。通过传输许多正交低带宽子载波来避免 ISI 激发了 OFDM。OFDM 调制器将高速率串行符号流转换为许多并行低速率流。每个正交低速率流遇到一个具有最小 ISI 的相对平坦的信道，并且可以很容易地均衡。</p>
 <p>举个例子：</p>
 <blockquote>
@@ -430,9 +430,9 @@
 </ul>
 <p>公式也可以简写为<br>$$<br>s(k)&#x3D;\sum_{m&#x3D;0}^{N-1} a_{m, n} e^{j 2 \pi\left(\frac{m k}{N}\right)}<br>$$</p>
 <p>这数学上恰好与$a_{m, n}$的离散傅里叶反变换不谋而合。</p>
-<h2 id="没有循环前缀的OFDM-仿真"><a href="#没有循环前缀的OFDM-仿真" class="headerlink" title="没有循环前缀的OFDM 仿真"></a>没有循环前缀的OFDM 仿真</h2><p>首先，OFDM符号我们采用 OFDM 子载波数据用QAM调制的方案，将这些数据作为子载波前面的系数，然后利用快速傅里叶反变换（IFFT），将并行传输的数据 转换为一个个相互正交的子载波的叠加。因为每一个子载波传输的数据非常少（一个OFDM符号周期才传输一个QAM符号），所以每个子载波都是窄带的，所以大概里经历平坦衰落，接收端的均衡器均衡器每个子载波仅需要一个抽头。</p>
+<h2 id="2、没有循环前缀的OFDM-仿真"><a href="#2、没有循环前缀的OFDM-仿真" class="headerlink" title="2、没有循环前缀的OFDM 仿真"></a>2、没有循环前缀的OFDM 仿真</h2><p>首先，OFDM符号我们采用 OFDM 子载波数据用QAM调制的方案，将这些数据作为子载波前面的系数，然后利用快速傅里叶反变换（IFFT），将并行传输的数据 转换为一个个相互正交的子载波的叠加。因为每一个子载波传输的数据非常少（一个OFDM符号周期才传输一个QAM符号），所以每个子载波都是窄带的，所以大概里经历平坦衰落，接收端的均衡器均衡器每个子载波仅需要一个抽头。</p>
 <p>这是一个16QAM+OFDM的程序仿真</p>
-<h3 id="信源端"><a href="#信源端" class="headerlink" title="信源端"></a>信源端</h3><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">bps <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>    <span class="token comment">% Bits per symbol</span>
+<h3 id="2-1、信源端"><a href="#2-1、信源端" class="headerlink" title="2.1、信源端"></a>2.1、信源端</h3><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">bps <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>    <span class="token comment">% Bits per symbol</span>
 M <span class="token operator">=</span> <span class="token number">2</span><span class="token operator">^</span>bps<span class="token punctuation">;</span>  <span class="token comment">% 16QAM</span>
 nFFT <span class="token operator">=</span> <span class="token number">128</span><span class="token punctuation">;</span> <span class="token comment">% Number of FFT bins</span>
 
@@ -441,7 +441,7 @@ txgrid <span class="token operator">=</span> <span class="token function">qammod
 txout <span class="token operator">=</span> <span class="token function">ifft</span><span class="token punctuation">(</span>txgrid<span class="token punctuation">,</span>nFFT<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token function">stem</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span>nFFT<span class="token punctuation">,</span><span class="token function">real</span><span class="token punctuation">(</span>txout<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p><img src="https://ww2.mathworks.cn/help/examples/comm/win64/BasicOFDMWithNoCyclicPrefixExample_01.png"></p>
-<h3 id="信道"><a href="#信道" class="headerlink" title="信道"></a>信道</h3><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">rxin <span class="token operator">=</span> <span class="token function">awgn</span><span class="token punctuation">(</span>txout<span class="token punctuation">,</span><span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+<h3 id="2-2、信道"><a href="#2-2、信道" class="headerlink" title="2.2、信道"></a>2.2、信道</h3><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">rxin <span class="token operator">=</span> <span class="token function">awgn</span><span class="token punctuation">(</span>txout<span class="token punctuation">,</span><span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
 rxgrid <span class="token operator">=</span> <span class="token function">fft</span><span class="token punctuation">(</span>rxin<span class="token punctuation">,</span>nFFT<span class="token punctuation">)</span><span class="token punctuation">;</span> 
 rxsymbols <span class="token operator">=</span> <span class="token function">qamdemod</span><span class="token punctuation">(</span>rxgrid<span class="token punctuation">,</span>M<span class="token punctuation">,</span>UnitAveragePower<span class="token operator">=</span>true<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token keyword">if</span> <span class="token function">isequal</span><span class="token punctuation">(</span>txsymbols<span class="token punctuation">,</span>rxsymbols<span class="token punctuation">)</span> 
     <span class="token function">disp</span><span class="token punctuation">(</span> "恢复的符号与传输的符号匹配。" <span class="token punctuation">)</span>
@@ -450,9 +450,109 @@ rxsymbols <span class="token operator">=</span> <span class="token function">qam
  <span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>IFFT 的所有 bin（应该是指输入系数） 都填充有用数据。在实际系统中，边缘端子载波通常留空以用作保护带，并且一些子载波 可用于发送特定的导频信号。保护带和导频信号的组合有助于同步和均衡。   </p>
-<h2 id="均衡、卷积、以及循环前缀"><a href="#均衡、卷积、以及循环前缀" class="headerlink" title="均衡、卷积、以及循环前缀"></a>均衡、卷积、以及循环前缀</h2><p>这个例子介绍了频域均衡，并展示了如何将循环卷积转换为线性卷积</p>
-<p>。当考虑线性信道模型时，接收信号是发射信号与信道脉冲响应的卷积。</p>
+<h2 id="3、均衡、卷积、以及循环前缀"><a href="#3、均衡、卷积、以及循环前缀" class="headerlink" title="3、均衡、卷积、以及循环前缀"></a>3、均衡、卷积、以及循环前缀</h2><h3 id="3-1、频域均衡"><a href="#3-1、频域均衡" class="headerlink" title="3.1、频域均衡"></a>3.1、频域均衡</h3><p>这个例子介绍了频域均衡，并展示了如何将循环卷积“转换”（其实不叫转换，得到前len(u)个想要的结果）为线性卷积</p>
+<p>当考虑线性信道模型时，接收信号是发射信号与信道脉冲响应的卷积。<br>也即：<br>$$Y(f)&#x3D;H(f)U(f)$$</p>
+<p>只要知道了频域相应$H(f)$,就还可以得到信号,即$$U(f)&#x3D;\frac{Y(f)}{H(f)}$$<br>其实这个式子就是频域均衡</p>
+<h3 id="3-2、卷积"><a href="#3-2、卷积" class="headerlink" title="3.2、卷积"></a>3.2、卷积</h3><p>但是FFT处理产生的其实是信号$u$和$h$的循环卷积（这是为啥？），为了将这种循环卷积转换为线性卷积，$u$,$h$填充零的个数至少到 length(u)+length(h)-1 (<strong>填零策略</strong>)</p>
+<blockquote>
+<p>如果得到的必是循环卷积，那么，子载波数量N应该是len(u)+len(h)-1,</p>
+</blockquote>
+<blockquote>
+<p>eg:输入8个数据，信道冲击为3径，那么N至少为8+3-1&#x3D;10<br>也就是填2个0</p>
+</blockquote>
+<p>看一个循环卷积和线性卷积的区别例子</p>
+<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">u1 <span class="token operator">=</span> <span class="token number">1</span><span class="token operator">:</span><span class="token number">8</span><span class="token punctuation">;</span> 
+h <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0.4</span> <span class="token number">1</span> <span class="token number">0.4</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
+figure
+<span class="token function">subplot</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span>
+<span class="token function">stem</span><span class="token punctuation">(</span>u1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">axis</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span> <span class="token number">10</span> <span class="token number">0</span> <span class="token number">10</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token function">title</span><span class="token punctuation">(</span>"Input signal"<span class="token punctuation">)</span>
+<span class="token function">subplot</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token function">stem</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">axis</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span> <span class="token number">10</span> <span class="token number">0</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token function">title</span><span class="token punctuation">(</span>"Channel impulse response"<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="https://ww2.mathworks.cn/help/examples/comm/win64/EqualizationConvolutionAndCyclicPrefixAdditionExample_01.png"></p>
+<p>循环前缀能够把信道消弭未知信道时延的影响（循环长度大于最大信道时延长度即可）</p>
+<h3 id="3-3、循环前缀"><a href="#3-3、循环前缀" class="headerlink" title="3.3、循环前缀"></a>3.3、循环前缀</h3><p>对于 OFDM 处理，循环卷积的必要填充是通过添加 CP 而不是对信号进行零填充来提供的。添加重复符号结束样本的 CP 可启用：</p>
+<ul>
+<li>通过IFFT&amp;FFT计算的卷积转换为循环卷积</li>
+<li>用于信道估计、均衡和同步的简单频域处理</li>
+<li>用于前向纠错方案的重复样本</li>
+</ul>
+<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">L <span class="token operator">=</span> <span class="token function">length</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">;</span>      <span class="token comment">% Length of channel</span>
+N <span class="token operator">=</span> <span class="token function">length</span><span class="token punctuation">(</span>u1<span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">% Length of input signal</span>
+ucp <span class="token operator">=</span> <span class="token function">u1</span><span class="token punctuation">(</span>N<span class="token operator">-</span>L<span class="token operator">+</span><span class="token number">1</span><span class="token operator">:</span>N<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">% Use last samples of input signal as the CP</span>
+u2 <span class="token operator">=</span> <span class="token punctuation">[</span>ucp u1<span class="token punctuation">]</span><span class="token punctuation">;</span>      <span class="token comment">% Prepend the CP to the input signal</span>
+yl2 <span class="token operator">=</span> <span class="token function">conv</span><span class="token punctuation">(</span>u2<span class="token punctuation">,</span>h<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">% Convolution of input+CP and channel</span>
+yl2 <span class="token operator">=</span> <span class="token function">yl2</span><span class="token punctuation">(</span>L<span class="token operator">+</span><span class="token number">1</span><span class="token operator">:</span><span class="token keyword">end</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% Remove CP to compare signals</span>
+
+figure<span class="token punctuation">;</span>
+<span class="token function">stem</span><span class="token punctuation">(</span>yc1<span class="token punctuation">,</span>"x"<span class="token punctuation">)</span>
+hold on<span class="token punctuation">;</span>
+<span class="token function">stem</span><span class="token punctuation">(</span>yl2<span class="token punctuation">,</span>"o"<span class="token punctuation">)</span>
+<span class="token function">title</span><span class="token punctuation">(</span>"Convolution Results with Cyclic Prefix"<span class="token punctuation">)</span>
+<span class="token function">legend</span> <span class="token punctuation">(</span>"Linear"<span class="token punctuation">,</span>"Circular"<span class="token punctuation">,</span>"Location"<span class="token punctuation">,</span>"northwest"<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src="https://ww2.mathworks.cn/help/examples/comm/win64/EqualizationConvolutionAndCyclicPrefixAdditionExample_03.png"></p>
+<p>对比循环卷积与线性卷积的误差使得否达到要求</p>
+<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab"><span class="token keyword">if</span> <span class="token function">max</span><span class="token punctuation">(</span>yc1 <span class="token operator">-</span> <span class="token function">yl2</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span>N<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">1e-8</span>
+    <span class="token function">disp</span><span class="token punctuation">(</span>"Linear and circular convolution sequences match<span class="token punctuation">.</span>"<span class="token punctuation">)</span>
+<span class="token keyword">else</span>
+    <span class="token function">disp</span><span class="token punctuation">(</span>"Received symbols do not match transmitted symbols<span class="token punctuation">.</span>"<span class="token punctuation">)</span>
+<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="4、加CP的OFDM仿真"><a href="#4、加CP的OFDM仿真" class="headerlink" title="4、加CP的OFDM仿真"></a>4、加CP的OFDM仿真</h2><p>在这个案例中，将构建一个带有循环前缀的16QAM &amp; OFDM 仿真<br>为了能有效的均衡，循环前缀的长度必须大于信道长度（上一节说了，只有填零或者前缀的个数大于len（u）+len（h）-1 才有可能将循环卷积“转换”为线性卷积）</p>
+<h3 id="4-1、基本参数"><a href="#4-1、基本参数" class="headerlink" title="4.1、基本参数"></a>4.1、基本参数</h3><p>定义 QAM 和 OFDM 处理的变量。生成符号、QAM 调制、OFDM 调制，然后将 CP 添加到信号中。多个OFDM符号可以同时处理然后串行化。</p>
+<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">bps <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>    <span class="token comment">% Number of bits per symbol  相当于之前的k = log2(M)</span>
+M <span class="token operator">=</span> <span class="token number">2</span><span class="token operator">^</span>bps<span class="token punctuation">;</span>  <span class="token comment">% Modulation order</span>
+nFFT <span class="token operator">=</span> <span class="token number">128</span><span class="token punctuation">;</span> <span class="token comment">% Number of FFT bins</span>
+nCP <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">;</span>    <span class="token comment">% CP length</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="4-2-发射端"><a href="#4-2-发射端" class="headerlink" title="4.2 发射端"></a>4.2 发射端</h3><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">txsymbols <span class="token operator">=</span> <span class="token function">randi</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span> M<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>nFFT<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+txgrid <span class="token operator">=</span> <span class="token function">qammod</span><span class="token punctuation">(</span>txsymbols<span class="token punctuation">,</span>M<span class="token punctuation">,</span>UnitAveragePower<span class="token operator">=</span>true<span class="token punctuation">)</span><span class="token punctuation">;</span>
+txout <span class="token operator">=</span> <span class="token function">ifft</span><span class="token punctuation">(</span>txgrid<span class="token punctuation">,</span>nFFT<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">% To process multiple symbols, vectorize the txout matrix</span>
+<span class="token comment">% 这一步不太明白，我测试了一下，好像有没有这一句没区别啊!</span>
+txout <span class="token operator">=</span> <span class="token function">txout</span><span class="token punctuation">(</span><span class="token operator">:</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">% 取cp、加cp</span>
+txcp <span class="token operator">=</span> <span class="token function">txout</span><span class="token punctuation">(</span>nFFT<span class="token operator">-</span>nCP<span class="token operator">+</span><span class="token number">1</span><span class="token operator">:</span>nFFT<span class="token punctuation">)</span><span class="token punctuation">;</span>
+txout <span class="token operator">=</span> <span class="token punctuation">[</span>txcp<span class="token punctuation">;</span> txout<span class="token punctuation">]</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="4-3、噪声部分-（噪声、频选、延迟）"><a href="#4-3、噪声部分-（噪声、频选、延迟）" class="headerlink" title="4.3、噪声部分 （噪声、频选、延迟）"></a>4.3、噪声部分 （噪声、频选、延迟）</h3><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">hchan <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0.4</span> <span class="token number">1</span> <span class="token number">0.4</span><span class="token punctuation">]</span><span class="token operator">.'</span><span class="token punctuation">;</span>       <span class="token comment">% 信道冲激响应</span>
+rxin <span class="token operator">=</span> <span class="token function">awgn</span><span class="token punctuation">(</span>txout<span class="token punctuation">,</span><span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">;</span>       <span class="token comment">% Add noise   </span>
+rxin <span class="token operator">=</span> <span class="token function">conv</span><span class="token punctuation">(</span>rxin<span class="token punctuation">,</span>hchan<span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">% Add frequency dependency</span>
+channelDelay <span class="token operator">=</span> dsp<span class="token punctuation">.</span><span class="token function">Delay</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% Could use fractional delay 我发现效果就是第一个数据是零后面的数据是原数据往后移动一位</span>
+rxin <span class="token operator">=</span> <span class="token function">channelDelay</span><span class="token punctuation">(</span>rxin<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">% Add delay</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="4-4、接收端"><a href="#4-4、接收端" class="headerlink" title="4.4、接收端"></a>4.4、接收端</h3><p>添加一个小于 CP 长度的随机偏移量。零模型的偏移设置可在发射和接收信号之间实现完美同步？。任何小于 CP 长度的时序偏移都可以通过额外的线性相位进行均衡补偿。<br>[这个偏移量offset 到底有什么用？为什么设成随机的，难道是信道参数吗？？]</p>
+<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">offset <span class="token operator">=</span> <span class="token function">randi</span><span class="token punctuation">(</span>nCP<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token comment">% random offset less than length of CP</span>
+<span class="token comment">% Remove CP and synchronize the received signal</span>
+<span class="token comment">% 下面这一步1、去掉了CP头，2、假设完美同步（时延消除）3、往前多了 offset</span>
+rxsync <span class="token operator">=</span> <span class="token function">rxin</span><span class="token punctuation">(</span>nCP<span class="token operator">+</span><span class="token number">1</span><span class="token operator">+</span>channelDelay<span class="token punctuation">.</span>Length<span class="token operator">-</span>offset<span class="token operator">:</span><span class="token keyword">end</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+rxgrid <span class="token operator">=</span> <span class="token function">fft</span><span class="token punctuation">(</span><span class="token function">rxsync</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span>nFFT<span class="token punctuation">)</span><span class="token punctuation">,</span>nFFT<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab"><span class="token comment">% 是否使用均衡？</span>
+useEqualizer <span class="token operator">=</span> true<span class="token punctuation">;</span>
+<span class="token keyword">if</span> useEqualizer
+    hfchan <span class="token operator">=</span> <span class="token function">fft</span><span class="token punctuation">(</span>hchan<span class="token punctuation">,</span>nFFT<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">% 毫无疑问，hfchan是信道的频域相应，</span>
+    <span class="token comment">% Linear phase term related to timing offset</span>
+    offsetf <span class="token operator">=</span> <span class="token function">exp</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1i</span> <span class="token operator">*</span> <span class="token number">2</span><span class="token operator">*</span><span class="token keyword">pi</span><span class="token operator">*</span>offset <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token number">0</span><span class="token operator">:</span>nFFT<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token operator">.'</span><span class="token operator">/</span>nFFT<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">%这一步好像是给信号加了一个频偏啊？？？wtf 啥意思</span>
+    rxgrideq <span class="token operator">=</span> rxgrid <span class="token operator">./</span> <span class="token punctuation">(</span>hfchan <span class="token operator">.*</span> offsetf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    
+<span class="token keyword">else</span> <span class="token comment">% Without equalization errors occur</span>
+    rxgrideq <span class="token operator">=</span> rxgrid<span class="token punctuation">;</span>
+<span class="token keyword">end</span>
+rxsymbols <span class="token operator">=</span> <span class="token function">qamdemod</span><span class="token punctuation">(</span>rxgrideq<span class="token punctuation">,</span>M<span class="token punctuation">,</span>UnitAveragePower<span class="token operator">=</span>true<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token function">max</span><span class="token punctuation">(</span>txsymbols <span class="token operator">-</span> rxsymbols<span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">1e-8</span>
+    <span class="token function">disp</span><span class="token punctuation">(</span>"Receiver output matches transmitter input<span class="token punctuation">.</span>"<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">else</span>
+    <span class="token function">disp</span><span class="token punctuation">(</span>"Received symbols do not match transmitted symbols<span class="token punctuation">.</span>"<span class="token punctuation">)</span>
+<span class="token keyword">end</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
         </div>
         <!-- .entry-content -->
         <div class="single-reward">
