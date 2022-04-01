@@ -171,7 +171,7 @@ function bot_ui_ini() {
             noselection = function () {
                 botui.message.add({
                     delay: 1800,
-                    content: "哈哈抱歉啦~可以在留言板悄悄（大声）告诉我，哈哈，我个人是比较喜欢猫的，嘻嘻~"
+                    content: "哈哈抱歉啦~可以在留言板悄悄告诉我，哈哈，我个人是比较喜欢猫的，嘻嘻~"
                 }).then(function(){
                 fourthpart()
                 })
@@ -206,7 +206,7 @@ function bot_ui_ini() {
             }).then(function () {
                 botui.message.add({
                     delay: 2000,
-                    content: "对了，对博客搭建有什么兴趣吗？hexo建站还是蛮简单的，几乎不需要啥前端知识（前端我是真的小白）甚至是编程知识，有很多教程的啦~"
+                    content: "对了，对博客搭建有什么兴趣吗？hexo建站还是蛮简单的，几乎不需要啥编程知识（前端我是真的小白，靠丰富的网上教程就搭建出来啦） ，加油~"
                 })
             })
         }

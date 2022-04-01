@@ -594,9 +594,9 @@ hold off
 <span class="token function">title</span><span class="token punctuation">(</span>"Imaginary component of transmitter output"<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h3 id="5-2-1、-过采样"><a href="#5-2-1、-过采样" class="headerlink" title="5.2.1、 过采样"></a>5.2.1、 过采样</h3><p>Define an FFT length longer than nFFT to cause oversampling in time domain. To aid comparison later, insert zeros into the middle of txgrid to maintain correspondence between bin centers for the original and upsampled signals. A control here allows you to adjust the integer oversampling rate used by the OFDM modulator output and demodulator input.<br>定义一个长度大于nFFT的 FFT，这样可以在时域上过采样。为了便于比较，在 txgrid 的中间插入零以保持原始信号和上采样信号的 bin 中心之间的对应关系（为什么？）。upFactor 是过采样倍数可以自行调整</p>
-<p>% 我更改了以下填零的顺序，发现并没有太大的变化，都能拟合<br>是那么叫保险hi原始信号和上采样 信号 系数中心之间的对应关系？有什么样的对应关系需要保持呢？</p>
+<p>% 我更改了以下填零的顺序，发现并没有太大的变化，都能拟合<br>是那么叫保持原始信号和上采样 信号 系数中心之间的对应关系？有什么样的对应关系需要保持呢？</p>
 <blockquote>
-<p>答：在IFFT变换矩阵中，每行的前一半都是正频率而后一半都是负频率。因此，若要使用过采样，就应该将0添加到输入数据的中间而非末尾 —— 这样就能够确保添加的0数据值被映射到正和负频率一半的子载波上，而非0数据则被映射到0Hz附近的子载波上 <a target="_blank" rel="noopener" href="https://blog.csdn.net/misskissC/article/details/51315653">参考</a> ，呃 还是没懂 ，他妈的</p>
+<p>答：在IFFT变换矩阵中，每行的前一半都是正频率而后一半都是负频率。因此，若要使用过采样，就应该将0添加到输入数据的中间而非末尾 —— 这样就能够确保添加的0数据值被映射到正和负频率一半的子载波上，而非0数据则被映射到0Hz附近的子载波上 <a target="_blank" rel="noopener" href="https://blog.csdn.net/misskissC/article/details/51315653">参考资料</a> ，<br>呃 还是没懂 ，他妈的</p>
 </blockquote>
 <pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">upFactor <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span>
 nFFTUp  <span class="token operator">=</span> upFactor <span class="token operator">*</span> nFFT<span class="token punctuation">;</span>
@@ -653,7 +653,7 @@ rxsymbols <span class="token operator">=</span> <span class="token function">qam
     <span class="token function">disp</span><span class="token punctuation">(</span>"Received symbols do not match transmitted symbols<span class="token punctuation">.</span>"<span class="token punctuation">)</span>
 <span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>这一小节先到这里啦~ 还有n多问题没有解决 555，主要集中在：<br>1、设置的偏移上（offset），rxsync &#x3D; rxin(cplenUp+1+channelDelay.Length-offset:end); 这里的意义<br>2、3径信道的影响没看到呀，哦哦可能是OFDM以为天然抵抗多径，所以没啥影响。</p>
+<p>这一小节先到这里啦~ 还有n多问题没有解决 555，主要集中在：<br>1、设置的偏移上（offset），rxsync &#x3D; rxin(cplenUp+1+channelDelay.Length-offset:end); 这里的意义<br>2、过采样的时候，在iFFT前  为什么中间填零，而不是两边？<br>3、3径信道的影响没看到呀，哦哦，可能是OFDM以为天然抵抗多径，所以没啥影响。</p>
 <p>后续知道答案时会及时解决</p>
 
         </div>
