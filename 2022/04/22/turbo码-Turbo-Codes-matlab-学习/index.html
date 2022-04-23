@@ -424,26 +424,26 @@ turboenc <span class="token operator">=</span> comm<span class="token punctuatio
 <p> 如果你没有在创建时没有申明 属性值，也可以在 创建语句后面紧接着这样调用<br><code> objectname.property=value</code><br>这种方式和第二种方式等价。</p>
 <p>comm.TurboEncoder 对象的 属性（property）（有以下几种</p>
 <ul>
-<li><p><code>TrellisStructure</code>  trellis 结构<br>后接 trilles对象，用来构建卷积码编解码器 默认值 为poly2trellis(4,[13 15],13) 的RSC码</p>
+<li><p><code>TrellisStructure</code>  <strong>trellis 结构</strong><br>后接 trilles对象，用来构建卷积码编解码器 默认值 为poly2trellis(4,[13 15],13) 的RSC码</p>
 </li>
-<li><p><code>InterleaverIndicesSource</code>  交织列器索引来源<br>后面接的值只能是：’Property’ （默认）| ‘Input port’.</p>
+<li><p><code>InterleaverIndicesSource</code>  <strong>交织列器索引来源</strong><br>后面接的值只能是：’Property’ （默认）| ‘Input port’.</p>
 <ul>
 <li>当设定为’Property’时， 对象将使用 你自己指定的交织索引</li>
 <li>当设定为’Input port’时，即’InterleaverIndices’ 属性值 可以在创建的对象里面作为函数的参数一样更改<br>   如创建了 TurboEncoder对象 turboenc， 就可以使用<code>encodedData = turboenc(data,intrlvrIndices);</code> 这种方式调用对象实例。！！！</li>
 </ul>
 </li>
-<li><p><code>InterleaverIndices</code>  交织器索引<br> 他是<code>InterleaverIndicesSource</code>的依赖项，必须将<code>InterleaverIndicesSource</code>值设为’Property’<br> 后面接的值是 交织器索引序列</p>
+<li><p><code>InterleaverIndices</code>  <strong>交织器索引</strong><br> 他是<code>InterleaverIndicesSource</code>的依赖项，必须将<code>InterleaverIndicesSource</code>值设为’Property’<br> 后面接的值是 交织器索引序列</p>
 <ul>
 <li>默认为 <code>(64:-1:1).</code> 即倒序，之所以是64 好像默认64位输入比特</li>
 <li>当自己设定时，注意索引 只能是 1：L 随机重排，L是输入码长 可以用<code>randperm( )</code>函数实现</li>
 </ul>
 </li>
-<li><p><code>OutputIndicesSource</code> 输出索引来源<br> 后面只能是 ‘Auto’ (默认) | ‘Property’ | ‘Input port’</p>
+<li><p><code>OutputIndicesSource</code> <strong>输出索引来源</strong><br> 后面只能是 ‘Auto’ (默认) | ‘Property’ | ‘Input port’</p>
 <ul>
 <li>当设定为’Auto’时 该对象计算 删除第二个分量码的系统流（系统码部分），但 包括所有尾位(反馈位)的输出索引。<br>  后两个用法和之前的<code>InterleaverIndicesSource</code>一样</li>
 </ul>
 </li>
-<li><p><code>OutputIndices</code> 输出索引<br>同理，他是 <code>OutputIndicesSource</code>的依赖项<br>后面接的值是 输出索引序列</p>
+<li><p><code>OutputIndices</code> <strong>输出索引</strong><br>同理，他是 <code>OutputIndicesSource</code>的依赖项<br>后面接的值是 输出索引序列</p>
 <ul>
 <li>默认为<code>getTurboIOIndices(64,2,3)</code></li>
 <li>也可以自己设定 。但最大长度不得超过 ( L + mLen ) × N × 2 的完全编码长度，其中L是输入块长度， mLen是内存长度，N 是组成编码器的编码流数。</li>
