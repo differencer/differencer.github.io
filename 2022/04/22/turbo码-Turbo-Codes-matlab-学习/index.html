@@ -412,29 +412,275 @@
         <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
         
         <div class="entry-content">
-          <p>CSDN上看到一个比较简洁的<a target="_blank" rel="noopener" href="https://blog.csdn.net/zhouxuanyuye/article/details/78379330">turbo 的基础知识</a></p>
-<h1 id="turbo码编码器对象"><a href="#turbo码编码器对象" class="headerlink" title="turbo码编码器对象"></a>turbo码编码器对象</h1><p>在matlab R2020 版本以上 自带了turbo编码函数, 是一个matlab系统对象函数</p>
+          <p>开始前 最好看看以下博客 掌握一些基础知识<br>[1] 一个比较简洁的turbo 的基础知识(CSDN)<a target="_blank" rel="noopener" href="https://blog.csdn.net/zhouxuanyuye/article/details/78379330">Turbo码（Turbo Codes）-纸上谈芯</a><br>[2] 关于卷积码（包括RSC）、trellis 结构的一些基础知识(CSDN)<a target="_blank" rel="noopener" href="https://blog.csdn.net/differencer/article/details/120352331?spm=1001.2014.3001.5502">卷积码matlab实现之ploy2trellis函数</a></p>
+<p>原文链接 ：<a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/help/comm/ref/comm.turboencoder-system-object.html#bs4ay_y-15">matlab comm.TurboEncoder 的帮助文档 </a></p>
+<h1 id="一、turbo码编码器对象"><a href="#一、turbo码编码器对象" class="headerlink" title="一、turbo码编码器对象"></a>一、turbo码编码器对象</h1><p>在matlab R2020 版本以上中 communication toolbox 自带了turbo编码函数, 是一个matlab系统对象函数， 即comm.TurboEncoder </p>
 <p>创建 对象的语法如下：</p>
 <pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">turboenc <span class="token operator">=</span> comm<span class="token punctuation">.</span>TurboEncoder 
 turboenc <span class="token operator">=</span> comm<span class="token punctuation">.</span><span class="token function">TurboEncoder</span><span class="token punctuation">(</span>Name<span class="token punctuation">,</span>Value<span class="token punctuation">)</span>
 turboenc <span class="token operator">=</span> comm<span class="token punctuation">.</span><span class="token function">TurboEncoder</span><span class="token punctuation">(</span>trellis<span class="token punctuation">,</span>interlvrindices<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
+<p>注意：对于<strong>创建对象</strong>的第二种方式，matlab里面叫做 <strong>属性名（property name）-值（value）对</strong>,在‘创建对象时’ 这种创建方式，property一旦设定以后一般不再更改， 创建的所有对象实例 将拥有这些设定过的属性值。 </p>
+<p> 如果你没有在创建时没有申明 属性值，也可以在 创建语句后面紧接着这样调用<br><code> objectname.property=value</code><br>这种方式和第二种方式等价。</p>
+<p>comm.TurboEncoder 对象的 属性（property）（有以下几种</p>
+<ul>
+<li><p><code>TrellisStructure</code>  trellis 结构<br>后接 trilles对象，用来构建卷积码编解码器 默认值 为poly2trellis(4,[13 15],13) 的RSC码</p>
+</li>
+<li><p><code>InterleaverIndicesSource</code>  交织列器索引来源<br>后面接的值只能是：’Property’ （默认）| ‘Input port’.</p>
+<ul>
+<li>当设定为’Property’时， 对象将使用 你自己指定的交织索引</li>
+<li>当设定为’Input port’时，即’InterleaverIndices’ 属性值 可以在创建的对象里面作为函数的参数一样更改<br>   如创建了 TurboEncoder对象 turboenc， 就可以使用<code>encodedData = turboenc(data,intrlvrIndices);</code> 这种方式调用对象实例。！！！</li>
+</ul>
+</li>
+<li><p><code>InterleaverIndices</code>  交织器索引<br> 他是<code>InterleaverIndicesSource</code>的依赖项，必须将<code>InterleaverIndicesSource</code>值设为’Property’<br> 后面接的值是 交织器索引序列</p>
+<ul>
+<li>默认为 <code>(64:-1:1).</code> 即倒序，之所以是64 好像默认64位输入比特</li>
+<li>当自己设定时，注意索引 只能是 1：L 随机重排，L是输入码长 可以用<code>randperm( )</code>函数实现</li>
+</ul>
+</li>
+<li><p><code>OutputIndicesSource</code> 输出索引来源<br> 后面只能是 ‘Auto’ (默认) | ‘Property’ | ‘Input port’</p>
+<ul>
+<li>当设定为’Auto’时 该对象计算 删除第二个分量码的系统流（系统码部分），但 包括所有尾位(反馈位)的输出索引。<br>  后两个用法和之前的<code>InterleaverIndicesSource</code>一样</li>
+</ul>
+</li>
+<li><p><code>OutputIndices</code> 输出索引<br>同理，他是 <code>OutputIndicesSource</code>的依赖项<br>后面接的值是 输出索引序列</p>
+<ul>
+<li>默认为<code>getTurboIOIndices(64,2,3)</code></li>
+<li>也可以自己设定 。但最大长度不得超过 ( L + mLen ) × N × 2 的完全编码长度，其中L是输入块长度， mLen是内存长度，N 是组成编码器的编码流数。</li>
+</ul>
+</li>
+</ul>
 <p>使用 语法 </p>
 <pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">codeword <span class="token operator">=</span> <span class="token function">turboenc</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span> <span class="token comment">% 默认方式</span>
-codeword <span class="token operator">=</span> <span class="token function">turboenc</span><span class="token punctuation">(</span>message<span class="token punctuation">,</span>interlvrindices<span class="token punctuation">)</span> <span class="token comment">% 加了交织。interlvrindices是交织序列</span>
-codeword <span class="token operator">=</span> <span class="token function">turboenc</span><span class="token punctuation">(</span>message<span class="token punctuation">,</span>interlvrindices<span class="token punctuation">,</span>outindices<span class="token punctuation">)</span> <span class="token comment">%加了位排序和穿刺？</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+codeword <span class="token operator">=</span> <span class="token function">turboenc</span><span class="token punctuation">(</span>message<span class="token punctuation">,</span>interlvrindices<span class="token punctuation">)</span> <span class="token comment">% 当InterleaverIndicesSource 为Input port 时</span>
+codeword <span class="token operator">=</span> <span class="token function">turboenc</span><span class="token punctuation">(</span>message<span class="token punctuation">,</span>interlvrindices<span class="token punctuation">,</span>outindices<span class="token punctuation">)</span> <span class="token comment">% 当InterleaverIndicesSource 为Input port 、OutputIndicesSource 为Input port 时</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
 
 
-<h1 id="turbo码编码"><a href="#turbo码编码" class="headerlink" title="turbo码编码"></a>turbo码编码</h1><h2 id="默认编码（默认码率约为1-x2F-3）"><a href="#默认编码（默认码率约为1-x2F-3）" class="headerlink" title="默认编码（默认码率约为1&#x2F;3）"></a>默认编码（默认码率约为1&#x2F;3）</h2><p><img src="https://s2.loli.net/2022/04/22/LUo2pfNlRyFKGBr.png"></p>
-<p>如图为默认参数下，turbo码的编码结构图<br>上下各一个码率为1&#x2F;2的RSC编码器、注意由于是系统反馈卷积码，最终还有“反馈部分” （编码器输入完输入序列之后，如图的开关会闭合，经过系统自反馈，编码器状态会归零）反馈长度为关联长度-1，该图中&#x3D;4-1&#x3D;3</p>
-<p>输入序列为$C_k$，输出序列是</p>
+<h2 id="1-1、一些基本使用说明"><a href="#1-1、一些基本使用说明" class="headerlink" title="1.1、一些基本使用说明"></a>1.1、一些基本使用说明</h2><p>turbo 编码器使用并行级联卷积编码方案来编码二进制输入信号。总体而言，编码器由两个码率为$1&#x2F;N$的分量码编码器（一般是RSC编码器）和一个内部交织器组成。如图。<br><img src="https://s2.loli.net/2022/04/23/9wrgAfnzQmeE643.png"></p>
+<p>Turbo码编码器对象 属性中一个重要 TurboEncoder的</p>
 <ul>
-<li>1、上面的RSC编码器$X_k$部分（加3位反馈部分）、</li>
-<li>2、上面的RSC编码器$Z_k$部分（加3位反馈部分）</li>
-<li>3、下面的RSC编码器$Z_k^*$部分（加3位反馈部分）</li>
+<li>OutputIndicesSource属性：指定用于符号删余（puncturing：一般译为删余、或者打孔 ）和重复（repetition）的输出索引的来源。<ul>
+<li>设置该属性为’Auto’时(也即默认情况)，对象 会计算输出索引， 全长完整输出情况下，<br>编码器输出位数为：$M&#x3D;L×(2N-1)+2×numTails $  ，码率为$R&#x3D;L&#x2F;M$其中：<ul>
+<li>1、$L$是 输入码字的长度</li>
+<li>2、$numTails&#x3D; log2（TrellisStructure.numStates）×N$ 即RSC编码器的反馈比特部分</li>
 </ul>
-<p>如当输入一个长度为64位的信息序列，最终长度为 （64+3）*3&#x3D;192+12&#x3D;204位</p>
+</li>
+<li>设置该属性为’Input port’ 或者 ‘Property’时，对象 使用自行指定的输出索引运行（也就是你要自行编写输出索引），输出索引是相对于完全编码输出指定的（这一点看不懂的话可以继续往下看2.2小节的例子）。 输出的位数等于你提供的输出索引的向量长度。这种情况下的码率也得自行计算。</li>
+</ul>
+</li>
+</ul>
+<h1 id="二、turbo码编码-举例"><a href="#二、turbo码编码-举例" class="headerlink" title="二、turbo码编码 举例"></a>二、turbo码编码 举例</h1><h2 id="2-1、默认方式-编码（默认码率约为1-x2F-3）"><a href="#2-1、默认方式-编码（默认码率约为1-x2F-3）" class="headerlink" title="2.1、默认方式 编码（默认码率约为1&#x2F;3）"></a>2.1、默认方式 编码（默认码率约为1&#x2F;3）</h2><p><img src="https://s2.loli.net/2022/04/22/LUo2pfNlRyFKGBr.png"></p>
+<p>如图为默认参数下，turbo码的编码结构图<br>上下各一个码率为1&#x2F;2的RSC编码器、注意由于是系统反馈卷积码，最终还有“反馈部分” （编码器输入完输入序列之后，图中的开关会闭合，经过系统自反馈，编码器状态会归零,这有利于解码端MAP解码时后向迭代）反馈长度为(约束长度-1)，该图中&#x3D;4-1&#x3D;3</p>
+<p>输入序列为$C_k$，输出序列是(注意，输出序列<strong>逐比特</strong>按照下面的顺序循环依次输出)</p>
+<ul>
+<li>1、上面的RSC编码器$X_k$部分（系统码部分）（加3位反馈部分）、</li>
+<li>2、上面的RSC编码器$Z_k$部分（校验码部分）（加3位反馈部分）</li>
+<li>3、下面RSC编码器系统码部分不要，跳过！！！ （要3位反馈部分）</li>
+<li>4、下面的RSC编码器$Z_k^*$部分（校验码部分）（加3位反馈部分）</li>
+</ul>
+<p>即输出<br>$X_1、Z_1、X_1(skip)、Z_1^*;X_2、Z_2、X_2(skip)、Z_2^*;…… $</p>
+<p>如当输入一个长度为64位的信息序列，最终编码后长度为 $64×3 +3×4&#x3D;192+12&#x3D;204$</p>
+<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">rng default
+turboenc <span class="token operator">=</span> comm<span class="token punctuation">.</span>TurboEncoder<span class="token punctuation">;</span>
+frameLen <span class="token operator">=</span> <span class="token number">64</span><span class="token punctuation">;</span> <span class="token comment">% Frame length</span>
+data <span class="token operator">=</span> <span class="token function">randi</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>frameLen<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+encData <span class="token operator">=</span> <span class="token function">turboenc</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+codewordLen <span class="token operator">=</span> <span class="token function">length</span><span class="token punctuation">(</span>encData<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+codingrate <span class="token operator">=</span> frameLen<span class="token operator">/</span>codewordLen <span class="token comment">% 64/204= 0.3137</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="2-2-对比-全长turbo-码-以及-删余-turbo码"><a href="#2-2-对比-全长turbo-码-以及-删余-turbo码" class="headerlink" title="2.2 对比  全长turbo 码 以及 删余 turbo码"></a>2.2 对比  全长turbo 码 以及 删余 turbo码</h2><p>下面是 代码：</p>
+<h3 id="初始化参数"><a href="#初始化参数" class="headerlink" title="初始化参数"></a>初始化参数</h3><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">blkLen <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+trellis <span class="token operator">=</span> <span class="token function">poly2trellis</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token number">13</span> <span class="token number">15</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token number">13</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+n <span class="token operator">=</span> <span class="token function">log2</span><span class="token punctuation">(</span>trellis<span class="token punctuation">.</span>numOutputSymbols<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% 输出比符号 比特数</span>
+mLen <span class="token operator">=</span> <span class="token function">log2</span><span class="token punctuation">(</span>trellis<span class="token punctuation">.</span>numStates<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% 感觉这里应该是“记忆长度”，不应该用 寄存器个数，不多对一个但输入的卷积码来说没影响</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="全长编码输出"><a href="#全长编码输出" class="headerlink" title="全长编码输出"></a>全长编码输出</h3><p>和2.1 默认方式相比，</p>
+<ul>
+<li>1、输出时把 下面的RSC 编码器 的系统位也加上了</li>
+<li>2、自定义了”内交织器”</li>
+</ul>
+<p>那么给定 10 个输入比特 ， 反馈长度 &#x3D;4-1&#x3D;3<br>那么全长输出位数： （10+3）*4&#x3D;52</p>
+<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">fullOut <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span><span class="token punctuation">(</span>mLen<span class="token operator">+</span>blkLen<span class="token punctuation">)</span><span class="token operator">*</span><span class="token number">2</span><span class="token operator">*</span>n<span class="token punctuation">)</span><span class="token operator">'</span><span class="token punctuation">;</span> <span class="token comment">% </span>
+outLen <span class="token operator">=</span> <span class="token function">length</span><span class="token punctuation">(</span>fullOut<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">%计算全长</span>
+netRate <span class="token operator">=</span> blkLen<span class="token operator">/</span>outLen<span class="token punctuation">;</span><span class="token comment">% 整体码率 10/52= 0.192307692307692</span>
+data <span class="token operator">=</span> <span class="token function">randi</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>blkLen<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+intIndices  <span class="token operator">=</span> <span class="token function">randperm</span><span class="token punctuation">(</span>blkLen<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">% 内交织  产生一组 0到blkLen-1 不重复的数字</span>
+
+turboEnc <span class="token operator">=</span> comm<span class="token punctuation">.</span><span class="token function">TurboEncoder</span><span class="token punctuation">(</span><span class="token string">'TrellisStructure'</span><span class="token punctuation">,</span>trellis<span class="token punctuation">)</span><span class="token punctuation">;</span>
+turboEnc<span class="token punctuation">.</span>InterleaverIndices <span class="token operator">=</span> intIndices<span class="token punctuation">;</span>
+turboEnc<span class="token punctuation">.</span>OutputIndicesSource <span class="token operator">=</span> <span class="token string">'Property'</span><span class="token punctuation">;</span>
+turboEnc<span class="token punctuation">.</span>OutputIndices <span class="token operator">=</span> fullOut<span class="token punctuation">;</span> <span class="token comment">% 输出序列 全长输出</span>
+
+encMsg <span class="token operator">=</span> <span class="token function">turboEnc</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>   
+
+<span class="token function">disp</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'Turbo coding rate: '</span> <span class="token function">num2str</span><span class="token punctuation">(</span>netRate<span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  <span class="token comment">%isequal(encOutLen,outLen)  % Check lengths</span>
+
+encOutLen <span class="token operator">=</span> <span class="token function">length</span><span class="token punctuation">(</span>encMsg<span class="token punctuation">)</span> <span class="token comment">% Display encoded length =52</span>
+<span class="token function">isequal</span><span class="token punctuation">(</span>encOutLen<span class="token punctuation">,</span>outLen<span class="token punctuation">)</span>  <span class="token comment">% Check lengths =1 true</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="删余编码输出"><a href="#删余编码输出" class="headerlink" title="删余编码输出"></a>删余编码输出</h3><p>这个代码用删余的方式实现了默认参数下的 turbo码 ，即删去 第二个RSC的系统码部分 </p>
+<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">puncOut <span class="token operator">=</span> <span class="token function">getTurboIOIndices</span><span class="token punctuation">(</span>blkLen<span class="token punctuation">,</span>n<span class="token punctuation">,</span>mLen<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% 得到输出索引（第二个RSC输出的系统位不要）相较于在“全长输入下的”输出索引 </span>
+outLen <span class="token operator">=</span> <span class="token function">length</span><span class="token punctuation">(</span>puncOut<span class="token punctuation">)</span><span class="token punctuation">;</span>
+netRate <span class="token operator">=</span> blkLen<span class="token operator">/</span>outLen<span class="token punctuation">;</span>
+data <span class="token operator">=</span> <span class="token function">randi</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>blkLen<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+intIndices  <span class="token operator">=</span> <span class="token function">randperm</span><span class="token punctuation">(</span>blkLen<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+turboEnc <span class="token operator">=</span> comm<span class="token punctuation">.</span><span class="token function">TurboEncoder</span><span class="token punctuation">(</span><span class="token string">'TrellisStructure'</span><span class="token punctuation">,</span>trellis<span class="token punctuation">)</span><span class="token punctuation">;</span>
+turboEnc<span class="token punctuation">.</span>InterleaverIndices <span class="token operator">=</span> intIndices<span class="token punctuation">;</span>
+turboEnc<span class="token punctuation">.</span>OutputIndicesSource <span class="token operator">=</span> <span class="token string">'Property'</span><span class="token punctuation">;</span>
+turboEnc<span class="token punctuation">.</span>OutputIndices <span class="token operator">=</span> puncOut<span class="token punctuation">;</span> <span class="token comment">% 删余后的输出索引</span>
+
+encMsg <span class="token operator">=</span> <span class="token function">turboEnc</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">% Encode</span>
+
+<span class="token function">disp</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'Turbo coding rate: '</span> <span class="token function">num2str</span><span class="token punctuation">(</span>netRate<span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token comment">% 0.25641</span>
+
+encOutLen <span class="token operator">=</span> <span class="token function">length</span><span class="token punctuation">(</span>encMsg<span class="token punctuation">)</span> <span class="token comment">% Display encoded length  =39</span>
+
+<span class="token function">isequal</span><span class="token punctuation">(</span>encOutLen<span class="token punctuation">,</span> outLen<span class="token punctuation">)</span> <span class="token comment">% Check lengths =true</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="全长输出、删余输出的-输出索引-对比"><a href="#全长输出、删余输出的-输出索引-对比" class="headerlink" title="全长输出、删余输出的 输出索引 对比"></a>全长输出、删余输出的 输出索引 对比</h3><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">fullOut<span class="token operator">'</span>
+
+ans <span class="token operator">=</span> <span class="token number">1</span>×<span class="token number">52</span>
+
+     <span class="token number">1</span>     <span class="token number">2</span>     <span class="token number">3</span>     <span class="token number">4</span>     <span class="token number">5</span>     <span class="token number">6</span>     <span class="token number">7</span>     <span class="token number">8</span>     <span class="token number">9</span>    <span class="token number">10</span>    <span class="token number">11</span>    <span class="token number">12</span>    <span class="token number">13</span>    <span class="token number">14</span>    <span class="token number">15</span>    <span class="token number">16</span>    <span class="token number">17</span>    <span class="token number">18</span>    <span class="token number">19</span>    <span class="token number">20</span>    <span class="token number">21</span>    <span class="token number">22</span>    <span class="token number">23</span>    <span class="token number">24</span>    <span class="token number">25</span>    <span class="token number">26</span>    <span class="token number">27</span>    <span class="token number">28</span>    <span class="token number">29</span>    <span class="token number">30</span>    <span class="token number">31</span>    <span class="token number">32</span>    <span class="token number">33</span>    <span class="token number">34</span>    <span class="token number">35</span>    <span class="token number">36</span>    <span class="token number">37</span>    <span class="token number">38</span>    <span class="token number">39</span>    <span class="token number">40</span>    <span class="token number">41</span>    <span class="token number">42</span>    <span class="token number">43</span>    <span class="token number">44</span>    <span class="token number">45</span>    <span class="token number">46</span>    <span class="token number">47</span>    <span class="token number">48</span>    <span class="token number">49</span>    <span class="token number">50</span>
+
+puncOut<span class="token operator">'</span>
+
+ans <span class="token operator">=</span> <span class="token number">1</span>×<span class="token number">39</span>
+
+     <span class="token number">1</span>     <span class="token number">2</span>     <span class="token number">4</span>     <span class="token number">5</span>     <span class="token number">6</span>     <span class="token number">8</span>     <span class="token number">9</span>    <span class="token number">10</span>    <span class="token number">12</span>    <span class="token number">13</span>    <span class="token number">14</span>    <span class="token number">16</span>    <span class="token number">17</span>    <span class="token number">18</span>    <span class="token number">20</span>    <span class="token number">21</span>    <span class="token number">22</span>    <span class="token number">24</span>    <span class="token number">25</span>    <span class="token number">26</span>    <span class="token number">28</span>    <span class="token number">29</span>    <span class="token number">30</span>    <span class="token number">32</span>    <span class="token number">33</span>    <span class="token number">34</span>    <span class="token number">36</span>    <span class="token number">37</span>    <span class="token number">38</span>    <span class="token number">40</span>    <span class="token number">41</span>    <span class="token number">42</span>    <span class="token number">44</span>    <span class="token number">45</span>    <span class="token number">46</span>    <span class="token number">48</span>    <span class="token number">49</span>    <span class="token number">50</span>    <span class="token number">52</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>对比二者 输出索引可以看出<br>每个 4 位元组的第3位 （如 {1，2，3，4}中的3、{5，6，7，8}中的7）从全长turbo码中删除，以生成删余 turbo码输出。删除的该第三输出比特流。对应于下面的RSC编码器的系统比特流。 这与我在2.1 中说的 默认方式编码一样</p>
+<h2 id="2-3-一些仿真实例"><a href="#2-3-一些仿真实例" class="headerlink" title="2.3 一些仿真实例"></a>2.3 一些仿真实例</h2><h3 id="2-3-1、仿真实例：通过-BPSK-调制-AWGN-通道发送和接收-Turbo-编码数据"><a href="#2-3-1、仿真实例：通过-BPSK-调制-AWGN-通道发送和接收-Turbo-编码数据" class="headerlink" title="2.3.1、仿真实例：通过 BPSK 调制 AWGN 通道发送和接收 Turbo 编码数据"></a>2.3.1、仿真实例：通过 BPSK 调制 AWGN 通道发送和接收 Turbo 编码数据</h3><p>使用 turbo 编码和解码模拟 AWGN 通道上 BPSK 数据的传输和接收。</p>
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">modOrd <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span> <span class="token comment">% Modulation order </span>
+bps <span class="token operator">=</span> <span class="token function">log2</span><span class="token punctuation">(</span>modOrd<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% Bits per symbol</span>
+EbNo <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token comment">% Energy per bit to noise power spectral density ratio in dB</span>
+EsNo <span class="token operator">=</span> EbNo <span class="token operator">+</span> <span class="token number">10</span><span class="token operator">*</span><span class="token function">log10</span><span class="token punctuation">(</span>bps<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% Energy per symbol to noise power spectral density ratio in dB</span>
+
+L <span class="token operator">=</span> <span class="token number">256</span><span class="token punctuation">;</span> <span class="token comment">% Input packet length in bits</span>
+trellis <span class="token operator">=</span> <span class="token function">poly2trellis</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token number">13</span> <span class="token number">15</span> <span class="token number">17</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token number">13</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+numiter <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span> <span class="token comment">% 迭代次数！</span>
+n <span class="token operator">=</span> <span class="token function">log2</span><span class="token punctuation">(</span>trellis<span class="token punctuation">.</span>numOutputSymbols<span class="token punctuation">)</span><span class="token punctuation">;</span>
+numTails <span class="token operator">=</span> <span class="token function">log2</span><span class="token punctuation">(</span>trellis<span class="token punctuation">.</span>numStates<span class="token punctuation">)</span><span class="token operator">*</span>n<span class="token punctuation">;</span>
+M <span class="token operator">=</span> L<span class="token operator">*</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token operator">*</span>n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">2</span><span class="token operator">*</span>numTails<span class="token punctuation">;</span> <span class="token comment">% Output codeword packet length</span>
+rate <span class="token operator">=</span> L<span class="token operator">/</span>M<span class="token punctuation">;</span> <span class="token comment">% Coding rate</span>
+
+snrdB <span class="token operator">=</span> EsNo <span class="token operator">+</span> <span class="token number">10</span><span class="token operator">*</span><span class="token function">log10</span><span class="token punctuation">(</span>rate<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% Signal to noise ratio in dB</span>
+noiseVar <span class="token operator">=</span> <span class="token number">1.</span><span class="token operator">/</span><span class="token punctuation">(</span><span class="token number">10.</span><span class="token operator">^</span><span class="token punctuation">(</span>snrdB<span class="token operator">/</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% Noise variance</span>
+
+rng default
+
+intrlvrIndices <span class="token operator">=</span> <span class="token function">randperm</span><span class="token punctuation">(</span>L<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% 内交织序列</span>
+
+<span class="token comment">% turbo 编码译码器对象</span>
+turboenc <span class="token operator">=</span> comm<span class="token punctuation">.</span><span class="token function">TurboEncoder</span><span class="token punctuation">(</span>trellis<span class="token punctuation">,</span>intrlvrIndices<span class="token punctuation">)</span><span class="token punctuation">;</span>
+turbodec <span class="token operator">=</span> comm<span class="token punctuation">.</span><span class="token function">TurboDecoder</span><span class="token punctuation">(</span>trellis<span class="token punctuation">,</span>intrlvrIndices<span class="token punctuation">,</span>numiter<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">% BPSK 调制解调器对象</span>
+bpskmod <span class="token operator">=</span> comm<span class="token punctuation">.</span>BPSKModulator<span class="token punctuation">;</span>
+bpskdemod <span class="token operator">=</span> comm<span class="token punctuation">.</span><span class="token function">BPSKDemodulator</span><span class="token punctuation">(</span><span class="token string">'DecisionMethod'</span><span class="token punctuation">,</span><span class="token string">'Log-likelihood ratio'</span><span class="token punctuation">,</span> <span class="token punctuation">...</span>
+    <span class="token string">'Variance'</span><span class="token punctuation">,</span>noiseVar<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">% 信道对象、误比特计数器</span>
+awgnchan <span class="token operator">=</span> comm<span class="token punctuation">.</span><span class="token function">AWGNChannel</span><span class="token punctuation">(</span><span class="token string">'NoiseMethod'</span><span class="token punctuation">,</span><span class="token string">'Variance'</span><span class="token punctuation">,</span><span class="token string">'Variance'</span><span class="token punctuation">,</span>noiseVar<span class="token punctuation">)</span><span class="token punctuation">;</span>
+errrate <span class="token operator">=</span> comm<span class="token punctuation">.</span>ErrorRate<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="仿真主体（帧处理循环）"><a href="#仿真主体（帧处理循环）" class="headerlink" title="仿真主体（帧处理循环）"></a>仿真主体（帧处理循环）</h4><p>帧处理循环执行这些步骤。</p>
+<ul>
+<li>生成二进制数据。</li>
+<li>Turbo对数据进行编码。</li>
+<li>调制编码数据。</li>
+<li>将调制信号通过 AWGN 通道。</li>
+<li>通过使用 LLR 来解调有噪声的信号以输出软比特。</li>
+<li>对解调数据进行 Turbo 解码。<strong>由于来自解调器的位映射与 turbo 解码器预期的映射相反</strong>，解码器输入必须使用解调信号的相反数</li>
+<li>计算误差统计</li>
+</ul>
+<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab"><span class="token keyword">for</span> frmIdx <span class="token operator">=</span> <span class="token number">1</span><span class="token operator">:</span><span class="token number">100</span> 
+    data <span class="token operator">=</span> <span class="token function">randi</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>L<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    encodedData <span class="token operator">=</span> <span class="token function">turboenc</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    modSignal <span class="token operator">=</span> <span class="token function">bpskmod</span><span class="token punctuation">(</span>encodedData<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    receivedSignal <span class="token operator">=</span> <span class="token function">awgnchan</span><span class="token punctuation">(</span>modSignal<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    demodSignal <span class="token operator">=</span> <span class="token function">bpskdemod</span><span class="token punctuation">(</span>receivedSignal<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    receivedBits <span class="token operator">=</span> <span class="token function">turbodec</span><span class="token punctuation">(</span><span class="token operator">-</span>demodSignal<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">%由于来自解调器的位映射与 turbo 解码器预期的映射相反，解码器输入必须使用解调信号的相反数 </span>
+    errorStats <span class="token operator">=</span> <span class="token function">errrate</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span>receivedBits<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span>
+
+
+<span class="token function">fprintf</span><span class="token punctuation">(</span><span class="token string">'Bit error rate = %5.2e\nNumber of errors = %d\nTotal bits = %d\n'</span><span class="token punctuation">,</span> errorStats<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>输出：<br>Bit error rate &#x3D; 2.34e-04<br>Number of errors &#x3D; 6<br>Total bits &#x3D; 25600</p>
+<h3 id="2-3-2、-对-AWGN-信道中的-16-QAM-信号执行-Turbo-编码"><a href="#2-3-2、-对-AWGN-信道中的-16-QAM-信号执行-Turbo-编码" class="headerlink" title="2.3.2、 对 AWGN 信道中的 16-QAM 信号执行 Turbo 编码"></a>2.3.2、 对 AWGN 信道中的 16-QAM 信号执行 Turbo 编码</h3><p>通过在 AWGN 信道中使用 16-QAM 信号和 Turbo 码来模拟端到端通信链路。</p>
+<p>在帧处理循环中，数据包大小随机选择为 500、1000 或 1500 位。由于数据包大小不同，交织器索引作为其关联系统对象的输入参数提供给 turbo 编码器和解码器。将 Turbo 编码的误码率结果与未编码的误码率结果进行比较。</p>
+<h4 id="配置-1"><a href="#配置-1" class="headerlink" title="配置"></a>配置</h4><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">modOrder <span class="token operator">=</span> <span class="token number">16</span><span class="token punctuation">;</span>               <span class="token comment">% Modulation order</span>
+bps <span class="token operator">=</span> <span class="token function">log2</span><span class="token punctuation">(</span>modOrder<span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token comment">% Bits per symbol</span>
+EbNo <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">2</span><span class="token operator">:</span><span class="token number">0.5</span><span class="token operator">:</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>            <span class="token comment">% Energy per bit to noise power spectral density ratio in dB</span>
+EsNo <span class="token operator">=</span> EbNo <span class="token operator">+</span> <span class="token number">10</span><span class="token operator">*</span><span class="token function">log10</span><span class="token punctuation">(</span>bps<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% Energy per symbol to noise power spectral density ratio in dB</span>
+<span class="token function">rng</span><span class="token punctuation">(</span><span class="token number">1963</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+
+<span class="token comment">% turbo 编解码对象   (其中 解码器对象全部指定为 4 次)</span>
+turboEnc <span class="token operator">=</span> comm<span class="token punctuation">.</span><span class="token function">TurboEncoder</span><span class="token punctuation">(</span><span class="token string">'InterleaverIndicesSource'</span><span class="token punctuation">,</span><span class="token string">'Input port'</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% 采用'Input port'方式，则后续可以用函数式形式调用 交织索引</span>
+turboDec <span class="token operator">=</span> comm<span class="token punctuation">.</span><span class="token function">TurboDecoder</span><span class="token punctuation">(</span><span class="token string">'InterleaverIndicesSource'</span><span class="token punctuation">,</span><span class="token string">'Input port'</span><span class="token punctuation">,</span><span class="token string">'NumIterations'</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+trellis <span class="token operator">=</span> <span class="token function">poly2trellis</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token number">13</span> <span class="token number">15</span> <span class="token number">17</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token number">13</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+n <span class="token operator">=</span> <span class="token function">log2</span><span class="token punctuation">(</span>turboEnc<span class="token punctuation">.</span>TrellisStructure<span class="token punctuation">.</span>numOutputSymbols<span class="token punctuation">)</span><span class="token punctuation">;</span>
+numTails <span class="token operator">=</span> <span class="token function">log2</span><span class="token punctuation">(</span>turboEnc<span class="token punctuation">.</span>TrellisStructure<span class="token punctuation">.</span>numStates<span class="token punctuation">)</span><span class="token operator">*</span>n<span class="token punctuation">;</span>
+
+<span class="token comment">% 误比特记录对象</span>
+errRate <span class="token operator">=</span> comm<span class="token punctuation">.</span>ErrorRate<span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="仿真主体（帧处理循环）-1"><a href="#仿真主体（帧处理循环）-1" class="headerlink" title="仿真主体（帧处理循环）"></a>仿真主体（帧处理循环）</h3><p>帧处理循环执行这些步骤。</p>
+<ul>
+<li>选择一个随机数据包长度，生成随机二进制数据。</li>
+<li>计算输出码字长度和编码率。</li>
+<li>计算信噪比 (SNR) 和噪声方差。</li>
+<li>生成交织器索引。</li>
+<li>Turbo对数据进行编码。</li>
+<li>应用 16-QAM 调制，并标准化平均信号功率。</li>
+<li>将调制信号通过 AWGN 通道。</li>
+<li>使用LLR方法解调噪声信号，输出软比特，并归一化平均信号功率。</li>
+<li>Turbo 解码数据。由于来自解调器的位映射顺序与 turbo 解码器预期的映射顺序相反，因此解码器输入必须使用解调信号的相反数。</li>
+<li>计算误差统计。<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">ber <span class="token operator">=</span> <span class="token function">zeros</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token function">length</span><span class="token punctuation">(</span>EbNo<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span> k <span class="token operator">=</span> <span class="token number">1</span><span class="token operator">:</span><span class="token function">length</span><span class="token punctuation">(</span>EbNo<span class="token punctuation">)</span>
+    <span class="token comment">% numFrames = 100;</span>
+    errorStats <span class="token operator">=</span> <span class="token function">zeros</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">%for pktIdx = 1:numFrames</span>
+    L <span class="token operator">=</span> <span class="token number">500</span><span class="token operator">*</span><span class="token function">randi</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>         <span class="token comment">% Packet length in bits</span>
+    M <span class="token operator">=</span> L<span class="token operator">*</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token operator">*</span>n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">2</span><span class="token operator">*</span>numTails<span class="token punctuation">;</span>     <span class="token comment">% Output codeword packet length</span>
+    rate <span class="token operator">=</span> L<span class="token operator">/</span>M<span class="token punctuation">;</span>                       <span class="token comment">% Coding rate for current packet</span>
+    snrdB <span class="token operator">=</span> <span class="token function">EsNo</span><span class="token punctuation">(</span>k<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">10</span><span class="token operator">*</span><span class="token function">log10</span><span class="token punctuation">(</span>rate<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% Signal to noise ratio in dB</span>
+    noiseVar <span class="token operator">=</span> <span class="token number">1.</span><span class="token operator">/</span><span class="token punctuation">(</span><span class="token number">10.</span><span class="token operator">^</span><span class="token punctuation">(</span>snrdB<span class="token operator">/</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">% Noise variance</span>
+    
+    <span class="token keyword">while</span> <span class="token function">errorStats</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">100</span> <span class="token operator">&amp;&amp;</span> <span class="token function">errorStats</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">1e7</span>
+        data <span class="token operator">=</span> <span class="token function">randi</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>L<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        intrlvrIndices <span class="token operator">=</span> <span class="token function">randperm</span><span class="token punctuation">(</span>L<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        encodedData <span class="token operator">=</span> <span class="token function">turboEnc</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span>intrlvrIndices<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        modSignal <span class="token operator">=</span> <span class="token function">qammod</span><span class="token punctuation">(</span>encodedData<span class="token punctuation">,</span>modOrder<span class="token punctuation">,</span> <span class="token punctuation">...</span>
+            <span class="token string">'InputType'</span><span class="token punctuation">,</span><span class="token string">'bit'</span><span class="token punctuation">,</span><span class="token string">'UnitAveragePower'</span><span class="token punctuation">,</span>true<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        rxSignal <span class="token operator">=</span> <span class="token function">awgn</span><span class="token punctuation">(</span>modSignal<span class="token punctuation">,</span>snrdB<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        demodSignal <span class="token operator">=</span> <span class="token function">qamdemod</span><span class="token punctuation">(</span>rxSignal<span class="token punctuation">,</span>modOrder<span class="token punctuation">,</span><span class="token string">'OutputType'</span><span class="token punctuation">,</span><span class="token string">'llr'</span><span class="token punctuation">,</span> <span class="token punctuation">...</span>
+            <span class="token string">'UnitAveragePower'</span><span class="token punctuation">,</span>true<span class="token punctuation">,</span><span class="token string">'NoiseVariance'</span><span class="token punctuation">,</span>noiseVar<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        
+        rxBits <span class="token operator">=</span> <span class="token function">turboDec</span><span class="token punctuation">(</span><span class="token operator">-</span>demodSignal<span class="token punctuation">,</span>intrlvrIndices<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% Demodulated signal is negated 由于来自解调器的位映射顺序与 turbo 解码器预期的映射顺序相反，因此解码器输入必须使用解调信号的相反数。</span>
+        errorStats <span class="token operator">=</span> <span class="token function">errRate</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span>rxBits<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">end</span>
+    <span class="token comment">% Save the BER data and reset the bit error rate object</span>
+    <span class="token function">ber</span><span class="token punctuation">(</span>k<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token function">errorStats</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">reset</span><span class="token punctuation">(</span>errRate<span class="token punctuation">)</span>
+<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="作图"><a href="#作图" class="headerlink" title="作图"></a>作图</h3><pre class="line-numbers language-none"><code class="language-none">semilogy(EbNo,ber,&#39;-o&#39;)
+grid
+xlabel(&#39;Eb&#x2F;No (dB)&#39;)
+ylabel(&#39;Bit Error Rate&#39;)
+uncodedBER &#x3D; berawgn(EbNo,&#39;qam&#39;,modOrder); % Estimate of uncoded BER
+hold on
+semilogy(EbNo,uncodedBER)
+legend(&#39;Turbo&#39;,&#39;Uncoded&#39;,&#39;location&#39;,&#39;sw&#39;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<img src="https://ww2.mathworks.cn/help/examples/comm/win64/TurboCodingWith16QAMModulationInAnAWGNChannelExample_01.png"></li>
+</ul>
 
         </div>
         <!-- .entry-content -->
