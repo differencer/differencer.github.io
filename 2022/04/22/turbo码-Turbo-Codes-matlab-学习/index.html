@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   
-  <title itemprop="name">turbo码(Turbo Codes) matlab 学习 | t&#39;blog</title>
+  <title itemprop="name">turbo码 编码器(Turbo Encoder) matlab 学习 | t&#39;blog</title>
   
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -386,7 +386,7 @@
     </div>
     <header class="pattern-header single-header">
       <h1 class="entry-title">
-      turbo码(Turbo Codes) matlab 学习</h1>
+      turbo码 编码器(Turbo Encoder) matlab 学习</h1>
       <p class="entry-census">
         <span>
           <a href="/about/">
@@ -414,15 +414,14 @@
         <div class="entry-content">
           <p>开始前 最好看看以下博客 掌握一些基础知识<br>[1] 一个比较简洁的turbo 的基础知识(CSDN)<a target="_blank" rel="noopener" href="https://blog.csdn.net/zhouxuanyuye/article/details/78379330">Turbo码（Turbo Codes）-纸上谈芯</a><br>[2] 关于卷积码（包括RSC）、trellis 结构的一些基础知识(CSDN)<a target="_blank" rel="noopener" href="https://blog.csdn.net/differencer/article/details/120352331?spm=1001.2014.3001.5502">卷积码matlab实现之ploy2trellis函数</a></p>
 <p>原文链接 ：<a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/help/comm/ref/comm.turboencoder-system-object.html#bs4ay_y-15">matlab comm.TurboEncoder 的帮助文档 </a></p>
-<h1 id="一、turbo码编码器对象"><a href="#一、turbo码编码器对象" class="headerlink" title="一、turbo码编码器对象"></a>一、turbo码编码器对象</h1><p>在matlab R2020 版本以上中 communication toolbox 自带了turbo编码函数, 是一个matlab系统对象函数， 即comm.TurboEncoder </p>
-<p>创建 对象的语法如下：</p>
+<h1 id="一、turbo码编码器对象"><a href="#一、turbo码编码器对象" class="headerlink" title="一、turbo码编码器对象"></a>一、turbo码编码器对象</h1><p>在matlab R2012a 版本以上中 communication toolbox 引入了turbo码编码函数, 准确来说是一个matlab系统对象， 即comm.TurboEncoder </p>
+<p>创建 turbo码编码器对象的语法如下：</p>
 <pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">turboenc <span class="token operator">=</span> comm<span class="token punctuation">.</span>TurboEncoder 
 turboenc <span class="token operator">=</span> comm<span class="token punctuation">.</span><span class="token function">TurboEncoder</span><span class="token punctuation">(</span>Name<span class="token punctuation">,</span>Value<span class="token punctuation">)</span>
 turboenc <span class="token operator">=</span> comm<span class="token punctuation">.</span><span class="token function">TurboEncoder</span><span class="token punctuation">(</span>trellis<span class="token punctuation">,</span>interlvrindices<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
-<p>注意：对于<strong>创建对象</strong>的第二种方式，matlab里面叫做 <strong>属性名（property name）-值（value）对</strong>,在‘创建对象时’ 这种创建方式，property一旦设定以后一般不再更改， 创建的所有对象实例 将拥有这些设定过的属性值。 </p>
-<p> 如果你没有在创建时没有申明 属性值，也可以在 创建语句后面紧接着这样调用<br><code> objectname.property=value</code><br>这种方式和第二种方式等价。</p>
-<p>comm.TurboEncoder 对象的 属性（property）（有以下几种</p>
+<p>注意：对于<strong>创建对象</strong>的第二种方式，输入参数叫做 <strong>属性名（property name）-值（value）对</strong>,这种方式等价于，<code>objectname.property=value</code>， 创建的所有对象实例 将拥有这些设定过的属性值，一般不可再更改。</p>
+<p>comm.TurboEncoder 对象的 属性（property）有以下几种</p>
 <ul>
 <li><p><code>TrellisStructure</code>  <strong>trellis 结构</strong><br>后接 trilles对象，用来构建卷积码编解码器 默认值 为poly2trellis(4,[13 15],13) 的RSC码</p>
 </li>
@@ -434,8 +433,15 @@ turboenc <span class="token operator">=</span> comm<span class="token punctuatio
 </li>
 <li><p><code>InterleaverIndices</code>  <strong>交织器索引</strong><br> 他是<code>InterleaverIndicesSource</code>的依赖项，必须将<code>InterleaverIndicesSource</code>值设为’Property’<br> 后面接的值是 交织器索引序列</p>
 <ul>
-<li>默认为 <code>(64:-1:1).</code> 即倒序，之所以是64 好像默认64位输入比特</li>
+<li>默认为 <code>(64:-1:1).</code> 即倒序，之所以是64 ，默认64位输入比特</li>
 <li>当自己设定时，注意索引 只能是 1：L 随机重排，L是输入码长 可以用<code>randperm( )</code>函数实现</li>
+</ul>
+</li>
+<li><p><strong>总结一下</strong> 交织器索引 。设定交织器索引有三种方式：</p>
+<ul>
+<li>默认方式： 其中InterleaverIndicesSource&#x3D;’Property’ （默认），且InterleaverIndices&#x3D;<code>(64:-1:1).</code>（默认），当然这种方式应该要求输入码长位 64</li>
+<li>自定义方式（从对象属性输入）：其中InterleaverIndicesSource&#x3D;’Property’ （默认），InterleaverIndices&#x3D; 自设交织器序列，这种方式，生成的交织器索引对象实例 都将有一个固定的交织器序列，不可再更改</li>
+<li>自定义方式（从对象实例，以函数参数输入）：InterleaverIndicesSource&#x3D;’Input port’(默认)，不用设置InterleaverIndices， 创建对象实例后，将自设交织器序列 作为函数参数引入，可以随时更改</li>
 </ul>
 </li>
 <li><p><code>OutputIndicesSource</code> <strong>输出索引来源</strong><br> 后面只能是 ‘Auto’ (默认) | ‘Property’ | ‘Input port’</p>
@@ -458,7 +464,7 @@ codeword <span class="token operator">=</span> <span class="token function">turb
 
 
 <h2 id="1-1、一些基本使用说明"><a href="#1-1、一些基本使用说明" class="headerlink" title="1.1、一些基本使用说明"></a>1.1、一些基本使用说明</h2><p>turbo 编码器使用并行级联卷积编码方案来编码二进制输入信号。总体而言，编码器由两个码率为$1&#x2F;N$的分量码编码器（一般是RSC编码器）和一个内部交织器组成。如图。<br><img src="https://s2.loli.net/2022/04/23/9wrgAfnzQmeE643.png"></p>
-<p>Turbo码编码器对象 属性中一个重要 TurboEncoder的</p>
+<p>再次强调一下Turbo码编码器对象中一个重要属性 </p>
 <ul>
 <li>OutputIndicesSource属性：指定用于符号删余（puncturing：一般译为删余、或者打孔 ）和重复（repetition）的输出索引的来源。<ul>
 <li>设置该属性为’Auto’时(也即默认情况)，对象 会计算输出索引， 全长完整输出情况下，<br>编码器输出位数为：$M&#x3D;L×(2N-1)+2×numTails $  ，码率为$R&#x3D;L&#x2F;M$其中：<ul>
@@ -501,7 +507,7 @@ mLen <span class="token operator">=</span> <span class="token function">log2</sp
 <li>1、输出时把 下面的RSC 编码器 的系统位也加上了</li>
 <li>2、自定义了”内交织器”</li>
 </ul>
-<p>那么给定 10 个输入比特 ， 反馈长度 &#x3D;4-1&#x3D;3<br>那么全长输出位数： （10+3）*4&#x3D;52</p>
+<p>那么给定 10 个输入比特 ， 反馈长度 &#x3D;4-1&#x3D;3<br>那么全长输出位数： （10+3）×4&#x3D;52</p>
 <pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">fullOut <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span><span class="token punctuation">(</span>mLen<span class="token operator">+</span>blkLen<span class="token punctuation">)</span><span class="token operator">*</span><span class="token number">2</span><span class="token operator">*</span>n<span class="token punctuation">)</span><span class="token operator">'</span><span class="token punctuation">;</span> <span class="token comment">% </span>
 outLen <span class="token operator">=</span> <span class="token function">length</span><span class="token punctuation">(</span>fullOut<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">%计算全长</span>
 netRate <span class="token operator">=</span> blkLen<span class="token operator">/</span>outLen<span class="token punctuation">;</span><span class="token comment">% 整体码率 10/52= 0.192307692307692</span>
