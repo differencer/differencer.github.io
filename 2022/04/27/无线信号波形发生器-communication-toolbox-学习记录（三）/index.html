@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   
-  <title itemprop="name">Category: 通信 | t&#39;blog</title>
+  <title itemprop="name">无线信号波形发生器-communication toolbox 学习记录（三） | t&#39;blog</title>
   
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -376,303 +376,206 @@
   </div>
 </header>
 
-      
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
 <div class="pattern-center-blank"></div>
-<div class="pattern-center ">
-  <div class="pattern-attachment-img">
-    <img data-src="通信.img" class="lazyload" onerror="imgError(this,3)" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
+
+  <div class="pattern-center single-center">
+    <!-- 有配图默认渲染第一张 -->
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://s2.loli.net/2022/04/28/s8bUNcpEZrxFgKq.png);" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/04/28/s8bUNcpEZrxFgKq.png">
+    </div>
+    <header class="pattern-header single-header">
+      <h1 class="entry-title">
+      无线信号波形发生器-communication toolbox 学习记录（三）</h1>
+      <p class="entry-census">
+        <span>
+          <a href="/about/">
+            <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/custom/avatar.jpg">
+          </a>
+        </span>
+        <span>
+          <a href="/about/">differencer</a>
+        </span>
+        <span class="bull">
+        ·</span>
+        2022-4-27<span class="bull">
+        ·</span>
+      <span id="busuanzi_value_page_pv"></span>次阅读</p>
+    </header>
   </div>
-  <header class="pattern-header ">
-    <h1 class="cat-title">通信.zh</h1>
-    <span class="cat-des">
-      <p>通信.en</p>
-    </span>
-  </header>
-</div>
+
 <div id="content" class="site-content">
   <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
-      
-  <!-- 首页默认取最最新文章集 -->
-  
-    <article class="post post-list" itemscope="" itemtype="https://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2022/04/27/%E6%97%A0%E7%BA%BF%E4%BF%A1%E5%8F%B7%E6%B3%A2%E5%BD%A2%E5%8F%91%E7%94%9F%E5%99%A8-communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+        
+        <div class="entry-content">
+          <p>这个模块感觉平时很少用到，一般看时域图就是直接用plot，频域先做个FFT再plot 或者用<code>pwelch()</code></p>
+<p>这个模块以一种交互式界面（APP）出现的，用于<strong>创建</strong>、削弱、<strong>可视化</strong>和导出调制波形。</p>
+
         </div>
-        <img width="150" height="150" src="https://s2.loli.net/2022/04/28/s8bUNcpEZrxFgKq.png" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" >
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2022/04/27/%E6%97%A0%E7%BA%BF%E4%BF%A1%E5%8F%B7%E6%B3%A2%E5%BD%A2%E5%8F%91%E7%94%9F%E5%99%A8-communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">
-    无线信号波形发生器-communication toolbox 学习记录（三）</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2022-4-27</div>
-    <p>
-    </p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2022/04/27/%E6%97%A0%E7%BA%BF%E4%BF%A1%E5%8F%B7%E6%B3%A2%E5%BD%A2%E5%8F%91%E7%94%9F%E5%99%A8-communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
-  
-    <article class="post post-list" itemscope="" itemtype="https://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2022/04/22/turbo%E7%A0%81-Turbo-Codes-matlab-%E5%AD%A6%E4%B9%A0/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
+        <!-- .entry-content -->
+        <div class="single-reward">
+          <div class="reward-open">赏
+            <div class="reward-main">
+              <ul class="reward-row">
+                <li class="alipay-code"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/custom/donate/AliPayQR.jpg"></li>
+                <li class="wechat-code"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/custom/donate/WeChanQR.jpg"></li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <img width="150" height="150" src="https://s2.loli.net/2022/04/22/LUo2pfNlRyFKGBr.png" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" >
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2022/04/22/turbo%E7%A0%81-Turbo-Codes-matlab-%E5%AD%A6%E4%B9%A0/">
-    turbo码 编码器(Turbo Encoder) matlab 学习</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2022-4-22</div>
-    <p>
-    </p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2022/04/22/turbo%E7%A0%81-Turbo-Codes-matlab-%E5%AD%A6%E4%B9%A0/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
+      </article>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
+        
+          
+            <div class="post-nepre half previous">
+          
+            <a href="/2022/05/11/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89%E6%A6%82%E8%BF%B0/" rel="prev">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/05/12/qMxpGZJHSl4AuC7.png" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://s2.loli.net/2022/05/12/qMxpGZJHSl4AuC7.png">
+              </div>
+              <span class="label">
+              Previous Post</span>
+              <div class="info">
+                <h3>
+                语音信号处理（一）</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+        
+          
+            <div class="post-nepre half next">
+          
+            <a href="/2022/04/22/turbo%E7%A0%81-Turbo-Codes-matlab-%E5%AD%A6%E4%B9%A0/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/04/22/LUo2pfNlRyFKGBr.png" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://s2.loli.net/2022/04/22/LUo2pfNlRyFKGBr.png">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                turbo码 编码器(Turbo Encoder) matlab 学习</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
+      <!--
+  原来 ：
+<script src="//cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js"></script>
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "",
+        appKey: "",
+        path: window.location.pathname,
+        placeholder: "快来留言鸭~ ..."
+      })
+  }
+</script>
+ -->
+
+
+  <div id="vcomments"></div>
+  <!-- 先引入样式,从footer提前 -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js"></script>
+  <!-- 评论框美化 -->
+  <script>
+      new Valine({
+          el: '#vcomments',
+          appId: "DpQvbSVQXSeUV8lRSV5zHiOY-gzGzoHsz",
+          appKey: "j8tFI5wuIwD7gTt7KJe5ohod",
+         notify: 'false' === 'false',
+         verify: 'true' === 'true',
+         visitor: 'false' === 'false',
+          path: window.location.pathname,
+          verify: true,
+          avatar: 'monsterid',//小怪物头像
+          placeholder: "你是我一生只会遇见一次的惊喜 ..."  
+      });
+      //   自定义邮箱审核规则
+      document.body.addEventListener('click', function(e) {
+          if (e.target.classList.contains('vsubmit')) {
+              const email = document.querySelector('input[type=email]');
+              const nick = document.querySelector('input[name=nick]');
+              const reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+              if (!email.value || !nick.value || !reg.test(email.value)) {
+                  const str = `<div class="valert text-center"><div class="vtext">请填写正确的昵称和邮箱！</div></div>`;
+                  const vmark = document.querySelector('.vmark');
+                  vmark.innerHTML = str;
+                  vmark.style.display = 'block';
+                  setTimeout(function() {
+                      vmark.style.display = 'none';
+                      vmark.innerHTML = '';
+                  }, 2500);
+              }
+          }
+      });
+      // 点击回复直接评论,官方版本点击回复时都是跳回到页面上方的评论框进行回复，评论框是固定不动的
+      // 参考https://immmmm.com/valine-diy,用到jQuery
+      $(document).ready(function(){
+          //$('.vemoji-btn').text('😀');
+          $("#vcomments").on('click', 'span.vat',function(){
+              $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+              $('textarea#veditor').focus();
+          })
+      })
+  </script>
+  <!-- 今日诗词：随机返回一句古诗词名句的接口，宅到用来做 Valine 的 placeholder 显示内容 -->
+  <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+  <script type="text/javascript">
+      jinrishici.load(function(result) {
+          var jrsc_plac =  result.data.content + "\n「" + result.data.origin.title + "」" + result.data.origin.dynasty + " · " + result.data.origin.author
+          document.getElementById("veditor").setAttribute("placeholder",jrsc_plac);
+      });
+  </script>
   
-    <article class="post post-list" itemscope="" itemtype="https://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2022/03/27/%E9%80%9A%E4%BF%A1%E4%BB%BF%E7%9C%9F%E5%9F%BA%E7%A1%80-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%BA%8C/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
-        </div>
-        <img width="150" height="150" src="https://s2.loli.net/2022/03/28/qlVNcWvT3dgf1mr.png" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" >
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2022/03/27/%E9%80%9A%E4%BF%A1%E4%BB%BF%E7%9C%9F%E5%9F%BA%E7%A1%80-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%BA%8C/">
-    Get Started with Communications Toolbox -Communications Toolbox 学习系列（二）</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2022-3-27</div>
-    <p>
-    </p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2022/03/27/%E9%80%9A%E4%BF%A1%E4%BB%BF%E7%9C%9F%E5%9F%BA%E7%A1%80-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%BA%8C/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
   
-    <article class="post post-list" itemscope="" itemtype="https://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2022/03/17/OFDM-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%B8%80/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
-        </div>
-        <img width="150" height="150" src="https://s2.loli.net/2022/03/18/eyjk9Mdng4VTfS8.jpg" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" >
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2022/03/17/OFDM-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%B8%80/">
-    Get Started with Communications Toolbox -Communications Toolbox 学习系列（一）</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2022-3-17</div>
-    <p>
-    </p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2022/03/17/OFDM-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%B8%80/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
   
 
 
-      <div class="clearer">
-      </div>
-    </main>
-    <!--  -->
-    
-  </div>
+
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+          <a href="/about/" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/custom/avatar.jpg" itemprop="image" alt="differencer" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="/about/" itemprop="url" rel="author">differencer</a>
+            </h3>
+          </div>
+        </div>
+        <hr>
+        <p><i class="iconfont icon-write"></i></p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
 </div>
 
-<!-- 
-  
-    <article class="post post-list" itemscope="" itemtype="https://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2022/04/27/%E6%97%A0%E7%BA%BF%E4%BF%A1%E5%8F%B7%E6%B3%A2%E5%BD%A2%E5%8F%91%E7%94%9F%E5%99%A8-communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
-        </div>
-        <img width="150" height="150" src="https://s2.loli.net/2022/04/28/s8bUNcpEZrxFgKq.png" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" >
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2022/04/27/%E6%97%A0%E7%BA%BF%E4%BF%A1%E5%8F%B7%E6%B3%A2%E5%BD%A2%E5%8F%91%E7%94%9F%E5%99%A8-communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">
-    无线信号波形发生器-communication toolbox 学习记录（三）</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2022-4-27</div>
-    <p>
-    </p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2022/04/27/%E6%97%A0%E7%BA%BF%E4%BF%A1%E5%8F%B7%E6%B3%A2%E5%BD%A2%E5%8F%91%E7%94%9F%E5%99%A8-communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
-  
-    <article class="post post-list" itemscope="" itemtype="https://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2022/04/22/turbo%E7%A0%81-Turbo-Codes-matlab-%E5%AD%A6%E4%B9%A0/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
-        </div>
-        <img width="150" height="150" src="https://s2.loli.net/2022/04/22/LUo2pfNlRyFKGBr.png" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" >
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2022/04/22/turbo%E7%A0%81-Turbo-Codes-matlab-%E5%AD%A6%E4%B9%A0/">
-    turbo码 编码器(Turbo Encoder) matlab 学习</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2022-4-22</div>
-    <p>
-    </p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2022/04/22/turbo%E7%A0%81-Turbo-Codes-matlab-%E5%AD%A6%E4%B9%A0/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
-  
-    <article class="post post-list" itemscope="" itemtype="https://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2022/03/27/%E9%80%9A%E4%BF%A1%E4%BB%BF%E7%9C%9F%E5%9F%BA%E7%A1%80-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%BA%8C/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
-        </div>
-        <img width="150" height="150" src="https://s2.loli.net/2022/03/28/qlVNcWvT3dgf1mr.png" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" >
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2022/03/27/%E9%80%9A%E4%BF%A1%E4%BB%BF%E7%9C%9F%E5%9F%BA%E7%A1%80-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%BA%8C/">
-    Get Started with Communications Toolbox -Communications Toolbox 学习系列（二）</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2022-3-27</div>
-    <p>
-    </p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2022/03/27/%E9%80%9A%E4%BF%A1%E4%BB%BF%E7%9C%9F%E5%9F%BA%E7%A1%80-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%BA%8C/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
-  
-    <article class="post post-list" itemscope="" itemtype="https://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2022/03/17/OFDM-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%B8%80/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
-        </div>
-        <img width="150" height="150" src="https://s2.loli.net/2022/03/18/eyjk9Mdng4VTfS8.jpg" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" >
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2022/03/17/OFDM-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%B8%80/">
-    Get Started with Communications Toolbox -Communications Toolbox 学习系列（一）</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2022-3-17</div>
-    <p>
-    </p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2022/03/17/OFDM-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%B8%80/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
-  
 
- -->
+
     </div>    
     <div class="ins-search">
     <div class="ins-search-mask"></div>

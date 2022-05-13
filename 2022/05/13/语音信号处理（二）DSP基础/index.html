@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   
-  <title itemprop="name">Category: 通信 | t&#39;blog</title>
+  <title itemprop="name">语音信号处理（二）DSP基础 | t&#39;blog</title>
   
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -376,303 +376,314 @@
   </div>
 </header>
 
-      
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
 <div class="pattern-center-blank"></div>
-<div class="pattern-center ">
-  <div class="pattern-attachment-img">
-    <img data-src="通信.img" class="lazyload" onerror="imgError(this,3)" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
+
+  <div class="pattern-center single-center">
+    <!-- 有配图默认渲染第一张 -->
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://s2.loli.net/2022/05/12/qMxpGZJHSl4AuC7.png);" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/05/12/qMxpGZJHSl4AuC7.png">
+    </div>
+    <header class="pattern-header single-header">
+      <h1 class="entry-title">
+      语音信号处理（二）DSP基础</h1>
+      <p class="entry-census">
+        <span>
+          <a href="/about/">
+            <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/custom/avatar.jpg">
+          </a>
+        </span>
+        <span>
+          <a href="/about/">differencer</a>
+        </span>
+        <span class="bull">
+        ·</span>
+        2022-5-13<span class="bull">
+        ·</span>
+      <span id="busuanzi_value_page_pv"></span>次阅读</p>
+    </header>
   </div>
-  <header class="pattern-header ">
-    <h1 class="cat-title">通信.zh</h1>
-    <span class="cat-des">
-      <p>通信.en</p>
-    </span>
-  </header>
-</div>
+
 <div id="content" class="site-content">
   <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
-      
-  <!-- 首页默认取最最新文章集 -->
-  
-    <article class="post post-list" itemscope="" itemtype="https://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2022/04/27/%E6%97%A0%E7%BA%BF%E4%BF%A1%E5%8F%B7%E6%B3%A2%E5%BD%A2%E5%8F%91%E7%94%9F%E5%99%A8-communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+        
+        <div class="entry-content">
+          <h1 id="2、DSP基础"><a href="#2、DSP基础" class="headerlink" title="2、DSP基础"></a>2、DSP基础</h1><h2 id="2-1-DSP-基本运算"><a href="#2-1-DSP-基本运算" class="headerlink" title="2.1 DSP 基本运算"></a>2.1 DSP 基本运算</h2><p>模拟数据——》采样——》量化——》编码——》数字信号</p>
+<h3 id="线性卷积（-linear-convolution）"><a href="#线性卷积（-linear-convolution）" class="headerlink" title="线性卷积（ linear convolution）"></a>线性卷积（ linear convolution）</h3><p>$y(n)&#x3D;\sum_{m&#x3D;-\infty}^{\infty} x(m) h(n-m)&#x3D;x(n) * h(n)$</p>
+<p>卷积在图形表示上可分为四步：翻褶、移位、相乘、相加</p>
+<p>在数字信号处理当中 信号通过一个线性时不变系统被抽象为一个卷积操作</p>
+<p>圆周移位（circular shift）</p>
+<ul>
+<li>等价于经过周期延拓，平移后加窗</li>
+</ul>
+<h3 id="圆周卷积（circular-convolution）"><a href="#圆周卷积（circular-convolution）" class="headerlink" title="圆周卷积（circular convolution）"></a>圆周卷积（circular convolution）</h3><ul>
+<li>如果$x_1(n)$和$x_2(n)$ 都是长度为N的有限长序列</li>
+<li>$X_1(k)&#x3D;\operatorname{DFT}\left[x_{1}(n)\right] \quad X_{2}(k)&#x3D;\operatorname{DFT}\left[x_{2}(n)\right]$ </li>
+<li>且 $Y(k)&#x3D;X_{1}(k) X_{2}(k)$<br>那么<br>$$\begin{aligned} y(n)&#x3D;\operatorname{IDFT}[Y(k)] &amp;&#x3D;\left[\sum_{m&#x3D;0}^{N-1} x_{1}(m) x_{2}((n-m))<em>{N}\right] R</em>{N}(n) \ &amp;&#x3D;\left[\sum_{m&#x3D;0}^{N-1} x_{2}(m) x_{1}((n-m))<em>{N}\right] R</em>{N}(n) \end{aligned}$$<br>定义为$x_1(n)$和$x_2(n)$的圆周卷积。</li>
+</ul>
+<p>从定义也可以看出DSP种那个经典的结论：<strong>时域上的卷积为频域的乘积</strong>，这里的卷积是指圆周卷积操作！！</p>
+<p>注意：与线性卷积相比，圆周卷积多了周期延拓和取主值序列两个步骤。因此必须指定圆周卷积的点数N。<br>N也叫<strong>主值区间</strong>，做圆周卷积时，这个参数时必要的</p>
+<p>由于卷积运算相当复杂，所以当数据比较长时求卷积的操作等价于：先将两个输入数据分别求DFT转到频域在相乘，再IDFT 转到时域，这样来求卷积，大大减少时域卷积的运算量。</p>
+<p>但是一般我们要的是线性卷积的结果，怎么通过圆周卷积求线性卷积呢？ 发现当做N2点的圆周卷积时，N1&gt;&#x3D;N2时，圆周卷积的<strong>后</strong>N1-N2+1个点与线性卷积相同，可以通过补零的操作 转换。</p>
+<h3 id="线性相关（liear-correlation）"><a href="#线性相关（liear-correlation）" class="headerlink" title="线性相关（liear correlation）"></a>线性相关（liear correlation）</h3><p>$r_{x y}(m)&#x3D;\sum_{n&#x3D;-\infty}^{\infty} x(n) y^{*}(n-m)$</p>
+<p>相比于卷积的式子：少了翻褶的操作，淡多了一个求共轭的操作</p>
+<h3 id="圆周相关（circular-correlation）"><a href="#圆周相关（circular-correlation）" class="headerlink" title="圆周相关（circular correlation）"></a>圆周相关（circular correlation）</h3><p>前面与圆周卷积条件相同<br>如果$R_{x y}(k)&#x3D;X(k) Y^{<em>}(k)$<br>$r_{x y}(m)&#x3D;I D F T\left[R_{x y}(k)\right]&#x3D;\sum_{n&#x3D;0}^{N-1} y^{</em>}(n) x((n+m))<em>{N} R</em>{N}(m)&#x3D;\sum_{n&#x3D;0}^{N-1} x(n) y^{*}((n-m))<em>{N} R</em>{N}(m)$<br>称$r_{x y}(m)$是$x(n)$和$y(n)$的圆周相关。</p>
+<p>圆周相关与线性相关关系<br>一般的，如果两个有限长序列的长度为N和 N2，且满足N≥ N2，则有圆周相关的<strong>前</strong>N-N2＋1个点，与线性相关的结果一致。（因为少了翻褶操作）</p>
+<h3 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h3><p>卷积神经网络 卷积<br>二维卷积：<br>$h(i, j)&#x3D;\sum_{u} \sum_{v} f(u, v) g(i-u, j-v)$</p>
+<p>举例来说就是<br>f是输入二维的数据，g是卷积核<br>$f&#x3D;\left[\begin{array}{ll}f_{0,0} &amp; f_{0,1} \ f_{1,0} &amp; f_{1,1}\end{array}\right]<br>\quad g&#x3D;\left[\begin{array}{ll}g_{0,0} &amp; g_{0,1} \ g_{1,0} &amp; g_{1,1}\end{array}\right]$</p>
+<p><img src="https://s2.loli.net/2022/05/12/RpDL5GzQsFVb2Y3.png" alt="二维卷积举例"></p>
+<p>步骤就是</p>
+<ul>
+<li>先把输入的f矩阵扩展，扩展大小根据g决定，如g是一个N*M的阵，上（下）层就多N-1行，左右就多M-1列，填零。</li>
+<li>把g矩阵按各个维度翻转（<code>如果不翻转就是二维的互相关操作</code>）</li>
+<li>做类似于互相关（对应元素相乘再相加）的操作 <ul>
+<li>$h_{0,0}&#x3D;0<em>g_{1,1}+0</em>g_{1,0}+0*g_{0,1}+f_{0,0}*g_{0,0}$</li>
+<li>$h_{0,1}&#x3D;0<em>g_{1,1}+0</em>g_{1,0}+f_{0,0}*g_{0,1}+f_{0,1}*g_{0,0}$</li>
+<li>……</li>
+</ul>
+</li>
+</ul>
+<p>彩色图片有R（red）G（green）B（blue）三个通道，每个通道取值为[0-255]<br>灰度图片 与RGB换算关系: $gray&#x3D;R<em>0.299+G</em>0.587+B*0.114$</p>
+<p>二维卷积应用举例：<br>Prewitt算法的边缘检测</p>
+<ul>
+<li>步骤一、获取卷积核<ul>
+<li>横向边缘检测卷积核<br>$f1&#x3D;\left[\begin{array} {} 1 &amp; 1  &amp; 1 \ 0 &amp; 0 &amp; 0 \ -1&amp;-1&amp;-1\end{array}\right]$<br>与他做卷积相当于 上下两行（隔一行）做差，</li>
+<li>同理可得横向边缘卷积核<br>$f2&#x3D;\left[\begin{array} {} 1 &amp; 0  &amp; -1 \ 1 &amp; 0 &amp; -1 \ 1&amp;0&amp;-1\end{array}\right]$</li>
+</ul>
+</li>
+<li>步骤二： 将图像分别与卷积核做卷积 假设 得到 G 和G’ </li>
+<li>步骤三：将G与G’各个元素做取绝对值 得到|G| |G’|</li>
+<li>步骤四：最终 用$P(x,y)&#x3D;max{ |G(x,y)| ,|G’(x,y)|}$ 得到边缘检测图</li>
+</ul>
+<p>此外：CNN中的卷积 ，在前向传播时采用与卷积核的互相关，反向误差传播采用二维卷积</p>
+<h2 id="2-2、采样定理"><a href="#2-2、采样定理" class="headerlink" title="2.2、采样定理"></a>2.2、采样定理</h2><p>时域采样等价于频域上的对信号的周期延拓， 延拓周期为$f_s&#x3D;\frac{1}{T}$<br>(以$\Omega$为单位时，延拓周期是$\Omega_s&#x3D;\frac{2\pi}{T}$)<br>著名的奈奎斯特采样频率：能无失真恢复的条件：采样频域大于信号最高频率的两倍</p>
+<h3 id="采样定理的推导"><a href="#采样定理的推导" class="headerlink" title="采样定理的推导"></a>采样定理的推导</h3><p>采样信号可以视为原始信号与 周期冲击信号的乘积<br>$$<br>\hat{x}<em>{a}(t)&#x3D;x</em>{a}(t) \cdot \delta_{T}(t)<br>$$<br>等式两端取DTFT<br>$$<br>\hat{X}<em>{a}(j \Omega)&#x3D;\frac{1}{2 \pi}\left[\Delta</em>{T}(j \Omega) * X_{a}(j \Omega)\right]&#x3D;\frac{1}{T} \sum_{k&#x3D;-\infty}^{\infty} X_{a}\left(j\left(\Omega-k \Omega_{s}\right)\right)<br>$$<br>这一步的推导见下面<br>首先要求$\delta_{T}(t)$的 傅里叶变换是什么，在离散域就是DTFT，<br>由于$\delta_{T}(t)$是周期信号，那么 他在时域上就可以写成傅里叶级数的形式：</p>
+<ul>
+<li>$\delta_{T}(t)&#x3D;\sum_{k&#x3D;-\infty}^{\infty} A_{k} e^{j k \Omega_{s} t}$<br>其中 $A_{k}$ 响应频率 波 的幅度、$\Omega_{s}$ 是采样频率<br>$\begin{aligned} A_{k} &amp;&#x3D;\frac{1}{T} \int_{T} \delta_{T}(t) e^{-j k \Omega_{s} t} d t&#x3D;\frac{1}{T} \int_{T} \sum_{m&#x3D;-\infty}^{\infty} \delta(t-m T) e^{-j k \Omega_{s} t} d t \ &amp;&#x3D;\frac{1}{T} \int_{T} \delta(t) e^{-j k \Omega_{s} t} d t&#x3D;\frac{1}{T} \end{aligned}$ 倒数第二个等号：因为在 一个周期内，只有一个冲激信号</li>
+</ul>
+<p>那么 对$\delta_{T}(t)$的 DTFT 相当于对$\delta_{T}(t)&#x3D;\frac{1}{T} \sum_{k&#x3D;-\infty}^{\infty}  e^{j k \Omega_{s} t}$求DTFT<br>而$DTFT{e^{j k \Omega_{s} t}}&#x3D;2\pi\delta(j（\Omega-k\Omega_s）)$<br>所以 $DTFT{\delta_{T}(t)}&#x3D;\frac{2\pi}{T}\sum_{k&#x3D;-\infty}^{\infty}\delta(j（\Omega-k\Omega_s）)$<br>将此结果与$X_{a}(j \Omega)$ 做卷积 就可以得到上式采样定理的结果</p>
+<p>对于一个16kHz 的语音数据，将其降采样到8kHz </p>
+<ul>
+<li>采用抽取的方式降采样</li>
+<li>但是抽取前一定要通过一个抗混叠滤波器（因为降采样会频谱会扩展，有可能发生频谱混叠） <a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_37182342/article/details/89918944">举例</a></li>
+</ul>
+<p>采样定理的延申——“空域采样定理”</p>
+<table>
+<thead>
+<tr>
+<th>时域</th>
+<th>空域</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>时域采样序列（冲击函数序列）</td>
+<td>麦克风阵列</td>
+</tr>
+<tr>
+<td>采样率$fs$</td>
+<td>麦克风之间的间距$d$</td>
+</tr>
+<tr>
+<td>信号的最高频率 $fh$</td>
+<td>信号最小波长$\lambda_{min}$</td>
+</tr>
+<tr>
+<td>$fs&gt;2f_h $采样定理</td>
+<td>$d&lt;\lambda_{min}&#x2F;2$ 也叫半波长理论</td>
+</tr>
+</tbody></table>
+<h3 id="傅里叶变换"><a href="#傅里叶变换" class="headerlink" title="傅里叶变换"></a>傅里叶变换</h3><h4 id="傅里叶级数"><a href="#傅里叶级数" class="headerlink" title="傅里叶级数"></a>傅里叶级数</h4><p>本质上可以视为  把一个周期信号 用一系列正弦余弦波表示，整数倍频率的正弦余弦波可以视为 一组标准正交基， 正交基的系数可以通过”相关操作”（或者说内积的方式）求得<br>$$x(t)&#x3D;\sum_{k&#x3D;-\infty}^{\infty} X\left(j k \Omega_{0}\right) e^{j k \Omega_{0} t}$$<br>这里说的系数$X\left(j k \Omega_{0}\right)$系数(相当于上一小节采样定理推导中的$A_k$，当信号定下来以后只与$k$有关)通过下式求得:<br>$$X\left(j k \Omega_{0}\right)&#x3D;\frac{1}{T_{0}} \int_{-T_{0} &#x2F; 2}^{T_{0} &#x2F; 2} x(t) e^{-j k \Omega_{0} t} d t$$，可以看到本质上就是通过 一个周期内<strong>信号</strong>与<strong>正交基</strong>的相关（内积）操作，来”抽取“对应频率的数据。</p>
+<p><strong>傅里叶级数说明：周期信号对应的是离散谱</strong>，仅在频率为符号频率的整数倍上有值，这里所求的系数就是离散谱上每个整数倍周期的幅度，以及相位。</p>
+<h4 id="连续傅里叶变换"><a href="#连续傅里叶变换" class="headerlink" title="连续傅里叶变换"></a>连续傅里叶变换</h4><p>将 周期信号的傅里叶级数 的周期 拓宽之周期无穷大 变成非周期信号，傅里叶级数就变成了连续傅里叶变换<br>$$X(j \Omega)&#x3D;\int_{-\infty}^{\infty} x(t) e^{-j \Omega t} d t$$<br>$$x(t)&#x3D;\frac{1}{2 \pi} \int_{-\infty}^{\infty} X(j \Omega) e^{j \Omega t} d \Omega$$<br>第一个式子就相当于求 上一小节 傅里叶级数的 系数 的公式 意义上：仍然是通过内积的方式，“抽取”对应频率分量的系数。</p>
+<p>与傅里叶级数不同的是，由于<strong>时域信号非周期，因此频域中是连续谱</strong></p>
+<h4 id="离散时间傅里叶变换（DTFT）"><a href="#离散时间傅里叶变换（DTFT）" class="headerlink" title="离散时间傅里叶变换（DTFT）"></a>离散时间傅里叶变换（DTFT）</h4><p>离散非周期信号x(n)的DTFT可以表示为：<br>$$X\left(e^{j \omega}\right)&#x3D;\sum_{n&#x3D;-\infty}^{\infty} x(n) e^{-j \omega n}$$<br>$$x(n)&#x3D;\frac{1}{2 \pi} \int_{-\pi}^{\pi} X\left(e^{j \omega}\right) e^{j \omega n} d \omega$$<br>注意，这里不再采用模拟频率中的大写$\Omega$,而是采用小写的$\omega&#x3D;2\pi$,<br>因为在<strong>连续信号</strong>是<strong>不涉及采样</strong>的<br>$\Omega&#x3D;2\pi f&#x3D;2\pi&#x2F;T$ 一般不会写成$\Omega&#x3D;2\pi f_s&#x3D;2\pi&#x2F;T_s$ ,因为f 或者T 是连续信号本身的属性，不是采样频率，或者采样周期。</p>
+<p>连续信号经过采样后变成了离散信号，所以 <strong>离散（采样）信号本身是带有采样频率这一隐藏属性</strong> 故采用归一化的频率$\omega&#x3D;\Omega&#x2F;f_s&#x3D;2\pi f&#x2F;f_s$ $f$是信号本身的频率，根据采样定律，信号本身最高频率不能超过采样频率的一半（否则就有混叠），所以$\omega$的取值范围只能是{[$-\pi$,$\pi$]. 所以研究数字信号的频域的时候只用研究[$-\pi$,$\pi$]即可。（很容易得$X\left(e^{j \omega}\right)$s是一个周期为$2\pi$的函数，其他周期都是[$-\pi$,$\pi$]的周期延拓）</p>
+<p>PS：DTFT 与 傅里叶级数形式上非常像，其实这两个就是一对正反变换</p>
+<h4 id="离散傅里叶变换-DFT"><a href="#离散傅里叶变换-DFT" class="headerlink" title="离散傅里叶变换 DFT"></a>离散傅里叶变换 DFT</h4><p>也叫时间离散、频域离散的傅里叶变换<br>与DTFT的区别就是将 DTFT研究的非周期信号改为研究周期信号，频域变成了离散信号<br>$$<br>\begin{aligned}<br>&amp;X(k)&#x3D;\sum_{n&#x3D;0}^{N-1} x(n) e^{-j \frac{2 \pi}{N} n k}&#x3D;\sum_{n&#x3D;0}^{N-1} x(n) W_{N}^{n k} \<br>&amp;x(n)&#x3D;\frac{1}{N} \sum_{k&#x3D;0}^{N-1} X(k) e^{j \frac{2 \pi}{N} n k}&#x3D;\frac{1}{N} \sum_{k&#x3D;0}^{N-1} X(k) W_{n}^{-n k}<br>\end{aligned} \quad W_{N}&#x3D;e^{-j \frac{2 \pi}{N}}<br>$$<br>DFT针对有限长信号或者周期信号<br>DFT相当于对DTFT中的正变换加以采样，造成时域信号的周期性，因此时域信号应限制在一个周期内。凡是用到离散傅里叶变换的时候，有限长序列都是作为周期序列的一个周期来表示的，都隐含有周期性意义。</p>
+<p>总结：<br><strong>一个域上的离散性对应另一个域的周期性<br>一个域上的周期性对应另一个域的离散性</strong></p>
+<p>离散傅里叶变换也可以用矩阵来表示</p>
+<p>$$\mathbf{F}&#x3D;\left[\begin{array}{ccccc}1 &amp; 1 &amp; 1 &amp; \ldots &amp; 1 \ 1 &amp; W_{N} &amp; W_{N}^{2} &amp; \cdots &amp; W_{N}^{N-1} \ \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots \ 1 &amp; W_{N}^{N-1} &amp; W_{N}^{2(N-1)} &amp; \cdots &amp; W_{N}^{(N-1)(N-1)}\end{array}\right] \quad W_{N}&#x3D;e^{-j \frac{2 \pi}{N}}$$</p>
+<p>$$\mathbf{F}^{H} \mathbf{F}&#x3D;\mathbf{F F}^{H}&#x3D;N \mathbf{I} \quad \quad  \mathbf{F}^{-1}&#x3D;\frac{1}{N}\mathbf{F}^{H}$$</p>
+<p>那么DFT以及IDFT可以表示为<br>$$\mathbf{X}(k)&#x3D;\mathbf{F} \mathbf{x}(n)$$<br>$$\mathbf{x}(n)&#x3D;\mathbf{F}^{-1}\mathbf{X}(k)$$</p>
+<p>总结<br><img src="https://s2.loli.net/2022/05/12/qMxpGZJHSl4AuC7.png"></p>
+<p>注意：</p>
+<ul>
+<li>面对四种傅里叶变换时，要用一种”抽取”的思想看待所有公式，</li>
+<li>离散、周期 的关系</li>
+</ul>
+<h3 id="2-3、傅里叶变换的几个问题"><a href="#2-3、傅里叶变换的几个问题" class="headerlink" title="2.3、傅里叶变换的几个问题"></a>2.3、傅里叶变换的几个问题</h3><h4 id="频谱泄露"><a href="#频谱泄露" class="headerlink" title="频谱泄露"></a>频谱泄露</h4><p>频谱泄漏是指由于<strong>信号截断</strong>造成的原始信号<strong>频谱扩散</strong>现象。</p>
+<p>产生频谱泄漏的原因是对信号的截断。<strong>信号的截断</strong>相当于在原始信号z(n)与一个<strong>窗函数u(n)相乘</strong>，在频域中相当于各自<strong>频谱的卷积</strong>过程。卷积的结果造成原始信号频谱的“扩散”(或拖尾、变宽），这就是频谱泄漏。</p>
+<p>加窗是因为DFT只能对有限长或者说周期信号进行变换，对于后者还具体分为周期截断和非周期截断，非周期阶段会造成频谱泄露，可以采用不同的窗函数来缓解频谱的泄露</p>
+<p>所以 在对语音信号分帧加窗 的过程中避免使用频域拖尾严重的窗函数，采用如汉明窗之类的窗函数：<br>$w_{r e c}(n)&#x3D;R_{N}(n)$<br>$w_{\text {hamming }}(n)&#x3D;\left[0.54-0.46 \cos \left(\frac{2 \pi n}{N-1}\right)\right] R_{N}(n)$</p>
+<h4 id="栅栏效应"><a href="#栅栏效应" class="headerlink" title="栅栏效应"></a>栅栏效应</h4><p>因为DFT计算频谱只限制在<strong>离散点上的频谱</strong>，也就是F0的整数倍处的谱，而无法看到连续频谱函数，这就像通过一个“栅栏”观看景象一样，只能在离散点的地方看到真实景象。这种现象称为“栅栏效应”。</p>
+<p>减小栅栏效应的方法就是要是频域抽样更密，即<strong>增加频域抽样点数</strong>，就好像距离“栅栏”的距离边远一些。在不改变时域信号的情况下，必然是在<strong>时域信号末端补零</strong>。补零后的时域数据，在频谱中的谱线更密，原来看不到的谱分量就有可能看到了。</p>
+<h4 id="语音信号DFT的共轭对称性"><a href="#语音信号DFT的共轭对称性" class="headerlink" title="语音信号DFT的共轭对称性"></a>语音信号DFT的共轭对称性</h4><p>时域中的语音信号，经过离散傅里叶变换DFT后的频谱是共轭对称的（因为语音信号是实信号）</p>
+
         </div>
-        <img width="150" height="150" src="https://s2.loli.net/2022/04/28/s8bUNcpEZrxFgKq.png" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" >
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2022/04/27/%E6%97%A0%E7%BA%BF%E4%BF%A1%E5%8F%B7%E6%B3%A2%E5%BD%A2%E5%8F%91%E7%94%9F%E5%99%A8-communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">
-    无线信号波形发生器-communication toolbox 学习记录（三）</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2022-4-27</div>
-    <p>
-    </p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2022/04/27/%E6%97%A0%E7%BA%BF%E4%BF%A1%E5%8F%B7%E6%B3%A2%E5%BD%A2%E5%8F%91%E7%94%9F%E5%99%A8-communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
-  
-    <article class="post post-list" itemscope="" itemtype="https://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2022/04/22/turbo%E7%A0%81-Turbo-Codes-matlab-%E5%AD%A6%E4%B9%A0/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
+        <!-- .entry-content -->
+        <div class="single-reward">
+          <div class="reward-open">赏
+            <div class="reward-main">
+              <ul class="reward-row">
+                <li class="alipay-code"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/custom/donate/AliPayQR.jpg"></li>
+                <li class="wechat-code"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/custom/donate/WeChanQR.jpg"></li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <img width="150" height="150" src="https://s2.loli.net/2022/04/22/LUo2pfNlRyFKGBr.png" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" >
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2022/04/22/turbo%E7%A0%81-Turbo-Codes-matlab-%E5%AD%A6%E4%B9%A0/">
-    turbo码 编码器(Turbo Encoder) matlab 学习</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2022-4-22</div>
-    <p>
-    </p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2022/04/22/turbo%E7%A0%81-Turbo-Codes-matlab-%E5%AD%A6%E4%B9%A0/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
+      </article>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
+        
+          
+            <div class="post-nepre half previous">
+          
+            <a href="/2022/05/13/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E4%B8%89%EF%BC%89%E8%87%AA%E9%80%82%E5%BA%94%E6%BB%A4%E6%B3%A2%E6%96%B9%E6%B3%95/" rel="prev">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="">
+              </div>
+              <span class="label">
+              Previous Post</span>
+              <div class="info">
+                <h3>
+                语音信号处理（三）自适应滤波方法</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+        
+          
+            <div class="post-nepre half next">
+          
+            <a href="/2022/05/11/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E4%B8%80%EF%BC%89%E6%A6%82%E8%BF%B0/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/05/12/qMxpGZJHSl4AuC7.png" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://s2.loli.net/2022/05/12/qMxpGZJHSl4AuC7.png">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                语音信号处理（一）</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
+      <!--
+  原来 ：
+<script src="//cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js"></script>
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "",
+        appKey: "",
+        path: window.location.pathname,
+        placeholder: "快来留言鸭~ ..."
+      })
+  }
+</script>
+ -->
+
+
+  <div id="vcomments"></div>
+  <!-- 先引入样式,从footer提前 -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js"></script>
+  <!-- 评论框美化 -->
+  <script>
+      new Valine({
+          el: '#vcomments',
+          appId: "DpQvbSVQXSeUV8lRSV5zHiOY-gzGzoHsz",
+          appKey: "j8tFI5wuIwD7gTt7KJe5ohod",
+         notify: 'false' === 'false',
+         verify: 'true' === 'true',
+         visitor: 'false' === 'false',
+          path: window.location.pathname,
+          verify: true,
+          avatar: 'monsterid',//小怪物头像
+          placeholder: "你是我一生只会遇见一次的惊喜 ..."  
+      });
+      //   自定义邮箱审核规则
+      document.body.addEventListener('click', function(e) {
+          if (e.target.classList.contains('vsubmit')) {
+              const email = document.querySelector('input[type=email]');
+              const nick = document.querySelector('input[name=nick]');
+              const reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+              if (!email.value || !nick.value || !reg.test(email.value)) {
+                  const str = `<div class="valert text-center"><div class="vtext">请填写正确的昵称和邮箱！</div></div>`;
+                  const vmark = document.querySelector('.vmark');
+                  vmark.innerHTML = str;
+                  vmark.style.display = 'block';
+                  setTimeout(function() {
+                      vmark.style.display = 'none';
+                      vmark.innerHTML = '';
+                  }, 2500);
+              }
+          }
+      });
+      // 点击回复直接评论,官方版本点击回复时都是跳回到页面上方的评论框进行回复，评论框是固定不动的
+      // 参考https://immmmm.com/valine-diy,用到jQuery
+      $(document).ready(function(){
+          //$('.vemoji-btn').text('😀');
+          $("#vcomments").on('click', 'span.vat',function(){
+              $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+              $('textarea#veditor').focus();
+          })
+      })
+  </script>
+  <!-- 今日诗词：随机返回一句古诗词名句的接口，宅到用来做 Valine 的 placeholder 显示内容 -->
+  <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+  <script type="text/javascript">
+      jinrishici.load(function(result) {
+          var jrsc_plac =  result.data.content + "\n「" + result.data.origin.title + "」" + result.data.origin.dynasty + " · " + result.data.origin.author
+          document.getElementById("veditor").setAttribute("placeholder",jrsc_plac);
+      });
+  </script>
   
-    <article class="post post-list" itemscope="" itemtype="https://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2022/03/27/%E9%80%9A%E4%BF%A1%E4%BB%BF%E7%9C%9F%E5%9F%BA%E7%A1%80-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%BA%8C/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
-        </div>
-        <img width="150" height="150" src="https://s2.loli.net/2022/03/28/qlVNcWvT3dgf1mr.png" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" >
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2022/03/27/%E9%80%9A%E4%BF%A1%E4%BB%BF%E7%9C%9F%E5%9F%BA%E7%A1%80-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%BA%8C/">
-    Get Started with Communications Toolbox -Communications Toolbox 学习系列（二）</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2022-3-27</div>
-    <p>
-    </p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2022/03/27/%E9%80%9A%E4%BF%A1%E4%BB%BF%E7%9C%9F%E5%9F%BA%E7%A1%80-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%BA%8C/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
   
-    <article class="post post-list" itemscope="" itemtype="https://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2022/03/17/OFDM-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%B8%80/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
-        </div>
-        <img width="150" height="150" src="https://s2.loli.net/2022/03/18/eyjk9Mdng4VTfS8.jpg" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" >
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2022/03/17/OFDM-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%B8%80/">
-    Get Started with Communications Toolbox -Communications Toolbox 学习系列（一）</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2022-3-17</div>
-    <p>
-    </p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2022/03/17/OFDM-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%B8%80/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
   
 
 
-      <div class="clearer">
-      </div>
-    </main>
-    <!--  -->
-    
-  </div>
+
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+          <a href="/about/" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/custom/avatar.jpg" itemprop="image" alt="differencer" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="/about/" itemprop="url" rel="author">differencer</a>
+            </h3>
+          </div>
+        </div>
+        <hr>
+        <p><i class="iconfont icon-write"></i></p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
 </div>
 
-<!-- 
-  
-    <article class="post post-list" itemscope="" itemtype="https://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2022/04/27/%E6%97%A0%E7%BA%BF%E4%BF%A1%E5%8F%B7%E6%B3%A2%E5%BD%A2%E5%8F%91%E7%94%9F%E5%99%A8-communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
-        </div>
-        <img width="150" height="150" src="https://s2.loli.net/2022/04/28/s8bUNcpEZrxFgKq.png" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" >
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2022/04/27/%E6%97%A0%E7%BA%BF%E4%BF%A1%E5%8F%B7%E6%B3%A2%E5%BD%A2%E5%8F%91%E7%94%9F%E5%99%A8-communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">
-    无线信号波形发生器-communication toolbox 学习记录（三）</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2022-4-27</div>
-    <p>
-    </p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2022/04/27/%E6%97%A0%E7%BA%BF%E4%BF%A1%E5%8F%B7%E6%B3%A2%E5%BD%A2%E5%8F%91%E7%94%9F%E5%99%A8-communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%88%E4%B8%89%EF%BC%89/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
-  
-    <article class="post post-list" itemscope="" itemtype="https://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2022/04/22/turbo%E7%A0%81-Turbo-Codes-matlab-%E5%AD%A6%E4%B9%A0/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
-        </div>
-        <img width="150" height="150" src="https://s2.loli.net/2022/04/22/LUo2pfNlRyFKGBr.png" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" >
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2022/04/22/turbo%E7%A0%81-Turbo-Codes-matlab-%E5%AD%A6%E4%B9%A0/">
-    turbo码 编码器(Turbo Encoder) matlab 学习</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2022-4-22</div>
-    <p>
-    </p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2022/04/22/turbo%E7%A0%81-Turbo-Codes-matlab-%E5%AD%A6%E4%B9%A0/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
-  
-    <article class="post post-list" itemscope="" itemtype="https://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2022/03/27/%E9%80%9A%E4%BF%A1%E4%BB%BF%E7%9C%9F%E5%9F%BA%E7%A1%80-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%BA%8C/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
-        </div>
-        <img width="150" height="150" src="https://s2.loli.net/2022/03/28/qlVNcWvT3dgf1mr.png" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" >
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2022/03/27/%E9%80%9A%E4%BF%A1%E4%BB%BF%E7%9C%9F%E5%9F%BA%E7%A1%80-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%BA%8C/">
-    Get Started with Communications Toolbox -Communications Toolbox 学习系列（二）</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2022-3-27</div>
-    <p>
-    </p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2022/03/27/%E9%80%9A%E4%BF%A1%E4%BB%BF%E7%9C%9F%E5%9F%BA%E7%A1%80-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%BA%8C/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
-  
-    <article class="post post-list" itemscope="" itemtype="https://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2022/03/17/OFDM-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%B8%80/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
-        </div>
-        <img width="150" height="150" src="https://s2.loli.net/2022/03/18/eyjk9Mdng4VTfS8.jpg" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" >
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2022/03/17/OFDM-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%B8%80/">
-    Get Started with Communications Toolbox -Communications Toolbox 学习系列（一）</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2022-3-17</div>
-    <p>
-    </p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2022/03/17/OFDM-commmunication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95-%E4%B8%80/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
-  
 
- -->
+
     </div>    
     <div class="ins-search">
     <div class="ins-search-mask"></div>
