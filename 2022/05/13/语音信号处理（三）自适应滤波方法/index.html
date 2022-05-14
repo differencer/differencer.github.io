@@ -395,7 +395,118 @@
           </header>
         
         <div class="entry-content">
-          
+          <p>自适应滤波 是一种理论体系，应用于内容都非常广泛</p>
+<p>滤波器</p>
+<ul>
+<li><p>作用：改变信号的频谱</p>
+<ul>
+<li>模拟滤波器：由R、L、C构成的模拟电路，例如A&#x2F;D前的抗混叠滤波器（anti-alias filter）</li>
+<li>数字滤波器：由数字加法器、乘法器、延时器构成，基于数字信号运算实现。（数字通信系统中，不做特殊说明时 一般都指数字滤波器）</li>
+</ul>
+</li>
+<li><p>自适应滤波器：一种能够根据输入信号自动调整自身参数的数字滤波器。<br>非自适应滤波器：具有静态滤波器系数的数字滤波器，这些静态系数构成了滤波器的传递函数。</p>
+<ul>
+<li>自适应滤波器的应用场景：无法得知输入信号和噪声统计特性的情况（也即非平稳信号）。滤波器自身能够在工作过程中学习或估计信号的统计特性，并以此为依据调整自身参数，以达到某种准则&#x2F;代价函数下的最优滤波效果。此外还能跟踪信号变化。<br><img src="https://s2.loli.net/2022/05/13/SAeY6r5BlkG9Jm3.png"></li>
+</ul>
+</li>
+</ul>
+<h1 id="1、LMS（最小均方误差）算法"><a href="#1、LMS（最小均方误差）算法" class="headerlink" title="1、LMS（最小均方误差）算法"></a>1、LMS（最小均方误差）算法</h1><p>这是一个最基本的自适应滤波的算法，应用多，原理也比较简单。</p>
+<h2 id="1-1、-从N阶线性系统出发"><a href="#1-1、-从N阶线性系统出发" class="headerlink" title="1.1、 从N阶线性系统出发"></a>1.1、 从N阶线性系统出发</h2><p>设一个信号经过噪声因素被接受为$x(n)$</p>
+<p>设接收信号$x(n)$通过了一个N阶滤波器，参数为{$w_i(n)$}，则滤波器输出为：</p>
+<p>$$y(n)&#x3D;\sum_{i&#x3D;0}^{N-1} w_{i}(n) x(n-i)&#x3D;\mathbf{w}^{T}(n) \mathbf{x}(n)&#x3D;\mathbf{x}^{T}(n) \mathbf{w}(n)$$<br>后面两种是卷积结果的向量表示（可以动手写一些是不是这样）<br>其中<br>$$\mathbf{x}(n)&#x3D;[x(n), \quad x(n-1), \quad \ldots \quad x(n-N+1)]^{T}$$<br>$$\mathbf{w}(n)&#x3D;\left[\begin{array}{llll}w_{0}(n), &amp; w_{1}(n), &amp; \ldots &amp; w_{N-1}(n)\end{array}\right]^{T}$$</p>
+<p>注意到，由于滤波器系数$w(n)$是随着输入变化不断“学习”的，所以每个时刻的滤波器系数应当不同,所以写为时间的函数。</p>
+<p><strong>期望输出</strong>为$d(n)$,定义误差信号：<br>$$e(n)&#x3D;d(n)-y(n)&#x3D;d(n)-\mathbf{w}^{T}(n) \mathbf{x}(n)$$<br>我们定义的误差采用的滤波器系数是当前时刻的，这种误差在传统的自适应滤波器算法当中也叫后验误差，这里后验的意思就是算当前误差的时候已经用到了当前时刻的滤波器系数向量了。</p>
+<p>现在已经定义了误差，那么下一步就是<strong>寻找某种优化准则</strong>，以及基于这个准则，<strong>定义一种目标函数</strong>来最小化这个目标函数即可。</p>
+<p>自适应滤波当中最常用的准则就是MMSE（最小均方误差准则），在这种准则下面就可以很自然的定义目标函数:将目标函数写成均方误差的形式，目标函数如下：</p>
+<p>$$<br>J(\mathbf{w})&#x3D;E\left{|e(n)|^{2}\right}&#x3D;E\left{\left|d(n)-\mathbf{w}^{T}(n) \mathbf{x}(n)\right|^{2}\right}<br>$$</p>
+<h2 id="1-2、维纳滤波"><a href="#1-2、维纳滤波" class="headerlink" title="1.2、维纳滤波"></a>1.2、维纳滤波</h2><p>为了最小化目标函数， 需要计算$J(\mathbf{w})$对$\mathbf{w}$的导数，并令导数为零，结果如下：<br>$$<br>E\left{\mathbf{x}(n) \mathbf{x}^{T}(n)\right} \mathbf{w}(n)-E{\mathbf{x}(n) d(n)}&#x3D;\mathbf{R w}-\mathbf{r}&#x3D;\mathbf{0}<br>$$</p>
+<p>其中$\mathbf{R}&#x3D;E\left{\mathbf{x}(n) \mathbf{x}^{T}(n)\right} $,$\mathbf{r}&#x3D;E{\mathbf{x}(n) d(n)}$<br>矩阵$\mathbf{R}$就是<strong>输入的 期望自相关矩阵</strong>，而$\mathbf{r}$是<strong>输入信号与期望信号的 相关向量</strong></p>
+<p>那么再MMSE准则下，最优的滤波器学习系数就是<br>$$<br>\mathbf{w}_{o p t}&#x3D;\mathbf{R}^{-1} \mathbf{r}<br>$$<br>这种滤波器称为Wiener滤波器。Wiener滤波器是均方误差最小意义上的统计最优滤波器。</p>
+<p>Wiener滤波器是一种在信号处理领域极具理论价值的滤波器，但是，在实际应用过程中却又诸多缺陷。</p>
+<ul>
+<li>首先：不适用于非平稳过程（因为 相关矩阵 和相关向量 都是<strong>期望</strong>的形式），语音信号就是非平稳信号</li>
+<li>再求解过程中需要用到信号的所有历史数据（包括自相关矩阵，以及相关向量），当增加一个数据过后，滤波器就要重新求解系数。</li>
+</ul>
+<h2 id="1-3、自适应滤波器（-迭代算法，LMS算法）"><a href="#1-3、自适应滤波器（-迭代算法，LMS算法）" class="headerlink" title="1.3、自适应滤波器（ 迭代算法，LMS算法）"></a>1.3、自适应滤波器（ 迭代算法，LMS算法）</h2><p>由于涉及<strong>数学期望</strong>，在实际应用中，绝大多数情况下我们无法获得信号真实的自相关矩阵以及输入信号与期望输出之间的互相关向量，因此，实际应用中，我们用下式的<strong>瞬时梯度</strong>的<strong>迭代更新方案</strong>，<strong>代替数学期望方案</strong>，<br>$$<br>\hat{\nabla}(n)&#x3D;-2 e(n) \mathbf{x}(n)<br>$$<br>求取的<strong>瞬时梯度（的负梯度方向）代表了滤波器系数应该调整的方向</strong>，<br>于是，我们得到了标准时域LMS算法的更新公式:（也即基于采样点更新的标准LMS算法滤波器系数更新公式）<br>$$<br>\mathbf{w}(n+1)&#x3D;\mathbf{w}(n)+2 \mu \mathbf{x}(n) e(n)<br>$$<br>其中，$\mu $表示调整步长。</p>
+<p>标准LMS算法的执行流程：</p>
+<blockquote>
+<p>步骤：<br>    1) 滤波器初始化：<br>    2) 对每一个新的输入采样 ，计算输出信号<br>    3) 利用期望输出 ，根据<strong>误差公式</strong>计算误差信号 ，得到梯度(3.8)式。<br>    4) 利用<strong>LMS算法的更新公式</strong>更新滤波器系数：<br>    5) 返回步骤 2，直至结束，可以得到输出序列和误差序列。</p>
+</blockquote>
+<p>  LMS算法的基本思想 ——梯度下降</p>
+<ul>
+<li>LMS使用瞬时梯度作为每一步滤波器向量更新的依据，由于瞬时梯度就是目标函数真实梯度的无偏估计，这样这样保证了标准LMS算法的总体更新趋势使目标函数达到最小</li>
+</ul>
+<p>  LMS算法的优缺点：</p>
+<blockquote>
+<p>优点：简单，易于实现<br>    缺点：收敛速度慢（虽然 瞬时梯度是 真实梯度的无偏估计，但是估计的方差不为零，估计方差存在误差（噪声），这种方差的存在导致了LMS收敛速度比较慢）</p>
+</blockquote>
+<h2 id="1-4、LMS衍生算法（一）：-block-LMS-BLMS-分块最小均方算法"><a href="#1-4、LMS衍生算法（一）：-block-LMS-BLMS-分块最小均方算法" class="headerlink" title="1.4、LMS衍生算法（一）： block LMS (BLMS) 分块最小均方算法"></a>1.4、LMS衍生算法（一）： block LMS (BLMS) 分块最小均方算法</h2><ul>
+<li>思想：由于标准的LMS算法 每一个采样点都进行更新，那么有一种思路就是：不必每一个采样点都进行更新，而是累积到一定数量的采样点之后再进行更新，而对于这些block采样点再更新一次滤波器系数。 这样的好处就是每一个block 获取的梯度是 一个block所有采样点梯度的求和，所以得到的梯度仍然是 真实梯度 的无偏估计 ，但是累计的采样点数更多，他的方差会更小。 </li>
+<li>这种 想法与深度学习里面的minibatch的想法一致。</li>
+<li>关于<strong>梯度噪声</strong>，梯度噪声的存在并非完全没有好处，梯度噪声可能会帮助我们跳出一些局部最优值，从而向全局最优的方向进行移动。</li>
+</ul>
+<p>用更多的采样点，更新一次滤波器系数<br>$\mathbf{w}(n+1)&#x3D;\mathbf{w}(n)+2 \mu \mathbf{x}(n) e(n)$<br>$\mathbf{w}(n+2)&#x3D;\mathbf{w}(n+1)+2 \mu \mathbf{x}(n+1) e(n+1)$<br>$\cdots \cdot$<br>$\mathbf{w}(n+L)&#x3D;\mathbf{w}(n+L-1)+2 \mu \mathbf{x}(n+L-1) e(n+L-1)$<br>不难得出<strong>时域LMS的分块更新(block recursion)公式</strong><br>$$\quad \mathbf{w}(n+L)&#x3D;\mathbf{w}(n)+2 \mu \sum_{m&#x3D;0}^{L-1} \mathbf{x}(n+m) e(n+m)$$<br>每 L 点更新一次<br>注意，式中的误差信号是通过<strong>同一个滤波器</strong> 得到的：<br>$$e(n+m)&#x3D;d(n+m)-\mathbf{x}^{T}(n+m) \mathbf{w}(n)$$<br>即$n+m$时刻（$0&lt;&#x3D;m&lt;L$）的误差都是由$n$时刻的滤波器系数得到的，而不是标准LMS中的$n+m$时刻（当前时刻）<br>为了推导方便，我们通常令 L&#x3D;N 也就是跟新块的长度就等于滤波器阶数。</p>
+<p>与标准LMS算法相比，block LMS的更新频率降低了L倍，所以，我们定义一个新的时间索引k 来代替n。$kL&#x3D;n$<br>那么上式的跟新方程可以用下式代替：<br>$$<br>\mathbf{w}(k+1)&#x3D;\mathbf{w}(k)+2 \mu \sum_{m&#x3D;0}^{L-1} \mathbf{x}(k L+m) e(k L+m)<br>$$<br>其中将w(kL)和w(kL+1)分别<strong>简写</strong>成w(k)和w(k＋1)。那么， block LMS的梯度其实是block中每个点的梯度求和如下<br>$$<br>\hat{\nabla}(k)&#x3D;-2 \sum_{m&#x3D;0}^{L-1} \mathbf{x}(k L+m) e(k L+m)<br>$$</p>
+<h3 id="block-LMS-的核心运算："><a href="#block-LMS-的核心运算：" class="headerlink" title="block LMS 的核心运算："></a>block LMS 的核心运算：</h3><ul>
+<li>计算误差时：<br> $$y(n+m)&#x3D;\mathbf{x}^{T}(n+m) \mathbf{w}(n)$$<br> 就是输入向量与滤波器系数的卷积</li>
+<li>计算block梯度时：<br>$$\hat{\nabla}(k)&#x3D;-2 \sum_{m&#x3D;0}^{L-1} \mathbf{x}(k L+m) e(k L+m)$$<br>实际时输入向量与误差向量的相关</li>
+</ul>
+<h2 id="1-5、LMS衍生算法（二）-frequency-domain-adaptive-filtering-FDAF-频域自适应滤波"><a href="#1-5、LMS衍生算法（二）-frequency-domain-adaptive-filtering-FDAF-频域自适应滤波" class="headerlink" title="1.5、LMS衍生算法（二）:frequency-domain adaptive filtering (FDAF) 频域自适应滤波"></a>1.5、LMS衍生算法（二）:frequency-domain adaptive filtering (FDAF) 频域自适应滤波</h2><p>上一小节最后，说到BLMS核心运算就是卷积和相关。<br>但是，时域的卷积或者相关操作的复杂度时比较高的，一般我们更愿意将时域的卷积或者相关运算换算到频域（时域相关对应于频域相乘）来操作从而减少计算量，这也就是频域LMS算法的思想。</p>
+<p>回顾 圆周卷积&#x2F;相关 与 线性卷积&#x2F;相关 的关系</p>
+<p><strong>圆周卷积与线性卷积</strong></p>
+<blockquote>
+<p>一般的，如果两个有限长序列的长度为$N_1$和$N_2$ ，且满足$N_{1} \geqslant N_{2}$ ，则有圆周卷积的后$N_1-N_2+1$ 个点，与线性卷积的结果一致。</p>
+</blockquote>
+<h3 id="第一步计算线性卷积"><a href="#第一步计算线性卷积" class="headerlink" title="第一步计算线性卷积:"></a>第一步计算线性卷积:</h3><p> $$y(n+m)&#x3D;\mathbf{x}^{T}(n+m) \mathbf{w}(n)$$<br>目标利用FFT计算线性卷积。  有以下两种方案：</p>
+<ul>
+<li>overlap -save method （重叠保留法）</li>
+<li>overlap -add  method  （重叠相加法）</li>
+</ul>
+<p> <strong>重叠保留法 以求BLMS求卷积部分为例</strong><br>为了得到$N$点的（线性卷积后的）输出信号：<br>以<br> $$y(n+m)&#x3D;\mathbf{x}^{T}(n+m) \mathbf{w}(n) ，m&#x3D;0，1，2……N-1$$  为例，要保证至少有N个点的线性卷积与圆周卷积的结果相同：<br> $$N_1-N_2+1&#x3D;N$$<br> 由于$N_1&gt;&#x3D;N_2$(也就是输入信号长度通常要大于等于滤波器阶数)，且$N_2&#x3D;N$(滤波器阶数为N)，那么就要求每次参与运算的输入信号长度$N_1$至少为$2N-1$,为了FFT计算方便我们令输入长度为$N_1&#x3D;2N$<br> 那么FFT的点数就为$2N$</p>
+<p>如何扩展到2N长呢？</p>
+<ul>
+<li>对于<strong>输入信号</strong>而言， 除了当前N个采样点之外，还需要向前取N个点采样值</li>
+<li>对于<strong>滤波器</strong>来说，在N阶滤波器后面补N个0 即可</li>
+</ul>
+<p>然后分别计算二者扩展后的<strong>傅里叶变换</strong>，<strong>频域相乘</strong>后<strong>反变换</strong> 就能得到2N长的圆周卷积<br>  $$<br>\begin{aligned}<br>&amp;\mathbf{X}(k)&#x3D;\operatorname{diag}{\mathbf{F}[x(k N-N), \ldots, x(k N-1), x(k N), \ldots, x(k N+N-1))]} \<br>&amp;\mathbf{W}(k)&#x3D;\mathbf{F}\left[\mathbf{w}^{T}(k), 0, \ldots, 0\right]^{T}<br>\end{aligned}<br>$$</p>
+<p>$$<br>\mathbf{Y}(k)&#x3D;\mathbf{X}(k) \mathbf{W}(k)<br>$$<br>对于想要的N长的线性卷积，就是得到的圆周卷积的后N个点<br>$\mathbf{y}(k)&#x3D;[y(k N), y(k N+1), \ldots, y(k N+N-1))]&#x3D;$ last $N$ samples of $\mathbf{F}^{-1} \mathbf{Y}(k)$<br>下面就是流程框图：<br><img src="https://s2.loli.net/2022/05/14/TcoFaO6Xh9YCs3y.png"></p>
+<p>注意，overlap-save方法不仅适用于频域自适应滤波，对于滤波器系数固定不变的情况依然适用。例如我们常见的语音加混响，其实就是计算纯净语音信号，与固定系数的房间冲激响应之间的线性卷积，可以使用overlap-save方法实现。</p>
+<p><strong>圆周相关与线性相关</strong></p>
+<blockquote>
+<p>一般的，如果两个有限长序列的长度为 $N_1$和$N_2$ ，且满足$N_{1} \geqslant N_{2}$，则有圆周相关的前$N_1-N_2+1$ 个点，与线性相关的结果一致。</p>
+</blockquote>
+<h3 id="第二步-计算线性相关"><a href="#第二步-计算线性相关" class="headerlink" title="第二步 计算线性相关"></a>第二步 计算线性相关</h3><p>$$<br>\hat{\nabla}(k)&#x3D;-2 \sum_{m&#x3D;0}^{L-1} \mathbf{x}(k L+m) e(k L+m)<br>$$<br>与对卷积的操作非常类似，为了计算输入向量与误差信号之间的线性相关，我们的思路仍然是想办法将它们<strong>变换到频域</strong>，计算输入信号的<strong>共轭谱与误差信号谱的乘积</strong>，在进行<strong>逆变换</strong>到时域。</p>
+<p>步骤</p>
+<ul>
+<li><p>1、获取$\mathbf{x}(k)$ ,以及其傅里叶变换 这在上一步 已获得，（所以注意这是扩展之后的长为2N的输入信号）即$$\mathbf{X}(k)&#x3D;\operatorname{diag}{\mathbf{F}[x(k N-N), \ldots, x(k N-1), x(k N), \ldots, x(k N+N-1))]} $$</p>
+</li>
+<li><p>2、扩展误差信号，对于误差信号（$\mathbf{e}(k)&#x3D;[e(k N), \quad e(k N+1), \ldots, e(k N+N-1)]$）也需要将器扩展到2N长度</p>
+<ul>
+<li>思考：计算卷积的时候，我们将滤波器系数向量后面补N 个零。<br>  那么，计算相关的时候，我们在误差向量前面补N 个零。（这是为什么？：因为圆周卷积有一个“翻褶”的操作，而圆周相关没有？）<br>并计算扩展误差信号的傅里叶变换：<br>$$\mathbf{E}(k)&#x3D;\mathbf{F}\left[0,0, \ldots, 0, \mathbf{e}^{T}(k)\right]^{T}$$</li>
+</ul>
+</li>
+<li><p>3、将 上述 二者 频域相乘 （注意时共轭相乘）<br> $$<br> \boldsymbol{\Delta}(k)&#x3D;\mathbf{X}^{H}(k) \mathbf{E}(k)<br> $$</p>
+</li>
+<li><p>4、取逆变换后前N点<br>对于想要的N长的线性相关，就是得到的圆周卷积的前N个点，也即<br>$$<br>\vec{\nabla}(k)&#x3D;{[\hat{\nabla}(k N), \quad \hat{\nabla}(k N+1), \ldots, \hat{\nabla}(k N+N-1)]}&#x3D;\text { first } N \text { samples of } \mathbf{F}^{-1} \boldsymbol{\Delta}(k)<br>$$</p>
+</li>
+</ul>
+<h3 id="第三步-滤波器系数更新"><a href="#第三步-滤波器系数更新" class="headerlink" title="第三步 滤波器系数更新"></a>第三步 滤波器系数更新</h3><p>求了上述梯度后，仅需按照时域跟新方程更新即可。至此，BLMS的连个关键问题已经被解决<br>但是，每次更新都要进行多次的时频转换，最终转换到时域进行更新，为什么不直接在频域范围里进行更新呢？这也就是频域自适应滤波frequency-domain adaptive filtering (FDAF)的思想。<br>具体而言就是把原来是时域更新方程</p>
+<p>$$<br>\mathbf{w}(k+1)&#x3D;\mathbf{w}(k)+2 \mu \sum_{m&#x3D;0}^{L-1} \mathbf{x}(k L+m) e(k L+m)<br>$$<br>改写为：<br>$$<br>\mathbf{W}(k+1)&#x3D;\mathbf{W}(k)+2 \mu \mathbf{F}\left[\vec{\nabla}^{T}(k), 0,0, \ldots, 0\right]^{T}<br>$$<br>注意：</p>
+<ul>
+<li>第一，滤波器系数直接在频域更新，所以需要将梯度向量再次变换到频域；</li>
+<li>第二，由于滤波器系数向量后面补了N 个零(参考步骤一)，为了保证结果的正确性，梯度向量也需要在后面补N 个零。</li>
+</ul>
+<p>下面是frequency-domain adaptive filtering (FDAF)的总体框架图<br><img src="https://s2.loli.net/2022/05/14/qMZlsBncEGm8DTk.png"></p>
+<p>可以看出FDAF技术就是在BLMSAF的基础上发展而来，本质上解决的都是同一个问题，即分块条件下的LMS滤波器梯度更新问题。</p>
+<h2 id="1-6、关于LMS算法的讨论"><a href="#1-6、关于LMS算法的讨论" class="headerlink" title="1.6、关于LMS算法的讨论"></a>1.6、关于LMS算法的讨论</h2><h3 id="LMS算法对输入信号有何种要求？"><a href="#LMS算法对输入信号有何种要求？" class="headerlink" title="LMS算法对输入信号有何种要求？"></a>LMS算法对输入信号有何种要求？</h3><p>$$<br>\mathbf{w}(n+1)&#x3D;\mathbf{w}(n)+2 \mu \mathbf{x}(n) e(n)<br>$$</p>
+<p>LMS要求不同时刻输入的向量$\mathbf{x}(n)$线性无关————这是<code>LMS的独立性假设</code>,如果如输入信号存在相关性，会导致<strong>前一时刻迭代产生的梯度噪声传播到下一次迭代</strong>，造成误差的反复传播，收敛速度慢，跟踪性能变差。</p>
+<p>所以理论上，LMS算法对白噪声的效果最好。</p>
+<p>对于带有相关噪声的输入信号，如语音信号，有相应的“解相关LMS算法”。</p>
+<h3 id="归一化LMS（NLMS），功率归一化LMS（PNLMS-）"><a href="#归一化LMS（NLMS），功率归一化LMS（PNLMS-）" class="headerlink" title="归一化LMS（NLMS），功率归一化LMS（PNLMS ）"></a>归一化LMS（NLMS），功率归一化LMS（PNLMS ）</h3><p><strong>NLMS</strong><br>本质上是一个东西，只不过在更新方程中，除以了一个用于归一化的因子$\mathbf{x}^{T}(n) \mathbf{x}(n)$</p>
+<p>$$<br>\mathbf{w}(n+1)&#x3D;\mathbf{w}(n)+2 \mu \frac{\mathbf{x}(n)}{\mathbf{x}^{T}(n) \mathbf{x}(n)} e(n)<br>$$<br>思想是：对于较大的输入，会导致梯度噪声的放大，因此需要用输入向量的平方范数进行归一化。</p>
+<p><strong>PNLMS</strong><br>功率归一下LMS是NLMS的改进，它对调整步长进行改写，<br>$$<br>\mu(n)&#x3D;\frac{\alpha}{\beta+\mathbf{x}^{T}(n) \mathbf{x}(n)}, \quad 0&lt;\alpha&lt;2, \quad \beta \geqslant 0<br>$$<br>功率归一化LMS（PNLMS）是利用归一化项 $\mathbf{x}^{T}(n) \mathbf{x}(n)$调整学习速率，数值稳定性要好于NLMS。当$\alpha&#x3D;1$ 时，PNLMS退化为NLMS。</p>
+<h3 id="频域自适应滤波-学习速率的选取"><a href="#频域自适应滤波-学习速率的选取" class="headerlink" title="频域自适应滤波 学习速率的选取"></a>频域自适应滤波 学习速率的选取</h3><p>$$<br>\mathbf{W}(k+1)&#x3D;\mathbf{W}(k)+2 \mu \mathbf{F}\left[\vec{\nabla}^{T}(k), 0,0, \ldots, 0\right]^{T}<br>$$<br>我们在推导频域自适应滤波方法的时候，为了简化问题，将每一个frequency bin上的学习速率均设为常数$\mu$。<br>在实际工程应用中，用的更多的一种方法是，对第m 个frequency bin，利用输入信号在这个<strong>频点</strong>的功率$P_m(k)$对学习速率进行归一化：(和时域LMS归一化思想一致)<br>$$<br>\mu_{m}(k)&#x3D;\frac{\mu}{P_{m}(k)}<br>$$<br>频点功率$P_m(k)$通常采用迭代的方式求得<br>$$<br>P_{m}(k)&#x3D;\lambda P_{m}(k-1)+(1-\lambda)\left|X_{m}(k)\right|^{2}<br>$$</p>
+
         </div>
         <!-- .entry-content -->
         <div class="single-reward">

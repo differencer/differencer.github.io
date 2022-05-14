@@ -414,7 +414,8 @@
         <div class="entry-content">
           <h1 id="2、DSP基础"><a href="#2、DSP基础" class="headerlink" title="2、DSP基础"></a>2、DSP基础</h1><h2 id="2-1-DSP-基本运算"><a href="#2-1-DSP-基本运算" class="headerlink" title="2.1 DSP 基本运算"></a>2.1 DSP 基本运算</h2><p>模拟数据——》采样——》量化——》编码——》数字信号</p>
 <h3 id="线性卷积（-linear-convolution）"><a href="#线性卷积（-linear-convolution）" class="headerlink" title="线性卷积（ linear convolution）"></a>线性卷积（ linear convolution）</h3><p>$y(n)&#x3D;\sum_{m&#x3D;-\infty}^{\infty} x(m) h(n-m)&#x3D;x(n) * h(n)$</p>
-<p>卷积在图形表示上可分为四步：翻褶、移位、相乘、相加</p>
+<h4 id="卷积的计算方法"><a href="#卷积的计算方法" class="headerlink" title="卷积的计算方法"></a>卷积的计算方法</h4><p>卷积在<strong>按照定义计算</strong>可分为四步：翻褶、移位、相乘、相加<br><img src="https://s2.loli.net/2022/05/13/wTekIRLGXqQaSjb.jpg"></p>
+<p>第二种方法比较简单但不太推荐<br>如下：<br><img src="https://s2.loli.net/2022/05/13/udQP4IbtnMBXVlR.jpg"></p>
 <p>在数字信号处理当中 信号通过一个线性时不变系统被抽象为一个卷积操作</p>
 <p>圆周移位（circular shift）</p>
 <ul>
