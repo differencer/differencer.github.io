@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   
-  <title itemprop="name">categories | t&#39;blog</title>
+  <title itemprop="name">《实时语音信号处理》学习笔记 信号处理基础 发声机理 | t&#39;blog</title>
   
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -376,461 +376,282 @@
   </div>
 </header>
 
-      <header class="site-header no-select gizle sabit" role="banner">
-  <div class="site-top">
-    <div class="site-branding">
-      <span class="site-title">
-        <span class="logolink moe-mashiro">
-          <a href="/">
-            <span class="sakurasono">没错</span>
-            <span class="shironeko">就是爱折腾</span>
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
+<div class="pattern-center-blank"></div>
+
+  <div class="pattern-center single-center">
+    <!-- 有配图默认渲染第一张 -->
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://s2.loli.net/2022/05/16/8qbwxU3J2cfySnM.png);" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/05/16/8qbwxU3J2cfySnM.png">
+    </div>
+    <header class="pattern-header single-header">
+      <h1 class="entry-title">
+      《实时语音信号处理》学习笔记 信号处理基础 发声机理</h1>
+      <p class="entry-census">
+        <span>
+          <a href="/about/">
+            <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/custom/avatar.jpg">
           </a>
         </span>
-      </span>
-    </div>
-    <div class="searchbox search-form-submit">
-      <i class="iconfont js-toggle-search iconsearch icon-search">
-      </i>
-    </div>
-    <div id="show-nav" class="showNav mobile-fit">
-      <div class="line line1">
-      </div>
-      <div class="line line2">
-      </div>
-      <div class="line line3">
-      </div>
-    </div>
-    <div class="lower-cantiner">
-      <div class="lower">
-        <nav class="mobile-fit-control hide">
-          <ul id="menu-new" class="menu">
-            
-              <li>
-                <a href="/">
-                  <span class="faa-parent animated-hover">
-                    <i class="fa  fa-fort-awesome faa-shake" aria-hidden="true"></i>
-                    首页
-                  </span>
-                </a>
-                
-              </li>
-            
-              <li>
-                <a href="/archives">
-                  <span class="faa-parent animated-hover">
-                    <i class="fa  fa-archive faa-shake" aria-hidden="true"></i>
-                    归档
-                  </span>
-                </a>
-                
-                  <ul class="sub-menu">
-                    
-                      <li>
-                        <a href="/archives">
-                          <i class="fa fa-archive faa-shake" aria-hidden="true"></i>
-                          时轴
-                        </a>
-                      </li>
-                    
-                      <li>
-                        <a href="/categories/%E6%8A%80%E6%9C%AF/">
-                          <i class="fa fa-code" aria-hidden="true"></i>
-                          技术
-                        </a>
-                      </li>
-                    
-                      <li>
-                        <a href="/categories/%E7%94%9F%E6%B4%BB/">
-                          <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                          生活
-                        </a>
-                      </li>
-                    
-                      <li>
-                        <a href="/categories/%E5%85%B6%E4%BB%96/">
-                          <i class="fa fa-book" aria-hidden="true"></i>
-                          其他
-                        </a>
-                      </li>
-                    
-                  </ul>
-                
-              </li>
-            
-              <li>
-                <a href="javascript:;">
-                  <span class="faa-parent animated-hover">
-                    <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
-                    清单
-                  </span>
-                </a>
-                
-                  <ul class="sub-menu">
-                    
-                      <li>
-                        <a href="/tags/%E9%98%85%E8%AF%BB/">
-                          <i class="fa fa fa-book faa-bounce" aria-hidden="true"></i>
-                          书单
-                        </a>
-                      </li>
-                    
-                      <li>
-                        <a href="/bangumi/">
-                          <i class="fa fa-film faa-vertical" aria-hidden="true"></i>
-                          番组
-                        </a>
-                      </li>
-                    
-                      <li>
-                        <a href="/music/">
-                          <i class="fa fa-headphones" aria-hidden="true"></i>
-                          歌单
-                        </a>
-                      </li>
-                    
-                  </ul>
-                
-              </li>
-            
-              <li>
-                <a href="javascript:;">
-                  <span class="faa-parent animated-hover">
-                    <i class="fa  fa-bar-chart faa-shake" aria-hidden="true"></i>
-                    统计
-                  </span>
-                </a>
-                
-                  <ul class="sub-menu">
-                    
-                      <li>
-                        <a href="/tags/">
-                          <i class="fa fa-book faa-bounce" aria-hidden="true"></i>
-                          标签
-                        </a>
-                      </li>
-                    
-                      <li>
-                        <a href="/categories/">
-                          <i class="fa fa-tasks faa-shake" aria-hidden="true"></i>
-                          分类
-                        </a>
-                      </li>
-                    
-                  </ul>
-                
-              </li>
-            
-              <li>
-                <a href="/comment/">
-                  <span class="faa-parent animated-hover">
-                    <i class="fa  fa-pencil-square-o faa-tada" aria-hidden="true"></i>
-                    留言板
-                  </span>
-                </a>
-                
-              </li>
-            
-              <li>
-                <a href="/donate/">
-                  <span class="faa-parent animated-hover">
-                    <i class="fa  fa-heart faa-pulse" aria-hidden="true"></i>
-                    赞赏
-                  </span>
-                </a>
-                
-              </li>
-            
-              <li>
-                <a href="javascript:;">
-                  <span class="faa-parent animated-hover">
-                    <i class="fa  fa-leaf faa-wrench" aria-hidden="true"></i>
-                    关于
-                  </span>
-                </a>
-                
-                  <ul class="sub-menu">
-                    
-                      <li>
-                        <a href="/links/">
-                          <i class="fa fa-link faa-shake" aria-hidden="true"></i>
-                          友链
-                        </a>
-                      </li>
-                    
-                      <li>
-                        <a href="/about/">
-                          <i class="fa fa-meetup" aria-hidden="true"></i>
-                          我？
-                        </a>
-                      </li>
-                    
-                      <li>
-                        <a href="/theme-sakura/">
-                          <i class="fa iconfont icon-sakura" aria-hidden="true"></i>
-                          主题
-                        </a>
-                      </li>
-                    
-                  </ul>
-                
-              </li>
-            
-          </ul>
-        </nav>
-      </div>
-    </div>
+        <span>
+          <a href="/about/">differencer</a>
+        </span>
+        <span class="bull">
+        ·</span>
+        2022-5-16<span class="bull">
+        ·</span>
+      <span id="busuanzi_value_page_pv"></span>次阅读</p>
+    </header>
   </div>
-</header>
 
-
-<main class="content">
-
-    
-
-<div id="category-cloud" class="container chip-container">
-
-    <div class="card">
-
-        <div class="card-content">
-
-            <div class="tag-title center-align">
-
-                <i class="fa fa-bookmark"></i>&nbsp;&nbsp;文章分类
-
-            </div>
-
-            <div class="tag-chips">
-
-                
-
-                
-
-                
-
-                <a href="/categories/%E6%8A%80%E6%9C%AF/" title="技术: 7">
-
-                    <span class="chip center-align waves-effect waves-light
-
-                             chip-default "
-
-                            style="background-color: #F9EBEA;">技术
-
-                        <span class="tag-length">7</span>
-
-                    </span>
-
-                </a>
-
-                
-
-                
-
-                <a href="/categories/%E6%8A%80%E6%9C%AF/%E9%80%9A%E4%BF%A1/" title="通信: 4">
-
-                    <span class="chip center-align waves-effect waves-light
-
-                             chip-default "
-
-                            style="background-color: #F5EEF8;">通信
-
-                        <span class="tag-length">4</span>
-
-                    </span>
-
-                </a>
-
-                
-
-                
-
-                <a href="/categories/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/" title="语音信号处理: 1">
-
-                    <span class="chip center-align waves-effect waves-light
-
-                             chip-default "
-
-                            style="background-color: #D5F5E3;">语音信号处理
-
-                        <span class="tag-length">1</span>
-
-                    </span>
-
-                </a>
-
-                
-
-                
-
-                <a href="/categories/%E5%85%B6%E4%BB%96/" title="其他: 2">
-
-                    <span class="chip center-align waves-effect waves-light
-
-                             chip-default "
-
-                            style="background-color: #E8F8F5;">其他
-
-                        <span class="tag-length">2</span>
-
-                    </span>
-
-                </a>
-
-                
-
-                
-
-                <a href="/categories/%E7%94%9F%E6%B4%BB/" title="生活: 1">
-
-                    <span class="chip center-align waves-effect waves-light
-
-                             chip-default "
-
-                            style="background-color: #FEF9E7;">生活
-
-                        <span class="tag-length">1</span>
-
-                    </span>
-
-                </a>
-
-                
-
-                
-
-                <a href="/categories/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/DSP/" title="DSP: 1">
-
-                    <span class="chip center-align waves-effect waves-light
-
-                             chip-default "
-
-                            style="background-color: #F8F9F9;">DSP
-
-                        <span class="tag-length">1</span>
-
-                    </span>
-
-                </a>
-
-                
-
-                
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-    
-
-    <style type="text/css">
-
-    #category-radar {
-
-        margin-top: 50px;
-
-        width: 100%;
-
-        height: 360px;
-
-    }
-
-</style>
-
-<div class="container" data-aos="fade-up">
-
-    <div class="card">
-
-        <div id="category-radar" class="card-content"></div>
-
-    </div>
-
-</div>
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/wallleap/cdn/js/echarts.min.js"></script>
-
-<script type="text/javascript">
-
-    let radarChart = echarts.init(document.getElementById('category-radar'));
-
-    
-
-    let option = {
-
-        title: {
-
-            left: 'center',
-
-            text: '文章分类雷达图',
-
-            textStyle: {
-
-                fontWeight: 500,
-
-                fontSize: 22
-
-            }
-
-        },
-
-        tooltip: {},
-
-        radar: {
-
-            name: {
-
-                textStyle: {
-
-                    color: '#3C4858'
-
-                }
-
-            },
-
-            indicator: [{"name":"技术","max":8},{"name":"通信","max":8},{"name":"语音信号处理","max":8},{"name":"其他","max":8},{"name":"生活","max":8},{"name":"DSP","max":8}],
-
-            nameGap: 5,
-
-            center: ['50%','55%'],
-
-            radius: '66%'
-
-        },
-
-        series: [{
-
-            type: 'radar',
-
-            color: ['#3ecf8e'],
-
-            itemStyle: {normal: {areaStyle: {type: 'default'}}},
-
-            data : [
-
-                {
-
-                    value : [7,4,1,2,1,1],
-
-                    name : '文章分类数量'
-
-                }
-
-            ]
-
-        }]
-
-    };
-
-    radarChart.setOption(option);
-
+<div id="content" class="site-content">
+  <div id="primary" class="content-area">
+    <main id="main" class="site-main" role="main">
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+        
+        <div class="entry-content">
+          <h1 id="离散傅里叶变换-DFT"><a href="#离散傅里叶变换-DFT" class="headerlink" title="离散傅里叶变换 DFT"></a>离散傅里叶变换 DFT</h1><p>  离散傅里叶变换（DFT）是离散信号时&#x2F;频域变换的方法。作用类似于棱镜，将由多种频率混合而成的语音按频谱散射，经过种种处理后，再反变换到时域，就可以获得“提纯”后的语音信号。实数DFT的输入是实数，得到的频点有两个集合，分别是正弦（cos）和余弦（sin)函数的系数，对应于正频分量和负频分量。</p>
+<p>$$<br>\begin{aligned}<br>&amp;\mathrm{X}(k)&#x3D;\sum_{n&#x3D;0}^{N-1} x(n) e^{-j \frac{2 \pi k n}{N}}, k&#x3D;0, \ldots \ldots N-1 \<br>&amp;\mathrm{X}<em>{r e}(k)&#x3D;\sum</em>{n&#x3D;0}^{N-1} x(n) \cos \left(\frac{2 \pi k n}{N}\right), k&#x3D;0, \ldots \ldots N-1 \<br>&amp;\mathrm{X}<em>{im}(k)&#x3D;\sum</em>{n&#x3D;0}^{N-1} x(n) \sin \left(\frac{2 \pi k n}{N}\right), k&#x3D;0, \ldots \ldots N-1<br>\end{aligned}<br>$$<br><img src="https://s2.loli.net/2022/05/16/8qbwxU3J2cfySnM.png"></p>
+<h1 id="短时傅里叶变换STFT"><a href="#短时傅里叶变换STFT" class="headerlink" title="短时傅里叶变换STFT"></a>短时傅里叶变换STFT</h1><h2 id="为什么分段（帧）处理？"><a href="#为什么分段（帧）处理？" class="headerlink" title="为什么分段（帧）处理？"></a>为什么分段（帧）处理？</h2><ul>
+<li>原因：<ul>
+<li>1、时序原因，频谱图是无法得到有关于时间先后的信息的，比如说“ai”这个字的发音，“a”和“i”的发音在时间上是有顺序关系的，这时可以将序列等时分割成若干个小段，按顺序对每一个小段做DFT分析，先得到“a”的谱，后得到“a”到“i”的谱，最后是“i”的谱。</li>
+<li>2、实际中的语音信号往往是实时的数据流，或者非常长。需要考虑时效性、以及计算量</li>
+</ul>
+</li>
+<li>短时傅里叶变换常用于序列较长或时间分辨率较高的场景，语音信号是时变的，每秒产生约10个音节，在10~30ms时长内的语音信号可以看成是准静态的。下面的流程图展示了STFT的分析和综合处理流程为</li>
+</ul>
+<pre class="line-numbers language-mermaid" data-language="mermaid"><code class="language-mermaid"><span class="token keyword">graph</span> TD
+A<span class="token text string">[原始信号]</span> <span class="token arrow operator">--></span> B<span class="token text string">(加重叠窗 汉明窗 汉宁窗 凯撒窗 得到加窗的重叠的分段信号)</span>
+    B <span class="token arrow operator">--></span> C<span class="token text string">[FFT]</span>
+    C <span class="token arrow operator">--></span> D<span class="token text string">[频域分析处理]</span>
+    D <span class="token arrow operator">--></span> E<span class="token text string">[IFFT]</span>
+    E <span class="token arrow operator">--></span> F<span class="token text string">[分段逆变换]</span>
+    F <span class="token arrow operator">--></span> G<span class="token text string">[合成]</span>
+    <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>流程图再分段的过程中采用了<strong>加窗操作</strong>，而且加窗分段时<strong>时域有叠加</strong>。<br>这是为什么呢？</p>
+<h2 id="为什么加窗（把矩形窗换成其他窗）"><a href="#为什么加窗（把矩形窗换成其他窗）" class="headerlink" title="为什么加窗（把矩形窗换成其他窗）"></a>为什么加窗（把矩形窗换成其他窗）</h2><ul>
+<li>首先，如果采用了直接分段的方案，做STFT，每一段分别做FFT（FFT点数为窗函数长度），根据FFT定义，相当于对这一份分段进行周期延拓形成一个无限长的周期信号。如果截取窗的长度对于信号中的某一个频率分量不是其周期的整数倍，那就会产生新的频域分量(如下图，<strong>在截断处产生了“虚假的峰值”</strong>，也就产生了新的频域分量)，造成严重的频谱泄露和混叠（这个频域的能量会弥散到周围其他频域当中，此频点能量降低，如果能量够大甚至会淹没其他频率点）。</li>
+<li>其次如果直接从频域上看，<strong>相当于信号频谱与Sa函数相卷积</strong>，把信号频域想象成一个在数个频点上有冲击“信号”，Sa函数与冲激信号进行卷积，相当于对这个Sa函数的移位。<strong>进行FFT变换得到的 各个 系数 就是在频域分辨率的整数倍周期（$k&#x2F;fs$）上进行采样的采样值</strong>。那么显而易见，<strong>只有满足 频点位于 这些整数分辨率的频点上的 冲击  经过与Sa函数的卷积，才不会对 其他的 频域采样点 产生影响</strong>（Sa（sinc）函数的自变量除0外，在整数倍pi（整数）处为零点，旁瓣衰减是 按照 自变量的倒数的一次方进行衰减），也就是发生泄漏。 实际信号的 很多就落在这些 非整数分辨率的频点上（因为信号不只是在时域上来连续，在频域上也是连续的），所以必然会产生频谱泄露，那么，如果泄露时必然的，还可以将Sa函数改为一些旁瓣衰减比较块的函数，其时域就对应着不同的窗，这也就是加窗（把矩形窗换成其他窗）的原因。<br><img src="https://s2.loli.net/2022/05/16/Pho7nVFHqwNrGmY.png"></li>
+</ul>
+<h2 id="为什么-叠加？"><a href="#为什么-叠加？" class="headerlink" title="为什么 叠加？"></a>为什么 叠加？</h2><p>因为上述流程采用了类似于 OLA 的算法（WOLA）来增加计算精度。下面来介绍一下</p>
+<h2 id="重叠保留法（OLS）、重叠相加法（OLA）"><a href="#重叠保留法（OLS）、重叠相加法（OLA）" class="headerlink" title="重叠保留法（OLS）、重叠相加法（OLA）"></a>重叠保留法（OLS）、重叠相加法（OLA）</h2><p>OLS 和 OLA 是 计算无限长序列（或是长序列） 与较短序列 卷积或者相关的方案。 将时域 原本$O(n^2)$ 得计算量 转化为 频域 $O(nlogn)$的计算量。</p>
+<p>区别，OLA精度较高，而且绝大多数情况下都用OLA。OLS 计算量稍小。</p>
+<p>OLA计算步骤 </p>
+<p>输入长序列 x(1:Nx) ,长度 Nx，序列分块长度 L  xk(kL+1: min(Nx，(k+1)L)); 短序列 h(1:M)<br>因为要做 M+L-1&#x3D;N 点数的DFT（FFT），所以一般 选取合适的参数L、M  使得N 等于2的幂次</p>
+<ul>
+<li>输入参数： 输入长序列x，短序列h，分块长度L</li>
+<li>1、计算短序列h的FFT H  &#x2F;&#x2F;<strong>不够N长的部分补零，后面补零</strong></li>
+<li>2、遍历每一个分块<ul>
+<li>2.1、计算分块的FFT Xk  &#x2F;&#x2F;<strong>不够N长的部分补零，后面补零</strong></li>
+<li>2.2、H Xk 对应位相乘得Yk，求IFFT 得yk</li>
+<li>2.3、重叠 相加（由于 N&gt;M 所以有重叠部分）</li>
+</ul>
+</li>
+<li>3、输出y</li>
+</ul>
+<p>OLS 计算步骤<br>参数与上面一致</p>
+<ul>
+<li>输入参数： 输入长序列x，短序列h，分块长度L</li>
+<li>计算短序列h的FFT H  &#x2F;&#x2F;<strong>不够N长的部分补零，后面补零</strong></li>
+<li>遍历每一个分块<ul>
+<li>计算分块的FFT Xk  &#x2F;&#x2F;<strong>不够N长的 取前面 该输入序列前面得 N-L位， 如果是第一块，前面取零</strong></li>
+<li>H Xk  对应位相乘 ，求IFFT 得yk</li>
+<li>去掉yk 前 N-M 位数据</li>
+</ul>
+</li>
+<li>整合输出 y</li>
+</ul>
+<h2 id="WOLA-（加权OLA）"><a href="#WOLA-（加权OLA）" class="headerlink" title="WOLA （加权OLA）"></a>WOLA （加权OLA）</h2><p>计算步骤与OLA相差不大，</p>
+<ul>
+<li>输入参数： 输入长序列x，短序列h，分块长度L</li>
+<li>1、计算短序列h的FFT H  &#x2F;&#x2F;不够N长的部分补零，后面补零</li>
+<li>2、遍历每一个分块 <ul>
+<li><strong>2.0、分块采用窗函数 对应位加权</strong></li>
+<li>2.1、计算分块的FFT Xk  &#x2F;&#x2F;不够N长的部分补零，后面补零</li>
+<li>2.2、H Xk 对应位相乘得Yk，求IFFT 得yk</li>
+<li><strong>2.2 plus 、用综合窗 对yk 加权</strong></li>
+<li>2.3、重叠 相加（由于 N&gt;M 所以有重叠部分）</li>
+</ul>
+</li>
+<li>3、输出y</li>
+</ul>
+<p>下段转自 一篇博客 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/339692933">地址</a><br>虽然加窗能减少频谱泄露，但是加窗也存在一个问题：加窗衰减了每帧信号的能量，特别是边界处。为了解决这一个问题，就引入了合成窗（综合窗）的概念。</p>
+<p>在iSTFT中，合成窗是在iFFT之后，对时域信号做的。此次加窗，并不是为了减少频谱泄露，因为之后不再做FFT，不需要满足周期性序列条件。而是为解决分析窗导致能量衰减问题的。为了补回能量，就要考虑到overlap满足一定的条件，即完美重建准则：<br>$$<br>\Sigma_{n&#x3D;0}^{N-1} h_{a}\left(t-t_{0}-n M\right) h_{s}\left(t-t_{0}-n M\right)&#x3D;1<br>$$<br>ha为分析窗(analysis window)，hs为合成窗(synthesis windows)。t0为每一帧的第一个采样点，M是hop size，n是第几帧。t当前采样点。</p>
+<p>下面用一个例子阐述合成窗是如何重建信号的。下图是一个时域转频域加窗的过程。<br><img src="https://s2.loli.net/2022/05/16/HChDXkOvm189rPN.png"><br>. 可以看到，经过加窗后，能量有所衰减。加一个合成窗，且overlap-add，便可以补回能量。如下图所示<br><img src="https://s2.loli.net/2022/05/16/HChDXkOvm189rPN.png"><br>. 可以定性看到，在经过overlap，边界处的信号补回原始幅度了。很多修正后的窗如 修正巴特沃斯窗、凯撒窗 都可以用到WOLA当中。需要注意的是，不同窗具有的 最优重叠长度不一样，如Blackman-Harris 窗最优位66.1% ，此处是比较巧妙，分析窗用hamming窗，overlap采用50%，则在合成的时候，就不需要额外加窗了，直接overlap-add就好。 </p>
+<p>PS：这一块有点类似于 通信原理学的 残留边带调制VSB 所需要的残留边带滤波器（频域）</p>
+<p>一般来说，根据完美重建公式，合成窗的选择，不仅跟分析窗有关，还和overlap有关。不同的overlap要采用不同的合成窗。</p>
+<h1 id="音频处理常用概念或算法"><a href="#音频处理常用概念或算法" class="headerlink" title="音频处理常用概念或算法"></a>音频处理常用概念或算法</h1><p>下面这几个书中都是一两页介绍带过，很难读透<br> 滤波器组</p>
+<p>功能：滤波器组将输入信号分解到多个频带，并对各个频带进行处理，最后将处理完的各个频带组合在一起得到最终的输出。<br>代码还没看懂，是webrtc 中的代码</p>
+<p> 混合高斯模型<br>没看懂</p>
+<p>HMM 模型<br>没懂，但这个应该很重要，后面写博客有机会补充</p>
+<p>卡尔曼滤波<br>不懂</p>
+<h1 id="发声机理-器件"><a href="#发声机理-器件" class="headerlink" title="发声机理 器件"></a>发声机理 器件</h1><h2 id="语音产生机理"><a href="#语音产生机理" class="headerlink" title="语音产生机理"></a>语音产生机理</h2><p>（1） 语音具有短时平稳性，这是很多语音算法前提之一。<br>（2）语音发音可以分为清音和浊音两类，发浊音时大部分能量集中在低频段，且在时域上具有周期性，在频域上频谱分布具有共振峰结构。清音和白噪声类似，没有明显的时域和频域特征。<br>（3) 浊音比如元音的语音产生机理如下：<br>空气通过正常呼吸进入肺部，进入时一般无语音产生。<br>空气通过气管排出肺时，依据贝努利定律（在一个流体系统，比如气流、水流中，流速越快，流体产生的压就越小），被声门开口处空气压力拉紧的喉头处的声带会振动。空气流被声门孔的打开和关闭形成了准周期的脉冲。通过咽、口和鼻道时，这些脉冲被频率整形。不同发音器官（颚、舌）的位置决定了产生的声音。<br>（4）声道气流来源于声带，其作用类似于线性滤波器，对输入波形进行频谱整形，从而发出不同的声音。声道的共振产生共振峰，产生共振的频率称为共振频率，共振的基频由声带决定</p>
+<p>发声可以简单看成是激励源信号作用于线性滤波器（IIR）产生的，声道角色可以看成是对输入波形进行频谱整形的线性滤波器，声带提供了声道激励的来源，激励根据声带所处的状态可以是周期性的， 也可以是非周期性的。</p>
+<h2 id="发生模型"><a href="#发生模型" class="headerlink" title="发生模型"></a>发生模型</h2><p>发声可以简单看成是激励源信号作用于线性滤波器（IIR）产生的，声道角色可以看成是对输入波形进行频谱整形的线性滤波器，声带提供了声道激励的来源，激励根据声带所处的状态可以是周期性的， 也可以是非周期性的。<br><img src="https://s2.loli.net/2022/05/16/GgQ5D9nwpHSJm6u.png"></p>
+<p>对于从嘴唇最终发出的声音的z变换可以表示为声门$G(z)$、声道$V(z)$和唇激励$R(z)$的积，<br>为<br>$$<br>X(z)&#x3D;G(z)V(z)R(z)<br>$$<br>对于非语音输出<br>$$<br>X(z)&#x3D;N(z)V(z)R(z)<br>$$</p>
+<p>声道的滤波器系数取决于声道的形状，当激励信号为周期性脉冲，发出原因，当激励信号于噪声接近发出辅音。</p>
+
+        </div>
+        <!-- .entry-content -->
+        <div class="single-reward">
+          <div class="reward-open">赏
+            <div class="reward-main">
+              <ul class="reward-row">
+                <li class="alipay-code"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/custom/donate/AliPayQR.jpg"></li>
+                <li class="wechat-code"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/custom/donate/WeChanQR.jpg"></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
+      </article>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
+        
+          
+            <div class="post-nepre half previous">
+          
+            <a href="/2022/05/16/%E3%80%8A%E5%AE%9E%E6%97%B6%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%E3%80%8B%E7%AC%AC%E4%BA%8C%E7%AB%A0-/" rel="prev">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="">
+              </div>
+              <span class="label">
+              Previous Post</span>
+              <div class="info">
+                <h3>
+                </h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+        
+          
+            <div class="post-nepre half next">
+          
+            <a href="/2022/05/13/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E4%B8%89%EF%BC%89%E8%87%AA%E9%80%82%E5%BA%94%E6%BB%A4%E6%B3%A2%E6%96%B9%E6%B3%95/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                语音信号处理（三）自适应滤波方法</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
+      <!--
+  原来 ：
+<script src="//cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js"></script>
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "",
+        appKey: "",
+        path: window.location.pathname,
+        placeholder: "快来留言鸭~ ..."
+      })
+  }
 </script>
+ -->
 
 
-    
+  <div id="vcomments"></div>
+  <!-- 先引入样式,从footer提前 -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js"></script>
+  <!-- 评论框美化 -->
+  <script>
+      new Valine({
+          el: '#vcomments',
+          appId: "DpQvbSVQXSeUV8lRSV5zHiOY-gzGzoHsz",
+          appKey: "j8tFI5wuIwD7gTt7KJe5ohod",
+         notify: 'false' === 'false',
+         verify: 'true' === 'true',
+         visitor: 'false' === 'false',
+          path: window.location.pathname,
+          verify: true,
+          avatar: 'monsterid',//小怪物头像
+          placeholder: "你是我一生只会遇见一次的惊喜 ..."  
+      });
+      //   自定义邮箱审核规则
+      document.body.addEventListener('click', function(e) {
+          if (e.target.classList.contains('vsubmit')) {
+              const email = document.querySelector('input[type=email]');
+              const nick = document.querySelector('input[name=nick]');
+              const reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+              if (!email.value || !nick.value || !reg.test(email.value)) {
+                  const str = `<div class="valert text-center"><div class="vtext">请填写正确的昵称和邮箱！</div></div>`;
+                  const vmark = document.querySelector('.vmark');
+                  vmark.innerHTML = str;
+                  vmark.style.display = 'block';
+                  setTimeout(function() {
+                      vmark.style.display = 'none';
+                      vmark.innerHTML = '';
+                  }, 2500);
+              }
+          }
+      });
+      // 点击回复直接评论,官方版本点击回复时都是跳回到页面上方的评论框进行回复，评论框是固定不动的
+      // 参考https://immmmm.com/valine-diy,用到jQuery
+      $(document).ready(function(){
+          //$('.vemoji-btn').text('😀');
+          $("#vcomments").on('click', 'span.vat',function(){
+              $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+              $('textarea#veditor').focus();
+          })
+      })
+  </script>
+  <!-- 今日诗词：随机返回一句古诗词名句的接口，宅到用来做 Valine 的 placeholder 显示内容 -->
+  <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+  <script type="text/javascript">
+      jinrishici.load(function(result) {
+          var jrsc_plac =  result.data.content + "\n「" + result.data.origin.title + "」" + result.data.origin.dynasty + " · " + result.data.origin.author
+          document.getElementById("veditor").setAttribute("placeholder",jrsc_plac);
+      });
+  </script>
+  
+  
+  
 
-</main>
+
+
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+          <a href="/about/" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/custom/avatar.jpg" itemprop="image" alt="differencer" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="/about/" itemprop="url" rel="author">differencer</a>
+            </h3>
+          </div>
+        </div>
+        <hr>
+        <p><i class="iconfont icon-write"></i></p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
+</div>
+
 
 
     </div>    
