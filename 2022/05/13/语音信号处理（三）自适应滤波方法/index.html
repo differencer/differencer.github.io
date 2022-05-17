@@ -380,19 +380,36 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
 <div class="pattern-center-blank"></div>
 
+  <div class="pattern-center single-center">
+    <!-- 有配图默认渲染第一张 -->
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://s2.loli.net/2022/05/13/SAeY6r5BlkG9Jm3.png);" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/05/13/SAeY6r5BlkG9Jm3.png">
+    </div>
+    <header class="pattern-header single-header">
+      <h1 class="entry-title">
+      语音信号处理（三）自适应滤波方法</h1>
+      <p class="entry-census">
+        <span>
+          <a href="/about/">
+            <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/custom/avatar.jpg">
+          </a>
+        </span>
+        <span>
+          <a href="/about/">differencer</a>
+        </span>
+        <span class="bull">
+        ·</span>
+        2022-5-13<span class="bull">
+        ·</span>
+      <span id="busuanzi_value_page_pv"></span>次阅读</p>
+    </header>
+  </div>
+
 <div id="content" class="site-content">
   <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
       <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
         <div class="toc"></div>
         <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
-        
-          <header class="entry-header">
-            <h1 class="entry-title">语音信号处理（三）自适应滤波方法</h1>
-            <p class="entry-census">differencer&nbsp;·&nbsp;2022-5-13&nbsp;·&nbsp;<span id="busuanzi_value_page_pv"></span>次阅读</p></p>
-
-            <hr>
-          </header>
         
         <div class="entry-content">
           <p>自适应滤波 是一种理论体系，应用于内容都非常广泛</p>
@@ -441,6 +458,34 @@
 <blockquote>
 <p>优点：简单，易于实现<br>    缺点：收敛速度慢（虽然 瞬时梯度是 真实梯度的无偏估计，但是估计的方差不为零，估计方差存在误差（噪声），这种方差的存在导致了LMS收敛速度比较慢）</p>
 </blockquote>
+<p><strong>代码实现</strong></p>
+<pre class="line-numbers language-none"><code class="language-none">function [output,en,w]&#x3D;MyLMS(L,mu,desiresig,inputSig)
+% 输入参数
+% L 滤波器阶数
+% mu 学习步长
+% inputsig 输入信号
+% desiresig 期望信号
+% output 输出
+% w 滤波器系数
+% 注意 输入信号于期望 输入应该保证一样长
+
+N&#x3D;length(desiresig);
+w &#x3D; zeros(1,L);
+error&#x3D;zeros(1,N);
+
+filterinput&#x3D;inputSig;
+
+inputpad &#x3D; [zeros(1,L -1) filterinput&#39;];
+  for n &#x3D; 1:N  % 每一个采样点“前进一步”
+      m &#x3D; n + L -1;
+      inputpadblock &#x3D; inputpad(m-L+1:1:m)&#39;;	 
+      output(n) &#x3D; w*(inputpadblock);              % 滤波器输出   y&#x3D;w*x
+      error(n) &#x3D; desiresig(n) - output(n);        % 误差信号     e&#x3D;d-y
+      w &#x3D; w + mu.*inputpadblock&#39;.*error(n);       % 调整滤波器系数的LMS算法 w&#x3D;w+mu*x*e
+  end
+end
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h2 id="1-4、LMS衍生算法（一）：-block-LMS-BLMS-分块最小均方算法"><a href="#1-4、LMS衍生算法（一）：-block-LMS-BLMS-分块最小均方算法" class="headerlink" title="1.4、LMS衍生算法（一）： block LMS (BLMS) 分块最小均方算法"></a>1.4、LMS衍生算法（一）： block LMS (BLMS) 分块最小均方算法</h2><ul>
 <li>思想：由于标准的LMS算法 每一个采样点都进行更新，那么有一种思路就是：不必每一个采样点都进行更新，而是累积到一定数量的采样点之后再进行更新，而对于这些block采样点再更新一次滤波器系数。 这样的好处就是每一个block 获取的梯度是 一个block所有采样点梯度的求和，所以得到的梯度仍然是 真实梯度 的无偏估计 ，但是累计的采样点数更多，他的方差会更小。 </li>
 <li>这种 想法与深度学习里面的minibatch的想法一致。</li>
@@ -550,7 +595,7 @@
           
             <a href="/2022/05/16/%E3%80%8A%E5%AE%9E%E6%97%B6%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%E3%80%8B%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%20%E5%8F%91%E5%A3%B0%E6%9C%BA%E7%90%86/" rel="prev">
               <div class="background">
-                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/05/16/8qbwxU3J2cfySnM.png" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://s2.loli.net/2022/05/16/8qbwxU3J2cfySnM.png">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/05/16/GgQ5D9nwpHSJm6u.png" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://s2.loli.net/2022/05/16/GgQ5D9nwpHSJm6u.png">
               </div>
               <span class="label">
               Previous Post</span>
