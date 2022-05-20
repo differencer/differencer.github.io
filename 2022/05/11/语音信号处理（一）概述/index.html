@@ -413,10 +413,8 @@
         
         <div class="entry-content">
           <h1 id="语音信号处理概述"><a href="#语音信号处理概述" class="headerlink" title="语音信号处理概述"></a>语音信号处理概述</h1><h2 id="1、语音交互（VUI）"><a href="#1、语音交互（VUI）" class="headerlink" title="1、语音交互（VUI）"></a>1、语音交互（VUI）</h2><ul>
-<li><p>优势：输入效率高、解放双手双眼（车载）、使用门槛低、信息“含量”高</p>
-</li>
-<li><p>劣势：信息接受效率低、复杂声学环境、心理负担</p>
-</li>
+<li>优势：输入效率高、解放双手双眼（车载）、使用门槛低、信息“含量”高</li>
+<li>劣势：信息接受效率低、复杂声学环境、心理负担</li>
 <li><p>历史：</p>
 <ul>
 <li>1952 Audrey</li>
@@ -424,7 +422,7 @@
 <li>2011 siri</li>
 <li>2014 win8 cortana</li>
 <li>2014 Amazon echo</li>
-<li>2016 Google ：Google Home   小米、百度、</li>
+<li>2016 Google ：Google Home   小米、百度、 </li>
 </ul>
 </li>
 <li><p>人机语音交互流程</p>
@@ -440,18 +438,20 @@
 <li><p>语音交互适合场景<br>家庭场景、车载场景、外出场景</p>
 </li>
 </ul>
-<h2 id="2、复杂的声学环境："><a href="#2、复杂的声学环境：" class="headerlink" title="2、复杂的声学环境："></a>2、复杂的声学环境：</h2><p>- </p>
-<ul>
+<h2 id="2、复杂的声学环境："><a href="#2、复杂的声学环境：" class="headerlink" title="2、复杂的声学环境："></a>2、复杂的声学环境：</h2><ul>
+<li><ul>
 <li>方向性干扰，如人声</li>
 <li>环境噪声（散射噪声）</li>
 <li>远近产生的混响（本质上就是通信中的多径效应）</li>
 <li>声学回声</li>
 </ul>
+</li>
+</ul>
 <p>前端处理意义：<br>  让人听得清（提高SNR）、让机器听的请（语音识别率更高）</p>
 <h2 id="3、前端语音信号处理"><a href="#3、前端语音信号处理" class="headerlink" title="3、前端语音信号处理"></a>3、前端语音信号处理</h2><p>举例：</p>
 <ul>
 <li>语音通话（免提通话）</li>
-<li>电话&#x2F;视频 远程会议</li>
+<li>电话/视频 远程会议</li>
 </ul>
 <p>一般手机（如苹果）有多个麦克风： </p>
 <ul>
@@ -464,10 +464,20 @@
 <h3 id="3-1、AEC-声学回声消除"><a href="#3-1、AEC-声学回声消除" class="headerlink" title="3.1、AEC 声学回声消除"></a>3.1、AEC 声学回声消除</h3><p>消除设备自身干扰 </p>
 <p>需要的参数<br>参考信号：扬声器播放的信号<br>输入信号：麦克风输入的信号（包含扬声器信号和 实际输入信号）<br>两种信号在时间上对齐（做相关），把高度相关的部分（扬声器信号）删除</p>
 <p>主要模块： 实验估计、线性回声消除、双讲检测（应该是检测你在讲话还是在听话状态 来控制回声消除模块的工作模式）、残余回声抑制</p>
-<h3 id="3-2、De-reverb-解混响"><a href="#3-2、De-reverb-解混响" class="headerlink" title="3.2、De-reverb 解混响"></a>3.2、De-reverb 解混响</h3><p>1、盲卷积法 [Neely and Allen ，1979]；<br>    - 如果把 多径信道视为一个FIR 滤波器，输出视为一个 语音信号与FIR 的卷积，那么可以估计FIR 并求逆，作用于信号<br>    - 盲是指，没有任何先验信息，不知道信号形态，所以这种方案仅在噪声非常小时 有用<br>2、 加权预测误差 WPE [Takuya 2012] AT&amp;T<br>    - 原因：语音信号有线性预测特性<br>    - 估计一个线性预测滤波器，将房间冲激响应截短，<br>      - 为什么不全部减掉？因为认为 混响（冲击）有早期混响和晚期混响，早期混响其实是有益的，真正有干扰的是晚期混响<br>    用权重等于 当前预测的误差除以当前信号功率，<br>    单通道多通道都可以（多更佳）<br>3、 麦克风阵列波束成形 消除其他空间上的混响<br>4、 深度学习用于解混响 [Han 2015]<br>    - DAE、DNN、LSTM、GAN 实验频谱映射</p>
-<h3 id="3-3、BSS-语音分离模块"><a href="#3-3、BSS-语音分离模块" class="headerlink" title="3.3、BSS 语音分离模块"></a>3.3、BSS 语音分离模块</h3><p>语音分离- 旨在解决 “鸡尾酒会”问题  单 多<br>1、听觉场景分析 [hu and wang 2004]<br> 本质上是对人的听觉特性的模拟、具体是二分类监督学习<br>2、非负矩阵分解[Lee and Seung ,2001]<br> 基于统计独立信息假设，语音信号的系数性与谐波特性<br>3、 多通道技术 多<br>  fix beamforming ， adaptive beamforming ，ICA<br>4、 基于深度学习的语音分离<br>  Deep clustering<br>  Deep attractor netwaork<br>  Permutation invariant training 单<br>  等<br>  convTasNet</p>
+<h3 id="3-2、De-reverb-解混响"><a href="#3-2、De-reverb-解混响" class="headerlink" title="3.2、De-reverb 解混响"></a>3.2、De-reverb 解混响</h3><p>1、盲卷积法 [Neely and Allen ，1979]； </p>
+<pre><code>- 如果把 多径信道视为一个FIR 滤波器，输出视为一个 语音信号与FIR 的卷积，那么可以估计FIR 并求逆，作用于信号
+- 盲是指，没有任何先验信息，不知道信号形态，所以这种方案仅在噪声非常小时 有用
+</code></pre><p>2、 加权预测误差 WPE [Takuya 2012] AT&amp;T</p>
+<pre><code>- 原因：语音信号有线性预测特性
+- 估计一个线性预测滤波器，将房间冲激响应截短，
+  - 为什么不全部减掉？因为认为 混响（冲击）有早期混响和晚期混响，早期混响其实是有益的，真正有干扰的是晚期混响
+用权重等于 当前预测的误差除以当前信号功率，
+单通道多通道都可以（多更佳）
+</code></pre><p>3、 麦克风阵列波束成形 消除其他空间上的混响<br>4、 深度学习用于解混响 [Han 2015]</p>
+<pre><code>- DAE、DNN、LSTM、GAN 实验频谱映射
+</code></pre><h3 id="3-3、BSS-语音分离模块"><a href="#3-3、BSS-语音分离模块" class="headerlink" title="3.3、BSS 语音分离模块"></a>3.3、BSS 语音分离模块</h3><p>语音分离- 旨在解决 “鸡尾酒会”问题  单 多<br>1、听觉场景分析 [hu and wang 2004]<br> 本质上是对人的听觉特性的模拟、具体是二分类监督学习<br>2、非负矩阵分解[Lee and Seung ,2001]<br> 基于统计独立信息假设，语音信号的系数性与谐波特性<br>3、 多通道技术 多<br>  fix beamforming ， adaptive beamforming ，ICA<br>4、 基于深度学习的语音分离<br>  Deep clustering<br>  Deep attractor netwaork<br>  Permutation invariant training 单<br>  等<br>  convTasNet</p>
 <h3 id="3-4、-波束形成-多通道"><a href="#3-4、-波束形成-多通道" class="headerlink" title="3.4、 波束形成  多通道"></a>3.4、 波束形成  多通道</h3><p>   用于多通道语音增强、信号分离、去混响、声源定位<br>  现目前流行波束成形与深度学习相结合的方案</p>
-<h3 id="3-5、噪声抑制模块-NS（这里特指单通道、多通道一般放在波束成形）"><a href="#3-5、噪声抑制模块-NS（这里特指单通道、多通道一般放在波束成形）" class="headerlink" title="3.5、噪声抑制模块 NS（这里特指单通道、多通道一般放在波束成形）"></a>3.5、噪声抑制模块 NS（这里特指单通道、多通道一般放在波束成形）</h3><p>   基于统计模型方案  MMSE ML MAP<br>   基于子空间方法： 利用语音与噪声的不相关性，借助特征值&#x2F;奇异值分解到子空间处理<br>   语音增强核心在于噪声估计 ：<br>   基于深度学习的语音增强方法 ： 两大类： masking &amp;&amp; mapping</p>
+<h3 id="3-5、噪声抑制模块-NS（这里特指单通道、多通道一般放在波束成形）"><a href="#3-5、噪声抑制模块-NS（这里特指单通道、多通道一般放在波束成形）" class="headerlink" title="3.5、噪声抑制模块 NS（这里特指单通道、多通道一般放在波束成形）"></a>3.5、噪声抑制模块 NS（这里特指单通道、多通道一般放在波束成形）</h3><p>   基于统计模型方案  MMSE ML MAP<br>   基于子空间方法： 利用语音与噪声的不相关性，借助特征值/奇异值分解到子空间处理<br>   语音增强核心在于噪声估计 ：<br>   基于深度学习的语音增强方法 ： 两大类： masking &amp;&amp; mapping</p>
 <h3 id="3-6、幅度控制"><a href="#3-6、幅度控制" class="headerlink" title="3.6、幅度控制"></a>3.6、幅度控制</h3><p>   自动调整信号动态范围<br>   常用方法：<br>            1、 动态范围控制（Dynamic Range Control）DRC<br>            2、 自动增益控制（Automatic Gain Control） AGC</p>
 <h2 id="展望"><a href="#展望" class="headerlink" title="展望"></a>展望</h2><ul>
 <li>信号处理与深度学习相结合的方案 <ul>
@@ -491,11 +501,11 @@
 </ul>
 </li>
 </ul>
-<h2 id="推荐阅读："><a href="#推荐阅读：" class="headerlink" title="推荐阅读："></a>推荐阅读：</h2><p>基础知识：<br>–奥本海姆，《信号与系统》，电子工业出版社<br>–奥本海姆，《离散时间信号处理》( Discrete Time Signal Processing,Third Edition )<br>–郑君里，《信号与系统》，电子工业出版社，高等教育本科国家级规范教材<br>–赵力，《语音信号处理》，机械工业出版社<br>–韩纪庆，《语音信号处理》，机械工业出版社</p>
-<p>–张贤达，《现代信号处理》，清华大学出版社<br>–张贤达，《矩阵分析与应用》，清华大学出版社<br>– Van Trees，检测、估计和调制理论(IV)《Optimum array processing》<br>– Signals and Systems: an Introduction to Analog and Digital Signal Processing.1987Lecture.Alan V.Oppenheim</p>
+<h2 id="推荐阅读："><a href="#推荐阅读：" class="headerlink" title="推荐阅读："></a>推荐阅读：</h2><p>基础知识：<br>—奥本海姆，《信号与系统》，电子工业出版社<br>—奥本海姆，《离散时间信号处理》( Discrete Time Signal Processing,Third Edition )<br>—郑君里，《信号与系统》，电子工业出版社，高等教育本科国家级规范教材<br>—赵力，《语音信号处理》，机械工业出版社<br>—韩纪庆，《语音信号处理》，机械工业出版社</p>
+<p>—张贤达，《现代信号处理》，清华大学出版社<br>—张贤达，《矩阵分析与应用》，清华大学出版社<br>— Van Trees，检测、估计和调制理论(IV)《Optimum array processing》<br>— Signals and Systems: an Introduction to Analog and Digital Signal Processing.1987Lecture.Alan V.Oppenheim</p>
 <p>推荐阅读：<br>实操：<br>《实时语音处理实践指南》<br>进阶：<br>《自适应滤波器原理》第五版<br>《语音增强 理论与实践》罗艾洲<br>《麦克风阵列信号处理》Jacob Benest</p>
-<p>推荐项目：<br>– Athena-signal<br><a target="_blank" rel="noopener" href="https://github.com/athena-team/athena-signal">https://github.com/athena-team/athena-signal</a></p>
-<p>– Python for Signal Processing：<br>    <a target="_blank" rel="noopener" href="https://github.com/unpingco/Python-for-Signal-Processing">https://github.com/unpingco/Python-for-Signal-Processing</a><br>    《Python for Signal Processing: Featuring IPython Notebooks》对应源码，包含信号处理12大类（采样定理、傅里叶变换、滤波器等）、随机过程15大类（高斯马尔科夫、最大似然等)<br>– Speex<br>    <a target="_blank" rel="noopener" href="https://www.speex.org/">https://www.speex.org</a><br>    AFree Codec For Free Speech。专门语音压缩而设计的，包含超过9种算法∶AEC、NS、VAD等，不过现在被Opus替代。<br>– Google WebRTC<br>    <a target="_blank" rel="noopener" href="https://webrtc.org/">https://webrtc.org</a><br>    一个免费的开放式项目，通过简单的API为浏览器和移动应用程序提供实时通信（RTC）功能。<br>– vOICEBOX: Speech Processing Toolbox for MATLAB<br>    <a target="_blank" rel="noopener" href="http://www.ee.ic.ac.uk/hp/staff/dmb/voicebox/voicebox.html">http://www.ee.ic.ac.uk/hp/staff/dmb/voicebox/voicebox.html</a><br>    语音处理工具箱，由MATLAB程序组成。超过100个函数，包含语音增强、ASR等在内。</p>
+<p>推荐项目：<br>— Athena-signal<br><a target="_blank" rel="noopener" href="https://github.com/athena-team/athena-signal">https://github.com/athena-team/athena-signal</a></p>
+<p>— Python for Signal Processing：<br>    <a target="_blank" rel="noopener" href="https://github.com/unpingco/Python-for-Signal-Processing">https://github.com/unpingco/Python-for-Signal-Processing</a><br>    《Python for Signal Processing: Featuring IPython Notebooks》对应源码，包含信号处理12大类（采样定理、傅里叶变换、滤波器等）、随机过程15大类（高斯马尔科夫、最大似然等)<br>— Speex<br>    <a target="_blank" rel="noopener" href="https://www.speex.org">https://www.speex.org</a><br>    AFree Codec For Free Speech。专门语音压缩而设计的，包含超过9种算法∶AEC、NS、VAD等，不过现在被Opus替代。<br>— Google WebRTC<br>    <a target="_blank" rel="noopener" href="https://webrtc.org">https://webrtc.org</a><br>    一个免费的开放式项目，通过简单的API为浏览器和移动应用程序提供实时通信（RTC）功能。<br>— vOICEBOX: Speech Processing Toolbox for MATLAB<br>    <a target="_blank" rel="noopener" href="http://www.ee.ic.ac.uk/hp/staff/dmb/voicebox/voicebox.html">http://www.ee.ic.ac.uk/hp/staff/dmb/voicebox/voicebox.html</a><br>    语音处理工具箱，由MATLAB程序组成。超过100个函数，包含语音增强、ASR等在内。</p>
 
         </div>
         <!-- .entry-content -->

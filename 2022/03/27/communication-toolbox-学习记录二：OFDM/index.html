@@ -419,17 +419,20 @@
 <p>为了避免在传输许多并行低带宽信号时出现 ISI，各个子载波必须相互正交。通过传输许多正交低带宽子载波来避免 ISI 激发了 OFDM。OFDM 调制器将高速率串行符号流转换为许多并行低速率流。每个正交低速率流遇到一个具有最小 ISI 的相对平坦的信道，并且可以很容易地均衡。</p>
 <p>举个例子：</p>
 <blockquote>
-<p>一个信号，其脉冲持续时间为$T_{sym}&#x3D;0.25 sec$,那么符号速率为$R_{sym}&#x3D;1&#x2F;T_{sym}&#x3D;8Hz$,<br>将这个脉冲乘以数倍于$R_{sym}$ 如 频率为$R_{sym}、2R_{sym}、3R_{sym}$的余弦波，得到下图：<br>时域图：<br><img src="https://ww2.mathworks.cn/help/examples/comm/win64/IntroToOFDMExample_03.png"><br>频域图：<br><img src="https://ww2.mathworks.cn/help/examples/comm/win64/IntroToOFDMExample_04.png"></p>
+<p>一个信号，其脉冲持续时间为$T_{sym}=0.25 sec$,那么符号速率为$R_{sym}=1/T_{sym}=8Hz$,<br>将这个脉冲乘以数倍于$R_{sym}$ 如 频率为$R_{sym}、2R_{sym}、3R_{sym}$的余弦波，得到下图：<br>时域图：<br><img src="https://ww2.mathworks.cn/help/examples/comm/win64/IntroToOFDMExample_03.png" alt=""><br>频域图：<br><img src="https://ww2.mathworks.cn/help/examples/comm/win64/IntroToOFDMExample_04.png" alt=""></p>
 </blockquote>
-<p>可以发现，每个子载波的频谱峰值出现在所有其他脉冲的过零处。<br>OFDM 调制器将所有这些子载波加在一起以形成其输出信号。子载波数据可以用不同的调制方式。<br>这里，子载波使用 QAM 方法进行基带调制。<br>数学上，OFDM调制符号采样输出为<br>$$<br>s(k)&#x3D;\sum_{m&#x3D;0}^{N-1} a_{m, n} e^{j 2 \pi m R_{\mathrm{sym}} k\left(\frac{T_{\mathrm{sym}}}{N}\right)}<br>$$<br>其中</p>
+<p>可以发现，每个子载波的频谱峰值出现在所有其他脉冲的过零处。<br>OFDM 调制器将所有这些子载波加在一起以形成其输出信号。子载波数据可以用不同的调制方式。<br>这里，子载波使用 QAM 方法进行基带调制。<br>数学上，OFDM调制符号采样输出为</p>
+<script type="math/tex; mode=display">
+s(k)=\sum_{m=0}^{N-1} a_{m, n} e^{j 2 \pi m R_{\mathrm{sym}} k\left(\frac{T_{\mathrm{sym}}}{N}\right)}</script><p>其中</p>
 <ul>
 <li>$a_{m, n}$是第$n$个（时域）OFDM调制符号的第$m$个子载波的 符号</li>
 <li>$R_{\mathrm{sym}}$是每个QAM符号流的符号速率</li>
-<li>$T_{\mathrm{sym}}&#x3D;1&#x2F;R_{\mathrm{sym}}$</li>
+<li>$T_{\mathrm{sym}}=1/R_{\mathrm{sym}}$</li>
 <li>$N$是子载波的数量 或者说是QAM符号流的数量</li>
 </ul>
-<p>公式也可以简写为<br>$$<br>s(k)&#x3D;\sum_{m&#x3D;0}^{N-1} a_{m, n} e^{j 2 \pi\left(\frac{m k}{N}\right)}<br>$$</p>
-<p>这数学上恰好与$a_{m, n}$的离散傅里叶反变换不谋而合。</p>
+<p>公式也可以简写为</p>
+<script type="math/tex; mode=display">
+s(k)=\sum_{m=0}^{N-1} a_{m, n} e^{j 2 \pi\left(\frac{m k}{N}\right)}</script><p>这数学上恰好与$a_{m, n}$的离散傅里叶反变换不谋而合。</p>
 <h2 id="2、没有循环前缀的OFDM-仿真"><a href="#2、没有循环前缀的OFDM-仿真" class="headerlink" title="2、没有循环前缀的OFDM 仿真"></a>2、没有循环前缀的OFDM 仿真</h2><p>首先，OFDM符号我们采用 OFDM 子载波数据用QAM调制的方案，将这些数据作为子载波前面的系数，然后利用快速傅里叶反变换（IFFT），将并行传输的数据 转换为一个个相互正交的子载波的叠加。因为每一个子载波传输的数据非常少（一个OFDM符号周期才传输一个QAM符号），所以每个子载波都是窄带的，所以大概里经历平坦衰落，接收端的均衡器均衡器每个子载波仅需要一个抽头。</p>
 <p>这是一个16QAM+OFDM的程序仿真</p>
 <h3 id="2-1、信源端"><a href="#2-1、信源端" class="headerlink" title="2.1、信源端"></a>2.1、信源端</h3><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">bps <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>    <span class="token comment">% Bits per symbol</span>
@@ -440,7 +443,7 @@ txsymbols <span class="token operator">=</span> <span class="token function">ran
 txgrid <span class="token operator">=</span> <span class="token function">qammod</span><span class="token punctuation">(</span>txsymbols<span class="token punctuation">,</span>M<span class="token punctuation">,</span>UnitAveragePower<span class="token operator">=</span>true<span class="token punctuation">)</span><span class="token punctuation">;</span>
 txout <span class="token operator">=</span> <span class="token function">ifft</span><span class="token punctuation">(</span>txgrid<span class="token punctuation">,</span>nFFT<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token function">stem</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span>nFFT<span class="token punctuation">,</span><span class="token function">real</span><span class="token punctuation">(</span>txout<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p><img src="https://ww2.mathworks.cn/help/examples/comm/win64/BasicOFDMWithNoCyclicPrefixExample_01.png"></p>
+<p><img src="https://ww2.mathworks.cn/help/examples/comm/win64/BasicOFDMWithNoCyclicPrefixExample_01.png" alt=""></p>
 <h3 id="2-2、信道"><a href="#2-2、信道" class="headerlink" title="2.2、信道"></a>2.2、信道</h3><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">rxin <span class="token operator">=</span> <span class="token function">awgn</span><span class="token punctuation">(</span>txout<span class="token punctuation">,</span><span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
 rxgrid <span class="token operator">=</span> <span class="token function">fft</span><span class="token punctuation">(</span>rxin<span class="token punctuation">,</span>nFFT<span class="token punctuation">)</span><span class="token punctuation">;</span> 
 rxsymbols <span class="token operator">=</span> <span class="token function">qamdemod</span><span class="token punctuation">(</span>rxgrid<span class="token punctuation">,</span>M<span class="token punctuation">,</span>UnitAveragePower<span class="token operator">=</span>true<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token keyword">if</span> <span class="token function">isequal</span><span class="token punctuation">(</span>txsymbols<span class="token punctuation">,</span>rxsymbols<span class="token punctuation">)</span> 
@@ -448,20 +451,16 @@ rxsymbols <span class="token operator">=</span> <span class="token function">qam
  <span class="token keyword">else</span> 
     <span class="token function">disp</span><span class="token punctuation">(</span> "恢复的符号与传输的符号不匹配。" <span class="token punctuation">)</span>
  <span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
 <p>IFFT 的所有 bin（应该是指输入系数） 都填充有用数据。在实际系统中，边缘端子载波通常留空以用作保护带，并且一些子载波 可用于发送特定的导频信号。保护带和导频信号的组合有助于同步和均衡。   </p>
 <h2 id="3、均衡、卷积、以及循环前缀"><a href="#3、均衡、卷积、以及循环前缀" class="headerlink" title="3、均衡、卷积、以及循环前缀"></a>3、均衡、卷积、以及循环前缀</h2><h3 id="3-1、频域均衡"><a href="#3-1、频域均衡" class="headerlink" title="3.1、频域均衡"></a>3.1、频域均衡</h3><p>这个例子介绍了频域均衡，并展示了如何将循环卷积“转换”（其实不叫转换，得到前len(u)个想要的结果）为线性卷积</p>
-<p>当考虑线性信道模型时，接收信号是发射信号与信道脉冲响应的卷积。<br>也即：<br>$$Y(f)&#x3D;H(f)U(f)$$</p>
-<p>只要知道了频域相应$H(f)$,就还可以得到信号,即$$U(f)&#x3D;\frac{Y(f)}{H(f)}$$<br>其实这个式子就是频域均衡</p>
+<p>当考虑线性信道模型时，接收信号是发射信号与信道脉冲响应的卷积。<br>也即：</p>
+<script type="math/tex; mode=display">Y(f)=H(f)U(f)</script><p>只要知道了频域相应$H(f)$,就还可以得到信号,即<script type="math/tex">U(f)=\frac{Y(f)}{H(f)}</script><br>其实这个式子就是频域均衡</p>
 <h3 id="3-2、卷积"><a href="#3-2、卷积" class="headerlink" title="3.2、卷积"></a>3.2、卷积</h3><p>但是FFT处理产生的其实是信号$u$和$h$的循环卷积（这是为啥？），为了将这种循环卷积转换为线性卷积，$u$,$h$填充零的个数至少到 length(u)+length(h)-1 (<strong>填零策略</strong>)</p>
 <blockquote>
 <p>如果得到的必是循环卷积，那么，子载波数量N应该是len(u)+len(h)-1,</p>
+<p>eg:输入8个数据，信道冲击为3径，那么N至少为8+3-1=10<br>也就是填2个0</p>
 </blockquote>
-<blockquote>
-<p>eg:输入8个数据，信道冲击为3径，那么N至少为8+3-1&#x3D;10<br>也就是填2个0</p>
-</blockquote>
-<p>看一个循环卷积和线性卷积的区别例子</p>
-<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">u1 <span class="token operator">=</span> <span class="token number">1</span><span class="token operator">:</span><span class="token number">8</span><span class="token punctuation">;</span> 
+<p>看一个循环卷积和线性卷积的区别例子<br><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">u1 <span class="token operator">=</span> <span class="token number">1</span><span class="token operator">:</span><span class="token number">8</span><span class="token punctuation">;</span> 
 h <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0.4</span> <span class="token number">1</span> <span class="token number">0.4</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
 figure
@@ -472,8 +471,7 @@ figure
 <span class="token function">subplot</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span>
 <span class="token function">stem</span><span class="token punctuation">(</span>h<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token function">axis</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span> <span class="token number">10</span> <span class="token number">0</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-<span class="token function">title</span><span class="token punctuation">(</span>"Channel impulse response"<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p><img src="https://ww2.mathworks.cn/help/examples/comm/win64/EqualizationConvolutionAndCyclicPrefixAdditionExample_01.png"></p>
+<span class="token function">title</span><span class="token punctuation">(</span>"Channel impulse response"<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><br><img src="https://ww2.mathworks.cn/help/examples/comm/win64/EqualizationConvolutionAndCyclicPrefixAdditionExample_01.png" alt=""></p>
 <p>循环前缀能够把信道消弭未知信道时延的影响（循环长度大于最大信道时延长度即可）</p>
 <h3 id="3-3、循环前缀"><a href="#3-3、循环前缀" class="headerlink" title="3.3、循环前缀"></a>3.3、循环前缀</h3><p>对于 OFDM 处理，循环卷积的必要填充是通过添加 CP 而不是对信号进行零填充来提供的。添加重复符号结束样本的 CP 可启用：</p>
 <ul>
@@ -494,20 +492,17 @@ hold on<span class="token punctuation">;</span>
 <span class="token function">stem</span><span class="token punctuation">(</span>yl2<span class="token punctuation">,</span>"o"<span class="token punctuation">)</span>
 <span class="token function">title</span><span class="token punctuation">(</span>"Convolution Results with Cyclic Prefix"<span class="token punctuation">)</span>
 <span class="token function">legend</span> <span class="token punctuation">(</span>"Linear"<span class="token punctuation">,</span>"Circular"<span class="token punctuation">,</span>"Location"<span class="token punctuation">,</span>"northwest"<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p><img src="https://ww2.mathworks.cn/help/examples/comm/win64/EqualizationConvolutionAndCyclicPrefixAdditionExample_03.png"></p>
-<p>对比循环卷积与线性卷积的误差使得否达到要求</p>
-<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab"><span class="token keyword">if</span> <span class="token function">max</span><span class="token punctuation">(</span>yc1 <span class="token operator">-</span> <span class="token function">yl2</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span>N<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">1e-8</span>
+<p><img src="https://ww2.mathworks.cn/help/examples/comm/win64/EqualizationConvolutionAndCyclicPrefixAdditionExample_03.png" alt=""></p>
+<p>对比循环卷积与线性卷积的误差使得否达到要求<br><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab"><span class="token keyword">if</span> <span class="token function">max</span><span class="token punctuation">(</span>yc1 <span class="token operator">-</span> <span class="token function">yl2</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span>N<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">1e-8</span>
     <span class="token function">disp</span><span class="token punctuation">(</span>"Linear and circular convolution sequences match<span class="token punctuation">.</span>"<span class="token punctuation">)</span>
 <span class="token keyword">else</span>
     <span class="token function">disp</span><span class="token punctuation">(</span>"Received symbols do not match transmitted symbols<span class="token punctuation">.</span>"<span class="token punctuation">)</span>
-<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
+<span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></p>
 <h2 id="4、加CP的OFDM仿真"><a href="#4、加CP的OFDM仿真" class="headerlink" title="4、加CP的OFDM仿真"></a>4、加CP的OFDM仿真</h2><p>在这个案例中，将构建一个带有循环前缀的16QAM &amp; OFDM 仿真<br>为了能有效的均衡，循环前缀的长度必须大于信道长度（上一节说了，只有填零或者前缀的个数大于len（u）+len（h）-1 才有可能将循环卷积“转换”为线性卷积）</p>
-<h3 id="4-1、基本参数"><a href="#4-1、基本参数" class="headerlink" title="4.1、基本参数"></a>4.1、基本参数</h3><p>定义 QAM 和 OFDM 处理的变量。生成符号、QAM 调制、OFDM 调制，然后将 CP 添加到信号中。多个OFDM符号可以同时处理然后串行化。</p>
-<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">bps <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>    <span class="token comment">% Number of bits per symbol  相当于之前的k = log2(M)</span>
+<h3 id="4-1、基本参数"><a href="#4-1、基本参数" class="headerlink" title="4.1、基本参数"></a>4.1、基本参数</h3><p>定义 QAM 和 OFDM 处理的变量。生成符号、QAM 调制、OFDM 调制，然后将 CP 添加到信号中。多个OFDM符号可以同时处理然后串行化。<br><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">bps <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>    <span class="token comment">% Number of bits per symbol  相当于之前的k = log2(M)</span>
 M <span class="token operator">=</span> <span class="token number">2</span><span class="token operator">^</span>bps<span class="token punctuation">;</span>  <span class="token comment">% Modulation order</span>
 nFFT <span class="token operator">=</span> <span class="token number">128</span><span class="token punctuation">;</span> <span class="token comment">% Number of FFT bins</span>
-nCP <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">;</span>    <span class="token comment">% CP length</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+nCP <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">;</span>    <span class="token comment">% CP length</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></p>
 <h3 id="4-2-发射端"><a href="#4-2-发射端" class="headerlink" title="4.2 发射端"></a>4.2 发射端</h3><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">txsymbols <span class="token operator">=</span> <span class="token function">randi</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span> M<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>nFFT<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 txgrid <span class="token operator">=</span> <span class="token function">qammod</span><span class="token punctuation">(</span>txsymbols<span class="token punctuation">,</span>M<span class="token punctuation">,</span>UnitAveragePower<span class="token operator">=</span>true<span class="token punctuation">)</span><span class="token punctuation">;</span>
 txout <span class="token operator">=</span> <span class="token function">ifft</span><span class="token punctuation">(</span>txgrid<span class="token punctuation">,</span>nFFT<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -517,29 +512,31 @@ txout <span class="token operator">=</span> <span class="token function">txout</
 <span class="token comment">% 取cp、加cp</span>
 txcp <span class="token operator">=</span> <span class="token function">txout</span><span class="token punctuation">(</span>nFFT<span class="token operator">-</span>nCP<span class="token operator">+</span><span class="token number">1</span><span class="token operator">:</span>nFFT<span class="token punctuation">)</span><span class="token punctuation">;</span>
 txout <span class="token operator">=</span> <span class="token punctuation">[</span>txcp<span class="token punctuation">;</span> txout<span class="token punctuation">]</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
 <h3 id="4-3、噪声部分-（噪声、频选、延迟）"><a href="#4-3、噪声部分-（噪声、频选、延迟）" class="headerlink" title="4.3、噪声部分 （噪声、频选、延迟）"></a>4.3、噪声部分 （噪声、频选、延迟）</h3><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">hchan <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0.4</span> <span class="token number">1</span> <span class="token number">0.4</span><span class="token punctuation">]</span><span class="token operator">.'</span><span class="token punctuation">;</span>       <span class="token comment">% 信道冲激响应</span>
 rxin <span class="token operator">=</span> <span class="token function">awgn</span><span class="token punctuation">(</span>txout<span class="token punctuation">,</span><span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">;</span>       <span class="token comment">% Add noise   </span>
 rxin <span class="token operator">=</span> <span class="token function">conv</span><span class="token punctuation">(</span>rxin<span class="token punctuation">,</span>hchan<span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">% Add frequency dependency</span>
 channelDelay <span class="token operator">=</span> dsp<span class="token punctuation">.</span><span class="token function">Delay</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% Could use fractional delay 我发现效果就是第一个数据是零后面的数据是原数据往后移动一位</span>
 rxin <span class="token operator">=</span> <span class="token function">channelDelay</span><span class="token punctuation">(</span>rxin<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">% Add delay</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
 <h3 id="4-4、接收端"><a href="#4-4、接收端" class="headerlink" title="4.4、接收端"></a>4.4、接收端</h3><p>添加一个小于 CP 长度的随机偏移量。零模型的偏移设置可在发射和接收信号之间实现完美同步？。任何小于 CP 长度的时序偏移都可以通过额外的线性相位进行均衡补偿。<br>[这个偏移量offset 到底有什么用？为什么设成随机的，难道是信道参数吗？？]<br>答：</p>
 <ul>
 <li>1、可能是模拟了一个信道产生的频偏，是信道参数。</li>
-<li>2、可能是同步时产生的误差（没有找到正确的OFDM信号开始的位置）<br>（以下结论参考自北京大学赵玉萍OFDM系统的频偏与时篇PPT）<br><img src="https://s2.loli.net/2022/04/01/PMe56Dc3wE2KuIQ.png"></li>
+<li>2、可能是同步时产生的误差（没有找到正确的OFDM信号开始的位置）<br>（以下结论参考自北京大学赵玉萍OFDM系统的频偏与时篇PPT）<br><img src="https://s2.loli.net/2022/04/01/PMe56Dc3wE2KuIQ.png" alt=""></li>
 <li>载波频率偏移对于低频信号的作用相当于在OFDM时域采样序列上增添了一个等效指数因子</li>
-<li>该因子是随着时间连续变化的，即 n &#x3D; 0 ~ N</li>
-<li>频偏对系统的影响可写为归一化频偏的函数$\epsilon&#x3D;df&#x2F;\Delta f$($\Delta f$是子载波间隔、$df$是频偏)</li>
+<li>该因子是随着时间连续变化的，即 n = 0 ~ N</li>
+<li>频偏对系统的影响可写为归一化频偏的函数$\epsilon=df/\Delta f$($\Delta f$是子载波间隔、$df$是频偏)</li>
 </ul>
 <pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">offset <span class="token operator">=</span> <span class="token function">randi</span><span class="token punctuation">(</span>nCP<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token comment">% random offset less than length of CP</span>
 <span class="token comment">% Remove CP and synchronize the received signal</span>
 <span class="token comment">% 下面这一步1、去掉了CP头，2、假设完美同步（时延消除）3、往前多了 offset</span>
 rxsync <span class="token operator">=</span> <span class="token function">rxin</span><span class="token punctuation">(</span>nCP<span class="token operator">+</span><span class="token number">1</span><span class="token operator">+</span>channelDelay<span class="token punctuation">.</span>Length<span class="token operator">-</span>offset<span class="token operator">:</span><span class="token keyword">end</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 rxgrid <span class="token operator">=</span> <span class="token function">fft</span><span class="token punctuation">(</span><span class="token function">rxsync</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span>nFFT<span class="token punctuation">)</span><span class="token punctuation">,</span>nFFT<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>至于为什么取rxsync &#x3D; rxin(nCP+1+channelDelay.Length-offset:end); 就能表示频偏还是不太明白。<br>可能的推导思路：</p>
+<p>至于为什么取rxsync = rxin(nCP+1+channelDelay.Length-offset:end); 就能表示频偏还是不太明白。<br>可能的推导思路：</p>
 <blockquote>
-<p>设<strong>发射端</strong>经过IFFT变换之后传输信号为：<br>$$<br>\boldsymbol{s}(\boldsymbol{n})&#x3D;\sum_{l&#x3D;0}^{N-1} X(l) e^{j \frac{2 \pi}{N} n l}<br>$$<br>若接收信号存在频率偏移, 此时信号应表示为<br>$$<br>\boldsymbol{r}(\boldsymbol{n})&#x3D;\sum_{l&#x3D;0}^{N-1} X(l) e^{j \frac{2 \pi}{N} n l} e^{j \frac{2 \pi}{N} n \epsilon}+\boldsymbol{w}(n)&#x3D;\sum_{l&#x3D;0}^{N-1} X(l) e^{j \frac{2 \pi}{N} n (l+\epsilon)}+\boldsymbol{w}(n)<br>$$<br>$\boldsymbol{w}(n)$ 为高斯噪声的取样值</p>
+<p>设<strong>发射端</strong>经过IFFT变换之后传输信号为：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{s}(\boldsymbol{n})=\sum_{l=0}^{N-1} X(l) e^{j \frac{2 \pi}{N} n l}</script><p>若接收信号存在频率偏移, 此时信号应表示为</p>
+<script type="math/tex; mode=display">
+\boldsymbol{r}(\boldsymbol{n})=\sum_{l=0}^{N-1} X(l) e^{j \frac{2 \pi}{N} n l} e^{j \frac{2 \pi}{N} n \epsilon}+\boldsymbol{w}(n)=\sum_{l=0}^{N-1} X(l) e^{j \frac{2 \pi}{N} n (l+\epsilon)}+\boldsymbol{w}(n)</script><p>$\boldsymbol{w}(n)$ 为高斯噪声的取样值</p>
 </blockquote>
 <pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab"><span class="token comment">% 是否使用均衡？</span>
 useEqualizer <span class="token operator">=</span> true<span class="token punctuation">;</span>
@@ -562,7 +559,6 @@ rxsymbols <span class="token operator">=</span> <span class="token function">qam
     <span class="token function">disp</span><span class="token punctuation">(</span>"Received symbols do not match transmitted symbols<span class="token punctuation">.</span>"<span class="token punctuation">)</span>
 <span class="token keyword">end</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
 <h2 id="5、the-final-matlab-OFDM-仿真"><a href="#5、the-final-matlab-OFDM-仿真" class="headerlink" title="5、the final - matlab OFDM 仿真"></a>5、the final - matlab OFDM 仿真</h2><h3 id="5-1、-基本配置"><a href="#5-1、-基本配置" class="headerlink" title="5.1、 基本配置"></a>5.1、 基本配置</h3><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">k <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>       <span class="token comment">% Number of bits per symbol </span>
 M <span class="token operator">=</span> <span class="token number">2</span><span class="token operator">^</span>k<span class="token punctuation">;</span>     <span class="token comment">% Modulation order</span>
 nFFT <span class="token operator">=</span> <span class="token number">128</span><span class="token punctuation">;</span>  <span class="token comment">% Number of FFT bins</span>
@@ -573,16 +569,14 @@ txout <span class="token operator">=</span> <span class="token function">ifft</s
 txout <span class="token operator">=</span> <span class="token function">txout</span><span class="token punctuation">(</span><span class="token operator">:</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% Vectorize matrix if processing multiple symbols</span>
 txcp <span class="token operator">=</span> <span class="token function">txout</span><span class="token punctuation">(</span>nFFT<span class="token operator">-</span>cplen<span class="token operator">+</span><span class="token number">1</span><span class="token operator">:</span>nFFT<span class="token punctuation">)</span><span class="token punctuation">;</span>
 txout <span class="token operator">=</span> <span class="token punctuation">[</span>txcp<span class="token punctuation">;</span> txout<span class="token punctuation">]</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
 <ul>
 <li>一个OFDM符号的时间长度$T_{symbol}$是子载波间隔$\Delta f$的倒数(因为OFDM符号是各个子载波信号在时域上的叠加，所以一个符号时间就是一个子载波的符号周期，而一个子载波的符号时间等于器在载波间隔的倒数)</li>
 <li><strong>一个OFDM符号</strong>我们用<strong>N（nFFT）个采样点</strong>表示 这里是128点</li>
-<li>所以采样点之间的时间间隔为  $T_{symbol}&#x2F;N$ , 采样频率为 $N \Delta f $，所以这里为什么除以2呢？？？？奇怪。</li>
+<li>所以采样点之间的时间间隔为  $T_{symbol}/N$ , 采样频率为 $N \Delta f $，所以这里为什么除以2呢？？？？奇怪。</li>
 </ul>
 <pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">scs <span class="token operator">=</span> <span class="token number">20e3</span><span class="token punctuation">;</span>        <span class="token comment">% Subcarrier spacing in Hz  子载波间隔？</span>
 Fs <span class="token operator">=</span> scs <span class="token operator">*</span> nFFT<span class="token operator">/</span><span class="token number">2</span><span class="token punctuation">;</span> <span class="token comment">% Sampling rate (1.28e6 Hz) 采样频率</span>
 Ts <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">/</span> Fs<span class="token punctuation">;</span>       <span class="token comment">% Sample duration in seconds  </span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-
 <pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">Tend <span class="token operator">=</span> Ts <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token function">length</span><span class="token punctuation">(</span>txout<span class="token punctuation">)</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token function">subplot</span><span class="token punctuation">(</span><span class="token number">211</span><span class="token punctuation">)</span>
 hold off
@@ -592,7 +586,6 @@ hold off
 hold off
 <span class="token function">plot</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token operator">:</span>Ts<span class="token operator">:</span>Tend<span class="token punctuation">,</span><span class="token function">imag</span><span class="token punctuation">(</span>txout<span class="token punctuation">)</span><span class="token punctuation">,</span>"<span class="token operator">*</span>"<span class="token punctuation">)</span>
 <span class="token function">title</span><span class="token punctuation">(</span>"Imaginary component of transmitter output"<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
 <h3 id="5-2-1、-过采样"><a href="#5-2-1、-过采样" class="headerlink" title="5.2.1、 过采样"></a>5.2.1、 过采样</h3><p>Define an FFT length longer than nFFT to cause oversampling in time domain. To aid comparison later, insert zeros into the middle of txgrid to maintain correspondence between bin centers for the original and upsampled signals. A control here allows you to adjust the integer oversampling rate used by the OFDM modulator output and demodulator input.<br>定义一个长度大于nFFT的 FFT，这样可以在时域上过采样。为了便于比较，在 txgrid 的中间插入零以保持原始信号和上采样信号的 bin 中心之间的对应关系（为什么？）。upFactor 是过采样倍数可以自行调整</p>
 <p>% 我更改了以下填零的顺序，发现并没有太大的变化，都能拟合<br>是那么叫保持原始信号和上采样 信号 系数中心之间的对应关系？有什么样的对应关系需要保持呢？</p>
 <blockquote>
@@ -620,20 +613,17 @@ hold on
 hold on
 <span class="token function">plot</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token operator">:</span>Ts<span class="token operator">:</span>Tend<span class="token punctuation">,</span><span class="token function">imag</span><span class="token punctuation">(</span>txout<span class="token punctuation">)</span><span class="token punctuation">)</span>
 <span class="token function">legend</span> <span class="token punctuation">(</span>"Original"<span class="token punctuation">,</span>"Upsampled"<span class="token punctuation">,</span>"Location"<span class="token punctuation">,</span>"southeast"<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p><img src="https://ww2.mathworks.cn/help/examples/comm/win64/OFDMWithFFTBasedOversamplingExample_01.png"></p>
+<p><img src="https://ww2.mathworks.cn/help/examples/comm/win64/OFDMWithFFTBasedOversamplingExample_01.png" alt=""></p>
 <h3 id="5-3、信道"><a href="#5-3、信道" class="headerlink" title="5.3、信道"></a>5.3、信道</h3><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">hchan <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0.4</span> <span class="token number">1</span> <span class="token number">0.4</span><span class="token punctuation">]</span><span class="token operator">.'</span><span class="token punctuation">;</span>       <span class="token comment">% 信道冲击</span>
 rxin <span class="token operator">=</span> <span class="token function">awgn</span><span class="token punctuation">(</span>txout<span class="token punctuation">,</span><span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">;</span>       <span class="token comment">% Add noise   </span>
 rxin <span class="token operator">=</span> <span class="token function">conv</span><span class="token punctuation">(</span>rxin<span class="token punctuation">,</span>hchan<span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">% Add frequency dependency</span>
 channelDelay <span class="token operator">=</span> dsp<span class="token punctuation">.</span><span class="token function">Delay</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% Could use fractional delay 时延</span>
 rxin <span class="token operator">=</span> <span class="token function">channelDelay</span><span class="token punctuation">(</span>rxin<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">% Add delay</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>添加一个小于 CP 长度的随机偏移量。零模型的偏移设置可在发射和接收信号之间实现完美同步。任何小于 CP 长度的时序偏移都可以通过额外的线性相位进行均衡补偿。为了直接比较不同速率的信号，在 FFT 处理之前，通过上采样因子对同步信号进行归一化。</p>
-<pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">offset <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token function">randi</span><span class="token punctuation">(</span>cplenUp<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% random offset less than length of CP</span>
+<p>添加一个小于 CP 长度的随机偏移量。零模型的偏移设置可在发射和接收信号之间实现完美同步。任何小于 CP 长度的时序偏移都可以通过额外的线性相位进行均衡补偿。为了直接比较不同速率的信号，在 FFT 处理之前，通过上采样因子对同步信号进行归一化。<br><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">offset <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token function">randi</span><span class="token punctuation">(</span>cplenUp<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">% random offset less than length of CP</span>
 <span class="token comment">% Remove CP and synchronize the received signal</span>
 rxsync <span class="token operator">=</span> <span class="token function">rxin</span><span class="token punctuation">(</span>cplenUp<span class="token operator">+</span><span class="token number">1</span><span class="token operator">+</span>channelDelay<span class="token punctuation">.</span>Length<span class="token operator">-</span>offset<span class="token operator">:</span><span class="token keyword">end</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-rxgrid <span class="token operator">=</span> <span class="token function">fft</span><span class="token punctuation">(</span><span class="token function">rxsync</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span>nFFTUp<span class="token punctuation">)</span><span class="token punctuation">,</span>nFFTUp<span class="token punctuation">)</span><span class="token operator">/</span>upFactor<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
+rxgrid <span class="token operator">=</span> <span class="token function">fft</span><span class="token punctuation">(</span><span class="token function">rxsync</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">:</span>nFFTUp<span class="token punctuation">)</span><span class="token punctuation">,</span>nFFTUp<span class="token punctuation">)</span><span class="token operator">/</span>upFactor<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></p>
 <h3 id="5-4-接收端均衡"><a href="#5-4-接收端均衡" class="headerlink" title="5.4 接收端均衡"></a>5.4 接收端均衡</h3><pre class="line-numbers language-matlab" data-language="matlab"><code class="language-matlab">useEqualizer <span class="token operator">=</span> true<span class="token punctuation">;</span>
 <span class="token keyword">if</span> useEqualizer
     <span class="token comment">%注意，接收端iFFT采用的是 nFFT×过采样倍数 的点数！！！！！！！！</span>
@@ -652,8 +642,7 @@ rxsymbols <span class="token operator">=</span> <span class="token function">qam
 <span class="token keyword">else</span>
     <span class="token function">disp</span><span class="token punctuation">(</span>"Received symbols do not match transmitted symbols<span class="token punctuation">.</span>"<span class="token punctuation">)</span>
 <span class="token keyword">end</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>这一小节先到这里啦~ 还有n多问题没有解决 555，主要集中在：<br>1、设置的偏移上（offset），rxsync &#x3D; rxin(cplenUp+1+channelDelay.Length-offset:end); 这里的意义<br>2、过采样的时候，在iFFT前  为什么中间填零，而不是两边？<br>3、3径信道的影响没看到呀，哦哦，可能是OFDM以为天然抵抗多径，所以没啥影响。</p>
+<p>这一小节先到这里啦~ 还有n多问题没有解决 555，主要集中在：<br>1、设置的偏移上（offset），rxsync = rxin(cplenUp+1+channelDelay.Length-offset:end); 这里的意义<br>2、过采样的时候，在iFFT前  为什么中间填零，而不是两边？<br>3、3径信道的影响没看到呀，哦哦，可能是OFDM以为天然抵抗多径，所以没啥影响。</p>
 <p>后续知道答案时会及时解决</p>
 
         </div>
