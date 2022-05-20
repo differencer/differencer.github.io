@@ -655,7 +655,40 @@ A=\mathbf{R}(n-1) \quad B=\mathbf{x}(n) \quad C=\frac{1}{\lambda} \quad D=\mathb
 <blockquote>
 <p>1）初始化：<br>$\mathbf{w}(0)=\mathbf{0}$、$\mathbf{P}(0)=\delta^{-1}\mathbf{I}$、$\delta$是一个很小的正数,<br>PS:$\mathbf{P}(0)$的取法有点“讲头”的，首先R(0)是一个相关矩阵，所以是一个对称阵，另外为了方便求逆，所以取单位阵，其次，之前也说了，RLS的误差准则是，离当前时刻越远，其影响对当前时刻越小越好，所以，给他乘一个很小的系数。<br>2）对于每一个时刻n，重复下面的计算：<br>  $\quad$ 先验误差：$\varepsilon(n)=d(n)-\mathbf{x}^{T}(n) \mathbf{w}(n-1)$<br>  $\quad$ 增益向量：$\mathbf{k}(n)=\frac{\mathbf{P}(n-1) \mathbf{x}(n)}{\lambda+\mathbf{x}^{T}(n) \mathbf{P}(n-1) \mathbf{x}(n)}$<br>  $\quad$ 逆矩阵更新： $\mathbf{P}(n)=\frac{1}{\lambda}\left[\mathbf{P}(n-1)-\mathbf{k}(n) \mathbf{x}^{T}(n) \mathbf{P}(n-1)\right]$<br>  $\quad$ 滤波器更新：$\mathbf{w}(n)=\mathbf{w}(n-1)+\mathbf{k}(n) \varepsilon(n)$</p>
 </blockquote>
-<h2 id="2-5-RLS-与LMS-对比"><a href="#2-5-RLS-与LMS-对比" class="headerlink" title="2.5 RLS 与LMS 对比"></a>2.5 RLS 与LMS 对比</h2><p>一个广泛的共识是，RLS算法的收敛速度和跟踪性能都优于LMS算法，所付出的代价是需要<br>更复杂的计算。<br>| 算法      | LMS |    RLS   |<br>| —————- | —————- |——-|<br>| 计算误差     | 后验误差    |先验误差|<br>| 收敛速度  |  慢  | 快|<br>|跟踪性能| 慢|快|<br>|计算代价|小|大|</p>
+<h2 id="2-5-RLS-与LMS-对比"><a href="#2-5-RLS-与LMS-对比" class="headerlink" title="2.5 RLS 与LMS 对比"></a>2.5 RLS 与LMS 对比</h2><p>一个广泛的共识是，RLS算法的收敛速度和跟踪性能都优于LMS算法，所付出的代价是需要<br>更复杂的计算。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>LMS</th>
+<th>RLS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>计算误差</td>
+<td>后验误差</td>
+<td>先验误差</td>
+</tr>
+<tr>
+<td>收敛速度</td>
+<td>慢</td>
+<td>快</td>
+</tr>
+<tr>
+<td>跟踪性能</td>
+<td>慢</td>
+<td>快</td>
+</tr>
+<tr>
+<td>计算代价</td>
+<td>小</td>
+<td>大</td>
+</tr>
+</tbody>
+</table>
+</div>
 <p>另外，由于RLS使用了自相关矩阵的逆矩阵的递推，所以，一旦<strong>输入信号的自相关矩阵接近奇异时</strong>（输入信号各个时刻不要“太相关”），RLS的收敛速度和跟踪性能会严重恶化。</p>
 <p>可以看到，LMS 算法 与RLS 算法 在各个方面走了<strong>两个极端</strong>，下面要讲的 仿射投影算法可以说是两种“极端”的折中，也可以说是包含二者的一种统一框架。</p>
 <h1 id="三、AP（Affine-Projection-algorithm）仿射投影算法"><a href="#三、AP（Affine-Projection-algorithm）仿射投影算法" class="headerlink" title="三、AP（Affine Projection algorithm）仿射投影算法"></a>三、AP（Affine Projection algorithm）仿射投影算法</h1><h2 id="3-1、再次从一个N阶系统-mathbf-w-n-出发"><a href="#3-1、再次从一个N阶系统-mathbf-w-n-出发" class="headerlink" title="3.1、再次从一个N阶系统$\mathbf{w(n)}$出发"></a>3.1、再次从一个N阶系统$\mathbf{w(n)}$出发</h2><p>考虑一个N阶系统$w(n)$ ，<br>这一次我们将构造一个更加通用的模型，首先输入、输出、权重 都可以是复数</p>
