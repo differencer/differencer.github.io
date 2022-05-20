@@ -427,7 +427,7 @@
 </ul>
 </li>
 </ul>
-<h1 id="1、LMS（最小均方误差）算法"><a href="#1、LMS（最小均方误差）算法" class="headerlink" title="1、LMS（最小均方误差）算法"></a>1、LMS（最小均方误差）算法</h1><p>这是一个最基本的自适应滤波的算法，应用多，原理也比较简单。</p>
+<h1 id="一、LMS（最小均方误差）算法"><a href="#一、LMS（最小均方误差）算法" class="headerlink" title="一、LMS（最小均方误差）算法"></a>一、LMS（最小均方误差）算法</h1><p>这是一个最基本的自适应滤波的算法，应用多，原理也比较简单。</p>
 <h2 id="1-1、-从N阶线性系统出发"><a href="#1-1、-从N阶线性系统出发" class="headerlink" title="1.1、 从N阶线性系统出发"></a>1.1、 从N阶线性系统出发</h2><p>设一个信号经过噪声因素被接受为$x(n)$</p>
 <p>设接收信号$x(n)$通过了一个N阶滤波器，参数为{$w_i(n)$}，则滤波器输出为：</p>
 <p>$$y(n)&#x3D;\sum_{i&#x3D;0}^{N-1} w_{i}(n) x(n-i)&#x3D;\mathbf{w}^{T}(n) \mathbf{x}(n)&#x3D;\mathbf{x}^{T}(n) \mathbf{w}(n)$$<br>后面两种是卷积结果的向量表示（可以动手写一些是不是这样）<br>其中<br>$$\mathbf{x}(n)&#x3D;[x(n), \quad x(n-1), \quad \ldots \quad x(n-N+1)]^{T}$$<br>$$\mathbf{w}(n)&#x3D;\left[\begin{array}{llll}w_{0}(n), &amp; w_{1}(n), &amp; \ldots &amp; w_{N-1}(n)\end{array}\right]^{T}$$</p>
@@ -445,7 +445,7 @@
 <li>首先：不适用于非平稳过程（因为 相关矩阵 和相关向量 都是<strong>期望</strong>的形式），语音信号就是非平稳信号</li>
 <li>再求解过程中需要用到信号的所有历史数据（包括自相关矩阵，以及相关向量），当增加一个数据过后，滤波器就要重新求解系数。</li>
 </ul>
-<h2 id="1-3、自适应滤波器（-迭代算法，LMS算法）"><a href="#1-3、自适应滤波器（-迭代算法，LMS算法）" class="headerlink" title="1.3、自适应滤波器（ 迭代算法，LMS算法）"></a>1.3、自适应滤波器（ 迭代算法，LMS算法）</h2><p>由于涉及<strong>数学期望</strong>，在实际应用中，绝大多数情况下我们无法获得信号真实的自相关矩阵以及输入信号与期望输出之间的互相关向量，因此，实际应用中，我们用下式的<strong>瞬时梯度</strong>的<strong>迭代更新方案</strong>，<strong>代替数学期望方案</strong>，<br>$$<br>\hat{\nabla}(n)&#x3D;-2 e(n) \mathbf{x}(n)<br>$$<br>求取的<strong>瞬时梯度（的负梯度方向）代表了滤波器系数应该调整的方向</strong>，<br>于是，我们得到了标准时域LMS算法的更新公式:（也即基于采样点更新的标准LMS算法滤波器系数更新公式）<br>$$<br>\mathbf{w}(n+1)&#x3D;\mathbf{w}(n)+2 \mu \mathbf{x}(n) e(n)<br>$$<br>其中，$\mu $表示调整步长。</p>
+<h2 id="1-3、自适应滤波器（-迭代算法，LMS算法）"><a href="#1-3、自适应滤波器（-迭代算法，LMS算法）" class="headerlink" title="1.3、自适应滤波器（ 迭代算法，LMS算法）"></a>1.3、自适应滤波器（ 迭代算法，LMS算法）</h2><p>由于涉及<strong>数学期望</strong>，在实际应用中，绝大多数情况下我们无法获得信号真实的自相关矩阵以及输入信号与期望输出之间的互相关向量，因此，实际应用中，我们用下式的<strong>瞬时梯度</strong>的<strong>迭代更新方案</strong>，<strong>代替数学期望方案</strong>，PS：梯度隐含着这是一个可导函数，梯度是一个向量(隐含了大小和方向)，方向是函数值变化（上升）最快的方向向量，大小是变化的快慢。<br>$$<br>\hat{\nabla}(n)&#x3D;-2 e(n) \mathbf{x}(n)<br>$$<br>求取的<strong>瞬时梯度（的负梯度方向）代表了滤波器系数应该调整的方向</strong>，也就是误差下降的方向<br>于是，我们得到了标准时域LMS算法的更新公式:（也即基于采样点更新的标准LMS算法滤波器系数更新公式）<br>$$<br>\mathbf{w}(n+1)&#x3D;\mathbf{w}(n)+2 \mu \mathbf{x}(n) e(n)<br>$$<br>其中，$\mu $表示调整步长。</p>
 <p>标准LMS算法的执行流程：</p>
 <blockquote>
 <p>步骤：<br>    1) 滤波器初始化：<br>    2) 对每一个新的输入采样 ，计算输出信号<br>    3) 利用期望输出 ，根据<strong>误差公式</strong>计算误差信号 ，得到梯度(3.8)式。<br>    4) 利用<strong>LMS算法的更新公式</strong>更新滤波器系数：<br>    5) 返回步骤 2，直至结束，可以得到输出序列和误差序列。</p>
@@ -459,32 +459,31 @@
 <p>优点：简单，易于实现<br>    缺点：收敛速度慢（虽然 瞬时梯度是 真实梯度的无偏估计，但是估计的方差不为零，估计方差存在误差（噪声），这种方差的存在导致了LMS收敛速度比较慢）</p>
 </blockquote>
 <p><strong>代码实现</strong></p>
-<pre class="line-numbers language-none"><code class="language-none">function [output,en,w]&#x3D;MyLMS(L,mu,desiresig,inputSig)
+<pre class="line-numbers language-none"><code class="language-none">function [output,en,w]&#x3D;MyLMS(L,mu,x,d)
 % 输入参数
 % L 滤波器阶数
 % mu 学习步长
-% inputsig 输入信号
-% desiresig 期望信号
-% output 输出
+% x 滤波器输入信号 列向量
+% d 期望信号 列向量
+% y 滤波器输出
 % w 滤波器系数
 % 注意 输入信号于期望 输入应该保证一样长
 
-N&#x3D;length(desiresig);
+N&#x3D;length(x);
 w &#x3D; zeros(1,L);
-error&#x3D;zeros(1,N);
+e&#x3D;zeros(1,N);
+y&#x3D;zeros(1,N);
 
-filterinput&#x3D;inputSig;
-
-inputpad &#x3D; [zeros(1,L -1) filterinput&#39;];
-  for n &#x3D; 1:N  % 每一个采样点“前进一步”
+x &#x3D; [zeros(1,L -1) x&#39;];
+for n &#x3D; 1:N  % 每一个采样点“前进一步”
       m &#x3D; n + L -1;
-      inputpadblock &#x3D; inputpad(m-L+1:1:m)&#39;;	 
-      output(n) &#x3D; w*(inputpadblock);              % 滤波器输出   y&#x3D;w*x
-      error(n) &#x3D; desiresig(n) - output(n);        % 误差信号     e&#x3D;d-y
-      w &#x3D; w + mu.*inputpadblock&#39;.*error(n);       % 调整滤波器系数的LMS算法 w&#x3D;w+mu*x*e
-  end
+      xpad &#x3D; x(m-L+1:1:m)&#39;;	 
+      y(n) &#x3D; w*(xpad);              % 滤波器输出   y&#x3D;w*x
+      e(n) &#x3D; d(n) - y(n);           % 误差信号     e&#x3D;d-y
+      w &#x3D; w + mu.*x(n)&#39;.*e(n);      % 调整滤波器系数的LMS算法 w&#x3D;w+mu*x*e
 end
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+end
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h2 id="1-4、LMS衍生算法（一）：-block-LMS-BLMS-分块最小均方算法"><a href="#1-4、LMS衍生算法（一）：-block-LMS-BLMS-分块最小均方算法" class="headerlink" title="1.4、LMS衍生算法（一）： block LMS (BLMS) 分块最小均方算法"></a>1.4、LMS衍生算法（一）： block LMS (BLMS) 分块最小均方算法</h2><ul>
 <li>思想：由于标准的LMS算法 每一个采样点都进行更新，那么有一种思路就是：不必每一个采样点都进行更新，而是累积到一定数量的采样点之后再进行更新，而对于这些block采样点再更新一次滤波器系数。 这样的好处就是每一个block 获取的梯度是 一个block所有采样点梯度的求和，所以得到的梯度仍然是 真实梯度 的无偏估计 ，但是累计的采样点数更多，他的方差会更小。 </li>
@@ -555,13 +554,72 @@ end
 <h4 id="关于期望信号-d-n）"><a href="#关于期望信号-d-n）" class="headerlink" title="关于期望信号$d(n）$"></a>关于期望信号$d(n）$</h4><p>LMS算法中我们已知的有输入信号$x$,和预测输出信号$y$，实际情况下是不知道期望输出的，如果知道了期望输出那么就没有进行滤波的必要了。因此需要用一些方法来估计期望输出，   具体而言，期望输出可以用以下几种方法获取。<a target="_blank" rel="noopener" href="https://www.it610.com/article/1290594719520333824.htm">出处</a></p>
 <ul>
 <li>1、使用延迟后的输入信号作为参考信号$d$，即$d(n) &#x3D; x(n-i)$，其中i为延迟量,可正可负（用于自适应预测）</li>
-<li>2、期望信号为信号与噪声之和，即$(n) &#x3D; x(n) + s(n)$,其中$s(n)$为训练时使用的噪声（用于自适应干扰抵消器，需要噪声与输入信号不相关）</li>
+<li>2、期望信号为信号与噪声之和，即$d(n) &#x3D; x(n) + s(n)$,其中$s(n)$为训练时使用的噪声（用于自适应干扰抵消器，需要噪声与输入信号不相关）</li>
 <li>3、直接用输出代替期望信号，即$d(n) &#x3D; x(n)$</li>
 <li>4、从$x(n)$中估计$d(n)$ ，$d(n) &#x3D; y(n) + v(n)$,其中$v(n) &#x3D; w(n)-wo$ ,$wo$是维纳滤波器的最优权值。具体见维纳滤波(感觉很离谱啊，求维纳滤波你也得需要期望信号啊)</li>
 </ul>
-<h3 id="关于自适应滤波的应用"><a href="#关于自适应滤波的应用" class="headerlink" title="关于自适应滤波的应用"></a>关于自适应滤波的应用</h3><p>自适应滤波算法有几种应用类型,具体有，噪声抵消、回声抵消、谱线增强、通道均衡、系统辨识、时间延迟估计，不同类型的目的、原理和手段不同，所以相对应的选取输入和期望信号也很不一样。<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/28603557">参考博客</a></p>
-<p>在去噪应用中，有两种情况<br>1、已知带噪信号为输入信号，已知噪声为参考信号。然后lms算法输出的<strong>误差向量</strong>即为<strong>所求信号无噪信号</strong>，因为把噪声信号作为输入，意味着滤波器输出会</p>
-<p>2、仅知道带噪信号：这种情况下，带噪信号作为参考信号，然后对带噪信号进行延迟处理，延迟的信号作为输入信号。这样做的目的是假定在延迟的时间段内，信号仍是相关的，但噪声却不相关。通过去相关来去除噪声分量，一次延迟的时间需要设置合理。（还没找到论文）</p>
+<p>其实这一部分在matlab 官方教程 <a target="_blank" rel="noopener" href="https://ww2.mathworks.cn/help/dsp/ug/overview-of-adaptive-filters-and-applications.html">自适应滤波以及应用概述</a> 里面的就有，讲得十分透彻.</p>
+<h1 id="二、RLS-滤波器（Recursive-Least-Square）递归最小二乘算法"><a href="#二、RLS-滤波器（Recursive-Least-Square）递归最小二乘算法" class="headerlink" title="二、RLS 滤波器（Recursive Least Square）递归最小二乘算法"></a>二、RLS 滤波器（Recursive Least Square）递归最小二乘算法</h1><h2 id="2-1、回顾与思路"><a href="#2-1、回顾与思路" class="headerlink" title="2.1、回顾与思路"></a>2.1、回顾与思路</h2><p>最小均方误差准则（MMSE）</p>
+<p>$$<br>J(\mathbf{w})&#x3D;E\left{|e(n)|^{2}\right}&#x3D;E\left{\left|d(n)-\mathbf{w}^{T}(n) \mathbf{x}(n)\right|^{2}\right}<br>$$</p>
+<p>其实是对所有时刻（所有历史时刻）的误差进行“均匀加权的结果”，也就是无论 某时刻 距离当前时刻的距离有多远，这一时刻对当前评价准则$J(\mathbf{w})$的贡献 权重 是相同的。这也可以称之为“均匀加权函数”</p>
+<p>这种均匀加权的策略对于平稳过程当然不错，但是对于语音信号这种非平稳过程就不太友好了。那么就有这样一种想法，既然是非平稳的过程，那么我希望对于里当前时刻越近的时间点，他对评价指标的影响越大，也就是给他的加权越重，反之，越轻。</p>
+<h2 id="2-2、新的误差准则"><a href="#2-2、新的误差准则" class="headerlink" title="2.2、新的误差准则"></a>2.2、新的误差准则</h2><p>采用指数加权的定义方式，调整目标函数为：</p>
+<p>$$<br>J_{n}(\mathbf{w})&#x3D;\sum_{i&#x3D;0}^{n} \lambda^{n-i}|e(i)|^{2}&#x3D;\sum_{i&#x3D;0}^{n} \lambda^{n-i}\left|d(i)-\mathbf{w}^{T}(n) \mathbf{x}(i)\right|^{2}<br>$$</p>
+<p>其中，n为“当前时刻”，i为遍历的“历史时刻”，$0&lt;\lambda \leq1$为“遗忘因子”。</p>
+<p>遗忘因子的作用是对离 n 时刻越近的误差加比较大的权重，而对离 n 时刻越远的误差加比较小的权<br>重，也就是说对各个时刻的误差具有一定的遗忘作用。<br>如果$\lambda&#x3D;1$表示无任何遗忘功能，或具有无穷记忆功能，此时RLS退化为LS方法。<br>如果$\lambda-&gt;0$表示只有当前时刻的误差起作用，而过去时刻的误差完全被遗忘。</p>
+<p>另外 特别注意：</p>
+<blockquote>
+<p>对于误差的定义： 用的是$|e(i)|&#x3D;\left|d(i)-\mathbf{w}^{T}(n) \mathbf{x}(i)\right|$而不是 $|e(i)|&#x3D;\left|d(i)-\mathbf{w}^{T}(i) \mathbf{x}(i)\right|$。<br>通俗点来说就是，对于$i$时刻（先前时刻）的误差，用的是$n$时刻滤波器的系数来估算的，而不是$i$时刻，也就是所谓的“后验误差”。 原因呢是：我们认为 在自适应更新过程中，滤波器总是变得越来越好，这意味着对于任何的 $i&lt;n$, 总认为$\left|d(i)-\mathbf{w}^{T}(n) \mathbf{x}(i)\right|&lt;\left|d(i)-\mathbf{w}^{T}(i) \mathbf{x}(i)\right|$，<br>这其实是一个比较主观的决定，实际工程当中，采用先验误差还是后验误差差别其实非常小，因为一旦滤波器的系数收敛，采用哪种方式来定义误差差距并不是很大。并且，采用后验误差运算量，占用内存上其实更小一些。</p>
+</blockquote>
+<h2 id="2-3、RLS算法-推导"><a href="#2-3、RLS算法-推导" class="headerlink" title="2.3、RLS算法 推导"></a>2.3、RLS算法 推导</h2><p>同样的，让$J_{n}(\mathbf{w})$的对w求导，令梯度为0，得到<br>$$<br>\mathbf{w}(n)&#x3D;\mathbf{R}^{-1}(n) \mathbf{r}(n)<br>$$</p>
+<p>其中，<br>$$<br>\mathbf{R}(n)&#x3D;\sum_{i&#x3D;0}^{n} \lambda^{n-i} \mathbf{x}(i) \mathbf{x}^{T}(i) \<br>\mathbf{r}(n)&#x3D;\sum_{i&#x3D;0}^{n} \lambda^{n-i} \mathbf{x}(i) d(i)<br>$$<br>这依然是加权意义下的“维纳解”</p>
+<p>此外，对于相关矩阵$\mathbf{R}(n)$与相关向量$\mathbf{r}(n)$有如下递推关系。<br>$$<br>\begin{aligned}<br>\mathbf{R}(n) &amp;&#x3D;\lambda \mathbf{R}(n-1)+\mathbf{x}(n) \mathbf{x}^{T}(n) \<br>\mathbf{r}(n) &amp;&#x3D;\lambda \mathbf{r}(n-1)+\mathbf{x}(n) d(n)<br>\end{aligned}<br>$$</p>
+<p>看起来只要知道上一时刻的相关矩阵和相关向量，再利用递推公式就能完整地构建改进型的维纳滤波器，步骤如下。<br><img src="https://s2.loli.net/2022/05/20/pOQJDSgcBN2udqx.png"><br>其实，这样的思想是可以，但计算量太大了，计算量主要在于求<strong>相关矩阵的逆</strong>的过程，每一步都要求，这样计算量太大了。</p>
+<p>如果将相关矩阵的逆设为矩阵$\mathbf P(n)&#x3D;\mathbf R^{-1}(n)$,那么能否直接得到$\mathbf P(n)$<strong>矩阵的递推公式</strong>，从而<strong>避免矩阵求逆的运算</strong>呢？</p>
+<p>推导如下：<br>$$<br>\mathbf{P}(n)&#x3D;\mathbf{R}^{-1}(n)&#x3D;\left(\lambda \mathbf{R}(n-1)+\mathbf{x}(n) \mathbf{x}^{T}(n)\right)^{-1}<br>$$<br>由矩阵求逆引理<br>$$<br>(A+B C D)^{-1}&#x3D;A^{-1}-A^{-1} B\left(C^{-1}+D A^{-1} B\right)^{-1} D A^{-1}<br>$$<br>现令<br>$$<br>A&#x3D;\mathbf{R}(n-1) \quad B&#x3D;\mathbf{x}(n) \quad C&#x3D;\frac{1}{\lambda} \quad D&#x3D;\mathbf{x}^{T}(n)<br>$$<br>就能得到<br>$$<br>\begin{aligned}<br>\mathbf{P}(n) &amp;&#x3D;\frac{1}{\lambda}\left[\mathbf{P}(n-1)-\frac{\mathbf{P}(n-1) \mathbf{x}(n) \mathbf{x}^{T}(n) \mathbf{P}(n-1)}{\lambda+\mathbf{x}^{T}(n) \mathbf{P}(n-1) \mathbf{x}(n)}\right] \<br>&amp;&#x3D;\frac{1}{\lambda}\left[\mathbf{P}(n-1)-\mathbf{k}(n) \mathbf{x}^{T}(n) \mathbf{P}(n-1)\right]<br>\end{aligned}<br>$$<br>其中，我们称$\mathbf{k}(n)$为<strong>增益向量</strong><br>$$<br>\mathbf{k}(n)&#x3D;\frac{\mathbf{P}(n-1) \mathbf{x}(n)}{\lambda+\mathbf{x}^{T}(n) \mathbf{P}(n-1) \mathbf{x}(n)}<br>$$</p>
+<p>ok，我们现在得到了$\mathbf P(n)$的递推公式，那么仅需与相关向量相乘就能得到最优滤波器系数向量了。<br>即<br>$$<br>\mathbf{w}(n)&#x3D;\mathbf{R}^{-1}(n) \mathbf{r}(n) &#x3D;\mathbf{P}(n) \mathbf{r}(n)<br>$$</p>
+<p>带进最优滤波器系数向量公式，得到滤波器更新公式 也即<strong>RLS算法更新公式</strong>：<br>$$<br>\mathbf{w}(n)&#x3D;\mathbf{w}(n-1)+\mathbf{k}(n) \varepsilon(n)\<br>\varepsilon(n)&#x3D;d(n)-\mathbf{x}^{T}(n) \mathbf{w}(n-1)<br>$$<br>（$ \varepsilon(n)$为<strong>先验估计误差误差</strong>）</p>
+<p>推导过程</p>
+<blockquote>
+<p>$$<br>\begin{aligned}<br>\mathbf{w}(n)&#x3D;&amp; \mathbf{R}^{-1}(n) \mathbf{r}(n)&#x3D;\mathbf{P}(n) \mathbf{r}(n) \<br>&#x3D;&amp; \frac{1}{\lambda}\left[\mathbf{P}(n-1)-\mathbf{k}(n) \mathbf{x}^{T}(n) \mathbf{P}(n-1)\right][\lambda \mathbf{r}(n-1)+\mathbf{x}(n) d(n)] \<br>&#x3D;&amp; \mathbf{P}(n-1) \mathbf{r}(n-1)-\mathbf{k}(n) \mathbf{x}^{T}(n) \mathbf{P}(n-1) \mathbf{r}(n-1) \<br>&amp;+\frac{1}{\lambda} d(n)\left[\mathbf{P}(n-1) \mathbf{x}(n)-\mathbf{k}(n) \mathbf{x}^{T}(n) \mathbf{P}(n-1) \mathbf{x}(n)\right]   \quad  （这一行具体的变换见下面）\<br>&#x3D;&amp; \mathbf{w}(n-1)+d(n) \mathbf{k}(n)-\mathbf{k}(n) \mathbf{x}^{T}(n) \mathbf{w}(n-1) \<br>&#x3D;&amp; \mathbf{w}(n-1)+\mathbf{k}(n)\left[d(n)-\mathbf{x}^{T}(n) \mathbf{w}(n-1)\right] \<br>&#x3D;&amp; \mathbf{w}(n-1)+\mathbf{k}(n) \varepsilon(n)\quad<br>\end{aligned}<br>$$<br>中间一步的推导：<br>$$<br>\frac{1}{\lambda}\left[\mathbf{P}(n-1) \mathbf{x}(n)-\mathbf{k}(n) \mathbf{x}^{T}(n) \mathbf{P}(n-1) \mathbf{x}(n)\right]（根据增益向量 将第一项变形） \<br>&#x3D;\frac{1}{\lambda}\left{\left[\lambda+\mathbf{x}^{T}(n) \mathbf{P}(n-1) \mathbf{x}(n)\right] \mathbf{k}(n)-\mathbf{k}(n) \mathbf{x}^{T}(n) \mathbf{P}(n-1) \mathbf{x}(n)\right} \<br>&#x3D;\mathbf{k}(n)<br>$$</p>
+</blockquote>
+<h2 id="2-4、标准RLS算法执行流程"><a href="#2-4、标准RLS算法执行流程" class="headerlink" title="2.4、标准RLS算法执行流程"></a>2.4、标准RLS算法执行流程</h2><p>初始化RLS算法执行步骤：</p>
+<blockquote>
+<p>1）初始化：<br>$\mathbf{w}(0)&#x3D;\mathbf{0}$、$\mathbf{P}(0)&#x3D;\delta^{-1}\mathbf{I}$、$\delta$是一个很小的正数,<br>PS:$\mathbf{P}(0)$的取法有点“讲头”的，首先R(0)是一个相关矩阵，所以是一个对称阵，另外为了方便求逆，所以取单位阵，其次，之前也说了，RLS的误差准则是，离当前时刻越远，其影响对当前时刻越小越好，所以，给他乘一个很小的系数。<br>2）对于每一个时刻n，重复下面的计算：<br>  $\quad$ 先验误差：$\varepsilon(n)&#x3D;d(n)-\mathbf{x}^{T}(n) \mathbf{w}(n-1)$<br>  $\quad$ 增益向量：$\mathbf{k}(n)&#x3D;\frac{\mathbf{P}(n-1) \mathbf{x}(n)}{\lambda+\mathbf{x}^{T}(n) \mathbf{P}(n-1) \mathbf{x}(n)}$<br>  $\quad$ 逆矩阵更新： $\mathbf{P}(n)&#x3D;\frac{1}{\lambda}\left[\mathbf{P}(n-1)-\mathbf{k}(n) \mathbf{x}^{T}(n) \mathbf{P}(n-1)\right]$<br>  $\quad$ 滤波器更新：$\mathbf{w}(n)&#x3D;\mathbf{w}(n-1)+\mathbf{k}(n) \varepsilon(n)$</p>
+</blockquote>
+<h2 id="2-5-RLS-与LMS-对比"><a href="#2-5-RLS-与LMS-对比" class="headerlink" title="2.5 RLS 与LMS 对比"></a>2.5 RLS 与LMS 对比</h2><p>一个广泛的共识是，RLS算法的收敛速度和跟踪性能都优于LMS算法，所付出的代价是需要<br>更复杂的计算。</p>
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>LMS</th>
+<th>RLS</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>计算误差</td>
+<td>后验误差</td>
+<td>先验误差</td>
+</tr>
+<tr>
+<td>收敛速度</td>
+<td>慢</td>
+<td>快</td>
+</tr>
+<tr>
+<td>跟踪性能</td>
+<td>慢</td>
+<td>快</td>
+</tr>
+<tr>
+<td>计算代价</td>
+<td>小</td>
+<td>大</td>
+</tr>
+</tbody></table>
+<p>另外，由于RLS使用了自相关矩阵的逆矩阵的递推，所以，一旦<strong>输入信号的自相关矩阵接近奇异时</strong>（输入信号各个时刻不要“太相关”），RLS的收敛速度和跟踪性能会严重恶化。</p>
+<p>可以看到，LMS 算法 与RLS 算法 在各个方面走了<strong>两个极端</strong>，下面要讲的 仿射投影算法可以说是两种“极端”的折中，也可以说是包含二者的一种统一框架。</p>
+<h1 id="三、AP（Affine-Projection-algorithm）仿射投影算法"><a href="#三、AP（Affine-Projection-algorithm）仿射投影算法" class="headerlink" title="三、AP（Affine Projection algorithm）仿射投影算法"></a>三、AP（Affine Projection algorithm）仿射投影算法</h1><h2 id="3-1、再次从一个N阶系统-mathbf-w-n-出发"><a href="#3-1、再次从一个N阶系统-mathbf-w-n-出发" class="headerlink" title="3.1、再次从一个N阶系统$\mathbf{w(n)}$出发"></a>3.1、再次从一个N阶系统$\mathbf{w(n)}$出发</h2><p>考虑一个N阶系统$w(n)$ ，<br>这一次我们将构造一个更加通用的模型，首先输入、输出、权重 都可以是复数<br>$$<br>y(n)&#x3D;\mathbf{w}^{H}(n) \mathbf{x}(n)&#x3D;\mathbf{x}^{T}(n) \mathbf{w}^{<em>}(n)<br>$$<br>N阶系统（n阶滤波器）n时刻的滤波器系数为，<br>$$\mathbf{w}(n)&#x3D;\left[\begin{array}{llll}w_{0}(n), &amp; w_{1}(n), &amp; \ldots &amp; w_{N-1}(n)\end{array}\right]^{T}$$<br>如果将 滤波器原本滤波器当前的输出扩展成一组向量 。向量内容 为滤波器最近的L个输出为：<br>$$y(n)–&gt;\mathbf{y}(n)&#x3D;[y(n), \quad y(n-1), \quad \ldots \quad y(n-L+1)]^{T}$$<br>那么，相应的输入也得改变，将是一个矩阵 N</em>L的矩阵，<br>$$\mathbf{X}(n)&#x3D;[\mathbf{x}(n), \quad \mathbf{x}(n-1), \quad \ldots \quad \mathbf{x}(n-N+1)]^{T}$$<br>也即，展开来写<br>$$<br>\begin{aligned}<br>\mathbf{X}(n) &amp;&#x3D;[\mathbf{x}(n), \mathbf{x}(n-1), \cdots \cdots, \mathbf{x}(n-N+1)]^{T} \<br>&amp;&#x3D;\left[\begin{array}{ccccc}<br>x(n) &amp; x(n-1) &amp; x(n-2) &amp; \cdots &amp; x(n-L+1) \<br>x(n-1) &amp; x(n-2) &amp; x(n-3) &amp; \cdots &amp; x(n-L) \<br>x(n-2) &amp; x(n-3) &amp; x(n-4) &amp; \cdots &amp; x(n-L-1) \<br>\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \<br>x(n-N+1) &amp; x(n-N) &amp; x(n-L-1) &amp; \cdots &amp; x(n-N-L+2)<br>\end{array}\right]<br>\end{aligned}<br>$$</p>
 
         </div>
         <!-- .entry-content -->
@@ -593,7 +651,7 @@ end
           
             <div class="post-nepre half previous">
           
-            <a href="/2022/05/16/%E3%80%8A%E5%AE%9E%E6%97%B6%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%E3%80%8B%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%20%E5%8F%91%E5%A3%B0%E6%9C%BA%E7%90%86/" rel="prev">
+            <a href="/2022/05/16/%E3%80%8A%E5%AE%9E%E6%97%B6%E8%AF%AD%E9%9F%B3%E5%A4%84%E7%90%86%E3%80%8B%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%20%E5%8F%91%E5%A3%B0%E6%9C%BA%E7%90%86/" rel="prev">
               <div class="background">
                 <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/05/16/GgQ5D9nwpHSJm6u.png" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://s2.loli.net/2022/05/16/GgQ5D9nwpHSJm6u.png">
               </div>

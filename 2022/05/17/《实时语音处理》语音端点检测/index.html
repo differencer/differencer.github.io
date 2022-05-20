@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   
-  <title itemprop="name">t&#39;blog</title>
+  <title itemprop="name">《实时语音处理》语音端点检测 | t&#39;blog</title>
   
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -376,167 +376,177 @@
   </div>
 </header>
 
-      <div class="blank" style="padding-top: 0px;"></div>
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
+<div class="pattern-center-blank"></div>
+
 <div id="content" class="site-content">
-  
-  <div class="notice" style="margin-top:60px">
-    <i class="iconfont icon-notification">
-    </i>
-    <div class="notice-content">小站正在施工中~嘻嘻</div>
-  </div>
-  
-  <div class="top-feature-row">
-  <h1 class="fes-title" style="font-family: 'Ubuntu', sans-serif;">
-  <i class="fa fa-anchor" aria-hidden="true">
-  </i>
-  兴趣</h1>
-  
-  <div class="top-feature-v2">
-    <div class="the-feature square from_left_and_right">
-      <a href="/theme-sakura/" target="_blank">
-        <div class="img">
-          <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/startdash/sakura.md.png">
-        </div>
-        <div class="info">
-          <h3>Sakura</h3>
-          <p>本站 hexo 主题</p>
-        </div>
-      </a>
-    </div>
-  </div>
-  
-  <div class="top-feature-v2">
-    <div class="the-feature square from_left_and_right">
-      <a href="https://space.bilibili.com/20713910/dynamic" target="_blank">
-        <div class="img">
-          <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/startdash/2233.png">
-        </div>
-        <div class="info">
-          <h3>Bilibili</h3>
-          <p>博主的b站视频</p>
-        </div>
-      </a>
-    </div>
-  </div>
-  
-  <div class="top-feature-v2">
-    <div class="the-feature square from_left_and_right">
-      <a href="/about/" target="_blank">
-        <div class="img">
-          <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/custom/avatar.jpg">
-        </div>
-        <div class="info">
-          <h3>about</h3>
-          <p>关于我？</p>
-        </div>
-      </a>
-    </div>
-  </div>
-  
-</div>
   <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
-      <h1 class="main-title" style="font-family: 'Ubuntu', sans-serif;">
-      <i class="fa fa-envira" aria-hidden="true"></i>
-      发现</h1>
-      
-  <!-- 首页默认取最最新文章集 -->
-  
-    
-<article  class="post post-list-thumb post-list-thumb-left"  class="post post-list-thumb" itemscope="" itemtype="https://schema.org/BlogPosting">
-
-  <div class="post-thumb">
-    <a href="/2022/03/17/%E6%97%A5%E6%BC%AB%EF%BC%88%E6%BC%AB%E7%94%BB%EF%BC%89%E8%AF%84%E9%89%B4/">
-      <img class="lazyload" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/03/18/oaY8HWPGmsiruex.jpg">
-    </a>
-  </div>
-  <div class="post-content-wrap">
-    <div class="post-content">
-      <div class="post-date">
-        <i class="iconfont icon-time">
-        </i>2022-3-17 11:03</div>
-      <a href="/2022/03/17/%E6%97%A5%E6%BC%AB%EF%BC%88%E6%BC%AB%E7%94%BB%EF%BC%89%E8%AF%84%E9%89%B4/" class="post-title">
-        <h3>日漫（漫画、动漫）评鉴</h3>
-      </a>
-      <div class="post-meta">
-        <span><i class="fa fa-tags"></i>
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
         
-            <a href="/tags/%E9%98%85%E8%AF%BB/">阅读<em>·</em></a>
-          
-        </span>
-        <span>
-          <i class="iconfont icon-file"></i>
-          
-            <a href="/categories/%E5%85%B6%E4%BB%96/">其他</a>
-          
-        </span>
-      </div>
-      <div class="float-content">
-        <p></p>
-        <div class="post-bottom">
-          <a href="/2022/03/17/%E6%97%A5%E6%BC%AB%EF%BC%88%E6%BC%AB%E7%94%BB%EF%BC%89%E8%AF%84%E9%89%B4/" class="button-normal">
-            <i class="iconfont icon-caidan"></i>
-          </a>
+          <header class="entry-header">
+            <h1 class="entry-title">《实时语音处理》语音端点检测</h1>
+            <p class="entry-census">differencer&nbsp;·&nbsp;2022-5-17&nbsp;·&nbsp;<span id="busuanzi_value_page_pv"></span>次阅读</p></p>
+
+            <hr>
+          </header>
+        
+        <div class="entry-content">
+          <p>#语音端点检测（VAD）</p>
+<h2 id="1、-简要描述"><a href="#1、-简要描述" class="headerlink" title="1、 简要描述"></a>1、 简要描述</h2><p> 语音端点检测（VAD）用于判断给定的音频数据是否存在语音，其常用在语音编解码、降噪、增益控制、波束形成以及唤醒识别等算法中。VAD检测给定音频数据含有语音的频率，VAD方法通常包括<strong>特征提取</strong>和<strong>语音、非语音判决</strong>两部分，当前使用的语音特征主要有时域和频域两种，时域特征包括能量波动、过零率、最大能量和最小能量等，频域特征主要有基频、频谱组成、频谱质心、谱差、谱密度、谱衰减等。用于VAD判决的特征通常可以分为六大类：能量、频域、倒谱、谱差、谐波和长时信息，基于能量的特征计算简单，如能量过零率，基于谱在低SNR可以获得较好的效果，当SNR为0dB时，基于语音谐波和长时语音特征判决方法的鲁棒性更强。</p>
+<p>当我们在分析声音时，通常以「短时距分析」（Short-term Analysis）为主，因为音讯在短时间内是相对稳定的。我们通常将声音先切成帧（Frame），每一帧长度大约在 20 ms 左右，再根据帧内的信号来进行分析。在一个特定帧内，我们可以观察到的三个主要声音特征如下：</p>
+<p>1.音量（Volume）：代表声音的大小，可由声音信号的震幅来类比，震幅越大，代表此声音波形的音量越大。音量又称为能量（Energy）或强度（Intensity）等。<br>2.音高（Pitch）：代表声音的高低，可由基本频率（Fundamental Frequency）来类比，这是基本周期（Fundamental Period）的倒数。声音的基本频率越高，代表音高越高；反之，声音的基本频率越低，代表音高越低。<br>3.音色（Timbre）：代表声音的内容（例如英文的元音、辅音，汉语里面的鼻音），可由每一个波形在一个基本周期的变化来类比。不同的音色即代表不同的音讯内容，例如不同的字母有不同的发音，都是由于音色不同而产生。</p>
+<p>如果用人声来说明，这些语音特征的物理意义如下：</p>
+<p>音量（Volume）：代表肺部压缩力量的大小，力量越大，音量越大。<br>音高（Pitch）：代表声带震动的快慢，震动越快，音高会越高。<br>音色（Timbre）：代表嘴唇和舌头的位置和形状，不同的位置和形状，就会产生不同的语音内容。</p>
+<h2 id="2、特征提取"><a href="#2、特征提取" class="headerlink" title="2、特征提取"></a>2、特征提取</h2><p>1、好的特征应具备的性质</p>
+<p>区分能力：含早语音和金汉噪声音频的分离度应尽量大。理论上，好的特征能够让语音特征和噪声特征分布没有交集。<br>噪声鲁棒性： 背景噪声会造成语音失真，这会影响提取的特征区分能力。<br>2、基于能量的特征<br>信号的能量强度是基于能量的VAD检测方法的主要依据，在满足语音能量大于背景噪声能量的假设下，当能量大于某一门限时，则可以认为有语音存在，当噪声能量达到和语音能量一样大时，能量特征无法区分是语音还是纯噪声。<br>3、短时能量过零率<br>采集到的语音信号在数字域上有正负之分，从坐标轴上看，有些在正半轴，有些在负半轴，过零率等于一段时间内穿过横轴的次数与总采样点数的比值，它反映了信号变化的快慢，其虽然是时域特征，但变化快慢在某种程度上反映了频域的信息。过零率对低频噪声敏感，实际使用可以过滤掉低频部分。<br>4、其它特征<br>频域特征、倒谱特征、基于谐波的特征、长时特征。</p>
+
         </div>
-      </div>
-    </div>
-  </div>
-</article>
-  
-    
-<article  class="post post-list-thumb" itemscope="" itemtype="https://schema.org/BlogPosting">
-
-  <div class="post-thumb">
-    <a href="/2022/03/16/%E6%98%8E%E5%85%89%E6%9D%91%E8%81%8C%E4%B8%9A%E6%8A%80%E6%9C%AF%E5%AD%A6%E6%A0%A1%E5%B0%8F%E5%90%83%E5%9B%BE%E9%89%B4/">
-      <img class="lazyload" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/03/17/z4AmZTfytIwDeLF.jpg">
-    </a>
-  </div>
-  <div class="post-content-wrap">
-    <div class="post-content">
-      <div class="post-date">
-        <i class="iconfont icon-time">
-        </i>2022-3-16 22:03</div>
-      <a href="/2022/03/16/%E6%98%8E%E5%85%89%E6%9D%91%E8%81%8C%E4%B8%9A%E6%8A%80%E6%9C%AF%E5%AD%A6%E6%A0%A1%E5%B0%8F%E5%90%83%E5%9B%BE%E9%89%B4/" class="post-title">
-        <h3>明光村职业技术学校小吃图鉴</h3>
-      </a>
-      <div class="post-meta">
-        <span><i class="fa fa-tags"></i>
-        
-            <a href="/tags/%E8%83%A1%E5%90%83%E6%B5%B7%E5%A1%9E%EF%BC%81/">胡吃海塞！<em>·</em></a>
-          
-        </span>
-        <span>
-          <i class="iconfont icon-file"></i>
-          
-            <a href="/categories/%E7%94%9F%E6%B4%BB/">生活</a>
-          
-        </span>
-      </div>
-      <div class="float-content">
-        <p></p>
-        <div class="post-bottom">
-          <a href="/2022/03/16/%E6%98%8E%E5%85%89%E6%9D%91%E8%81%8C%E4%B8%9A%E6%8A%80%E6%9C%AF%E5%AD%A6%E6%A0%A1%E5%B0%8F%E5%90%83%E5%9B%BE%E9%89%B4/" class="button-normal">
-            <i class="iconfont icon-caidan"></i>
-          </a>
+        <!-- .entry-content -->
+        <div class="single-reward">
+          <div class="reward-open">赏
+            <div class="reward-main">
+              <ul class="reward-row">
+                <li class="alipay-code"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/custom/donate/AliPayQR.jpg"></li>
+                <li class="wechat-code"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/custom/donate/WeChanQR.jpg"></li>
+              </ul>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
-</article>
-  
-
-
-    </main>
-      <!-- 首页默认取最最新文章集 -->
-    <!-- 
-      <nav class="navigator">
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
+      </article>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
         
-        <a class="extend prev" rel="prev" href="/">&lt;i class&#x3D;&quot;iconfont icon-back&quot;&gt;&lt;&#x2F;i&gt;</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
-      </nav>
-     -->
-  </div>
+        
+          
+            <div class="post-nepre full next">
+          
+            <a href="/2022/05/16/%E3%80%8A%E5%AE%9E%E6%97%B6%E8%AF%AD%E9%9F%B3%E5%A4%84%E7%90%86%E3%80%8B%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%20%E5%8F%91%E5%A3%B0%E6%9C%BA%E7%90%86/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/05/16/GgQ5D9nwpHSJm6u.png" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://s2.loli.net/2022/05/16/GgQ5D9nwpHSJm6u.png">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                《实时语音信号处理》学习笔记 信号处理基础 发声机理</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
+      <!--
+  原来 ：
+<script src="//cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js"></script>
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "",
+        appKey: "",
+        path: window.location.pathname,
+        placeholder: "快来留言鸭~ ..."
+      })
+  }
+</script>
+ -->
+
+
+  <div id="vcomments"></div>
+  <!-- 先引入样式,从footer提前 -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js"></script>
+  <!-- 评论框美化 -->
+  <script>
+      new Valine({
+          el: '#vcomments',
+          appId: "DpQvbSVQXSeUV8lRSV5zHiOY-gzGzoHsz",
+          appKey: "j8tFI5wuIwD7gTt7KJe5ohod",
+         notify: 'false' === 'false',
+         verify: 'true' === 'true',
+         visitor: 'false' === 'false',
+          path: window.location.pathname,
+          verify: true,
+          avatar: 'monsterid',//小怪物头像
+          placeholder: "你是我一生只会遇见一次的惊喜 ..."  
+      });
+      //   自定义邮箱审核规则
+      document.body.addEventListener('click', function(e) {
+          if (e.target.classList.contains('vsubmit')) {
+              const email = document.querySelector('input[type=email]');
+              const nick = document.querySelector('input[name=nick]');
+              const reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+              if (!email.value || !nick.value || !reg.test(email.value)) {
+                  const str = `<div class="valert text-center"><div class="vtext">请填写正确的昵称和邮箱！</div></div>`;
+                  const vmark = document.querySelector('.vmark');
+                  vmark.innerHTML = str;
+                  vmark.style.display = 'block';
+                  setTimeout(function() {
+                      vmark.style.display = 'none';
+                      vmark.innerHTML = '';
+                  }, 2500);
+              }
+          }
+      });
+      // 点击回复直接评论,官方版本点击回复时都是跳回到页面上方的评论框进行回复，评论框是固定不动的
+      // 参考https://immmmm.com/valine-diy,用到jQuery
+      $(document).ready(function(){
+          //$('.vemoji-btn').text('😀');
+          $("#vcomments").on('click', 'span.vat',function(){
+              $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+              $('textarea#veditor').focus();
+          })
+      })
+  </script>
+  <!-- 今日诗词：随机返回一句古诗词名句的接口，宅到用来做 Valine 的 placeholder 显示内容 -->
+  <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+  <script type="text/javascript">
+      jinrishici.load(function(result) {
+          var jrsc_plac =  result.data.content + "\n「" + result.data.origin.title + "」" + result.data.origin.dynasty + " · " + result.data.origin.author
+          document.getElementById("veditor").setAttribute("placeholder",jrsc_plac);
+      });
+  </script>
   
+  
+  
+
+
+
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+          <a href="/about/" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/custom/avatar.jpg" itemprop="image" alt="differencer" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="/about/" itemprop="url" rel="author">differencer</a>
+            </h3>
+          </div>
+        </div>
+        <hr>
+        <p><i class="iconfont icon-write"></i></p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
 </div>
+
+
 
     </div>    
     <div class="ins-search">
