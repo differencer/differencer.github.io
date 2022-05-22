@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   
-  <title itemprop="name">《实时语音处理》语音端点检测 | t&#39;blog</title>
+  <title itemprop="name">语音信号处理（四）噪声抑制 | t&#39;blog</title>
   
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -380,6 +380,30 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
 <div class="pattern-center-blank"></div>
 
+  <div class="pattern-center single-center">
+    <!-- 有配图默认渲染第一张 -->
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://s2.loli.net/2022/05/22/71jLVUWzQbiSeZ9.jpg);" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/05/22/71jLVUWzQbiSeZ9.jpg">
+    </div>
+    <header class="pattern-header single-header">
+      <h1 class="entry-title">
+      语音信号处理（四）噪声抑制</h1>
+      <p class="entry-census">
+        <span>
+          <a href="/about/">
+            <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/custom/avatar.jpg">
+          </a>
+        </span>
+        <span>
+          <a href="/about/">differencer</a>
+        </span>
+        <span class="bull">
+        ·</span>
+        2022-5-21<span class="bull">
+        ·</span>
+      <span id="busuanzi_value_page_pv"></span>次阅读</p>
+    </header>
+  </div>
+
 <div id="content" class="site-content">
   <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
@@ -387,21 +411,275 @@
         <div class="toc"></div>
         <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
         
-          <header class="entry-header">
-            <h1 class="entry-title">《实时语音处理》语音端点检测</h1>
-            <p class="entry-census">differencer&nbsp;·&nbsp;2022-5-17&nbsp;·&nbsp;<span id="busuanzi_value_page_pv"></span>次阅读</p></p>
-
-            <hr>
-          </header>
-        
         <div class="entry-content">
-          <h1 id="语音端点检测（VAD）"><a href="#语音端点检测（VAD）" class="headerlink" title="语音端点检测（VAD）"></a>语音端点检测（VAD）</h1><h2 id="1、-简要描述"><a href="#1、-简要描述" class="headerlink" title="1、 简要描述"></a>1、 简要描述</h2><p> 语音端点检测（VAD）用于判断给定的音频数据是否存在语音，其常用在语音编解码、降噪、增益控制、波束形成以及唤醒识别等算法中。VAD检测给定音频数据含有语音的频率，VAD方法通常包括<strong>特征提取</strong>和<strong>语音、非语音判决</strong>两部分，当前使用的语音特征主要有时域和频域两种，时域特征包括能量波动、过零率、最大能量和最小能量等，频域特征主要有基频、频谱组成、频谱质心、谱差、谱密度、谱衰减等。用于VAD判决的特征通常可以分为六大类：能量、频域、倒谱、谱差、谐波和长时信息，基于能量的特征计算简单，如能量过零率，基于谱在低SNR可以获得较好的效果，当SNR为0dB时，基于语音谐波和长时语音特征判决方法的鲁棒性更强。</p>
-<p>当我们在分析声音时，通常以「短时距分析」（Short-term Analysis）为主，因为音讯在短时间内是相对稳定的。我们通常将声音先切成帧（Frame），每一帧长度大约在 20 ms 左右，再根据帧内的信号来进行分析。在一个特定帧内，我们可以观察到的三个主要声音特征如下：</p>
-<p>1.音量（Volume）：代表声音的大小，可由声音信号的震幅来类比，震幅越大，代表此声音波形的音量越大。音量又称为能量（Energy）或强度（Intensity）等。<br>2.音高（Pitch）：代表声音的高低，可由基本频率（Fundamental Frequency）来类比，这是基本周期（Fundamental Period）的倒数。声音的基本频率越高，代表音高越高；反之，声音的基本频率越低，代表音高越低。<br>3.音色（Timbre）：代表声音的内容（例如英文的元音、辅音，汉语里面的鼻音），可由每一个波形在一个基本周期的变化来类比。不同的音色即代表不同的音讯内容，例如不同的字母有不同的发音，都是由于音色不同而产生。</p>
-<p>如果用人声来说明，这些语音特征的物理意义如下：</p>
-<p>音量（Volume）：代表肺部压缩力量的大小，力量越大，音量越大。<br>音高（Pitch）：代表声带震动的快慢，震动越快，音高会越高。<br>音色（Timbre）：代表嘴唇和舌头的位置和形状，不同的位置和形状，就会产生不同的语音内容。</p>
-<h2 id="2、特征提取"><a href="#2、特征提取" class="headerlink" title="2、特征提取"></a>2、特征提取</h2><p>1、好的特征应具备的性质</p>
-<p>区分能力：含早语音和金汉噪声音频的分离度应尽量大。理论上，好的特征能够让语音特征和噪声特征分布没有交集。<br>噪声鲁棒性： 背景噪声会造成语音失真，这会影响提取的特征区分能力。<br>2、基于能量的特征<br>信号的能量强度是基于能量的VAD检测方法的主要依据，在满足语音能量大于背景噪声能量的假设下，当能量大于某一门限时，则可以认为有语音存在，当噪声能量达到和语音能量一样大时，能量特征无法区分是语音还是纯噪声。<br>3、短时能量过零率<br>采集到的语音信号在数字域上有正负之分，从坐标轴上看，有些在正半轴，有些在负半轴，过零率等于一段时间内穿过横轴的次数与总采样点数的比值，它反映了信号变化的快慢，其虽然是时域特征，但变化快慢在某种程度上反映了频域的信息。过零率对低频噪声敏感，实际使用可以过滤掉低频部分。<br>4、其它特征<br>频域特征、倒谱特征、基于谐波的特征、长时特征。</p>
+          <p>概念解读：</p>
+<p>AEC：<br> 声学回声消除，设备自身的（回声）干扰，这会对设备的声音识别等有干扰</p>
+<p>NS :<br>去除背景噪音，特别是环境噪声，位置放置 比较灵活，既可以放 AEC 后，也可以放在ASR前面</p>
+<h1 id="一、子带分解（DFT-fliterbank）-STFT-短时傅里叶变换"><a href="#一、子带分解（DFT-fliterbank）-STFT-短时傅里叶变换" class="headerlink" title="一、子带分解（DFT fliterbank） STFT 短时傅里叶变换"></a>一、子带分解（DFT fliterbank） STFT 短时傅里叶变换</h1><p>信号的分频带处理，是语音信号处理中常用的手段<br>首先回顾DFT 公式，他将离散的时域（周期）信号，转换到频域</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+X(k) &=\sum_{n=0}^{N-1} x(n) W_{N}^{n k} \\
+X(k, l) &=\sum_{n=0}^{N-1} x(l+n) W_{N}^{n k}
+\end{aligned}</script><p>k: frequency bin index （频率（点）序号）<br>l:frame index ( 帧移 frame shift 总 大小)<br>n: time  bin index (帧内，时间序号)<br>N:frame length<br>如图：以每次帧移为1举例（其实这样右很大的overlap）</p>
+<p><img src="https://s2.loli.net/2022/05/22/23yo4cuPxJtb9eF.png" alt=""></p>
+<p>红圈部分可以视为一个子(频)带。</p>
+<p>选取合适的帧移因子(也可以叫抽取因子，因为这是每隔M个点抽取) $M$ ,则有</p>
+<script type="math/tex; mode=display">\begin{aligned} X(k,l)=\sum_{n=0}^{N-1} x(l M+n) W_{N}^{n k} \end{aligned}</script><h2 id="1-1、DFT子带分解-版本一-（NS常用）"><a href="#1-1、DFT子带分解-版本一-（NS常用）" class="headerlink" title="1.1、DFT子带分解  版本一 （NS常用）"></a>1.1、DFT子带分解  版本一 （NS常用）</h2><p>除此之外，再进行DFT之前还要加窗函数，这一点的必要性已经在博客的第二章（频谱泄露）讲过。</p>
+<script type="math/tex; mode=display">\begin{aligned} X(k,l)=\sum_{n=0}^{N-1} x(l M+n) w(n)W_{N}^{n k} \end{aligned}</script><p>我们把得到的$X(k,l)$ 叫做$ l$ 帧，子带$k$ 处的 频谱<br>PS： 更换窗函数并非抑制频谱泄露的唯一途径，还有就是增加窗函数的长度。举一个极端的例子，当窗函数无限长时，就意味着 原始信号没有被截断，不截断就不会导致频谱泄露的发生。</p>
+<h2 id="1-2、DFT-子带分解-版本二-（AEC常用）"><a href="#1-2、DFT-子带分解-版本二-（AEC常用）" class="headerlink" title="1.2、DFT 子带分解 版本二 （AEC常用）"></a>1.2、DFT 子带分解 版本二 （AEC常用）</h2><p>考虑使用更长的窗函数，例如$L=3N$<br>将会得到如下结果：</p>
+<script type="math/tex; mode=display">\begin{aligned} X(k,l)=\sum_{n=0}^{L-1} x(l M+n) w(n)W_{N}^{n k} \end{aligned}</script><p>特别注意，这里虽然和原来的式子只有求和符号区间的区别，但是，更改了这个区间之后，就不再是一个标准DFT了！！！因为 $W$因子的下标依旧是$N$.</p>
+<p>那么如何计算这个非标准的DFT呢？<br>下面是流程图</p>
+<pre class="line-numbers language-mermaid" data-language="mermaid"><code class="language-mermaid"><span class="token keyword">graph</span> TD
+A<span class="token text string">[加L长的窗函数到目前处理的信号块]</span> <span class="token arrow operator">--></span> B<span class="token text string">(把这个L长的块分成数个N长的子块 不够就补零)</span>
+    B <span class="token arrow operator">--></span> C<span class="token text string">[将子块对应点分别相加 得到 一个 N长块]</span>
+    C <span class="token arrow operator">--></span> D<span class="token text string">[对该N长块进行N点DFT/FFT]</span>
+    D <span class="token arrow operator">--></span> E<span class="token text string">[将L长的窗继续向前滑动M点]</span>
+    E <span class="token arrow operator">--></span> A<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="二、噪声抑制-NS-Noise-Suppression"><a href="#二、噪声抑制-NS-Noise-Suppression" class="headerlink" title="二、噪声抑制 NS (Noise Suppression)"></a>二、噪声抑制 NS (Noise Suppression)</h1><p>常见噪声场景及其分类</p>
+<ul>
+<li>CAF（咖啡厅） Babble Noise</li>
+<li>STR（街道）   Street Noise</li>
+<li>BUS（公交）   Bus Noise</li>
+<li>PED（）</li>
+</ul>
+<p>噪声抑制方法的分类</p>
+<ul>
+<li>从输入通道数来分<ul>
+<li>单通道噪声</li>
+<li>多通道噪声</li>
+</ul>
+</li>
+<li>从噪声统计特征<ul>
+<li>平稳噪声</li>
+<li>非平稳噪声（突发噪声，如：关车门、拍桌子）</li>
+</ul>
+</li>
+<li>降噪方案<ul>
+<li>被动降噪</li>
+<li>主动降噪</li>
+</ul>
+</li>
+</ul>
+<p>这篇文章内容目前先研究 单通道噪声、平稳噪声、被动降噪方案</p>
+<p>评价指标：</p>
+<ul>
+<li>信号层面<ul>
+<li>Signal-to-noise ratio（SNR） </li>
+<li>Signal-to-distortion ratio（SDR）</li>
+<li>Mean opinion score（MOS）</li>
+<li>Perceptual evaluation of speech quality（PESQ）</li>
+<li>Short-time objective intelligibility（STOI）</li>
+</ul>
+</li>
+<li>语音识别率<ul>
+<li>Word error rate（WER）</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-1、降噪算法基本框架：-噪声估计-amp-增益因子估计"><a href="#2-1、降噪算法基本框架：-噪声估计-amp-增益因子估计" class="headerlink" title="2.1、降噪算法基本框架： 噪声估计&amp; 增益因子估计"></a>2.1、降噪算法基本框架： 噪声估计&amp; 增益因子估计</h2><p>首先对于大部分降噪方法，都要经历两个步骤。</p>
+<ul>
+<li>对噪声的估计 （Noise estimation 、noise tracking）（也是噪声抑制的核心）<ul>
+<li>对噪声的一些统计特性特性进行估计</li>
+<li>如 ：噪声的谱什么样？在那些频段、那些帧上存在噪声谱？</li>
+<li>传统噪声估计的方法有：<ul>
+<li>递归平均 Recursive Averaging</li>
+<li>最小值追踪 Minima controlled</li>
+<li>直方图估计 histogram</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>对增益因子的估计<ul>
+<li>谱减法</li>
+<li>维纳滤波</li>
+<li>MMSE</li>
+<li>……<h2 id="2-2、噪声估计-：以-MCRA-模型-为例"><a href="#2-2、噪声估计-：以-MCRA-模型-为例" class="headerlink" title="2.2、噪声估计 ：以 MCRA 模型 为例"></a>2.2、噪声估计 ：以 MCRA 模型 为例</h2>Minima Controlled Recursive Averaging (MCRA) 最小追踪递归平均</li>
+</ul>
+</li>
+</ul>
+<p>传统噪声估计的方法(步骤) 有：</p>
+<ul>
+<li>递归平均 Recursive Averaging<ul>
+<li>如果再某些频带内/帧内 声音分量很低，或者存在的概率很低，那么就认为这是一个（纯）噪声的频带/帧，利用这些帧来估计其他频带/帧 的噪声 特性；反之，就不会选择那些声音分量小的频带/帧 来估计噪声</li>
+</ul>
+</li>
+<li>最小值追踪 Minima controlled<ul>
+<li>由于语音信号的稀疏特性，即使语音存在，在一个短时窗内（0，5~1.5s），<strong>每个频带的最小值也会概率趋近于噪声功率</strong>。因此可以通过在短时窗内追踪最小值的方法获得每个频带的噪声估计。</li>
+</ul>
+</li>
+<li>直方图估计 histogram<br> -带噪语音信号的每个频带在一个短时窗内做直方图统计，出现频次最高的值对应这个频带的噪声水平。</li>
+</ul>
+<h3 id="2-2-1、MCRA-模型"><a href="#2-2-1、MCRA-模型" class="headerlink" title="2.2.1、MCRA 模型"></a>2.2.1、MCRA 模型</h3><p>MCRA就是前两者( Recursive Averaging\Minima controlled)的结合<br><pre class="line-numbers language-mermaid" data-language="mermaid"><code class="language-mermaid"><span class="token keyword">graph</span> TD
+A<span class="token text string">[Minima controlled:利用局部最小值判断语音存在概率]</span> <span class="token arrow operator">--></span> B<span class="token text string">(语音存在概率)</span>
+    B <span class="token arrow operator">--></span> C<span class="token text string">[recursive averaging:利用哪些频带进行噪声估计]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></p>
+<p><strong>考虑一个加性噪声的模型</strong></p>
+<script type="math/tex; mode=display">
+y(n)=x(n)+d(n)</script><p>输入信号经过overlap 分帧、加窗、傅里叶变换，也即信号的STFT表示：(DFT 子带分解版本 一)</p>
+<script type="math/tex; mode=display">
+\begin{aligned} Y(k,l)=\sum_{n=0}^{N-1} y(l M+n) h(n) e^{-j\frac{2\pi}{N}nk} \end{aligned}</script><p>其中：<br>k: frequency bin index<br>l: time frame index<br>h: analysis window of size N (frame length)<br>M: frame shift</p>
+<p>给定两个假设 </p>
+<ul>
+<li>$H_0(k,\mathcal{l})$:当前帧（帧号l）、频段(频点编号k) 语音不存在</li>
+<li>$H_1(k,ℓ)$:当前帧（帧号l）、频段(频点编号k) 语音存在</li>
+</ul>
+<p>​那么再两个假设分别成立时有：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&H_{0}(k, \ell): Y(k, \ell)=D(k, \ell) \\
+&H_{1}(k, \ell): Y(k, \ell)=X(k, \ell)+D(k, \ell)
+\end{aligned}</script><p>其中$X(k, \ell)$,$D(k, \ell)$分别表示纯净语音信号、噪声信号的STFT表示，<br>PS：作为（背景）噪声估计，估计的其实其实就是噪声的能量，也就是方差。因为我们把噪声视为一个零均值的高斯变量，所以只有方差这一个参数。</p>
+<h3 id="2-2-2、噪声估计算法"><a href="#2-2-2、噪声估计算法" class="headerlink" title="2.2.2、噪声估计算法"></a>2.2.2、噪声估计算法</h3><h4 id="噪声估计递归方程"><a href="#噪声估计递归方程" class="headerlink" title="噪声估计递归方程"></a>噪声估计递归方程</h4><p>定义下面一个变量：<br>$\lambda_d(k,\ell)=E\left [\left | D(k,\ell)\right |^2\right])$,其物理含义是为$k$帧，$\ell$子带处的噪声方差（能量），也叫噪声谱。</p>
+<p>想法是，用<strong>当前的噪声谱</strong>来“平滑地、递归的”估计<strong>下一帧当前频点的噪声谱</strong>。</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&H_{0}^{\prime}(k, \ell): \hat{\lambda}_{d}(k, \ell+1)=\alpha_{d} \hat{\lambda}_{d}(k, \ell)+\left(1-\alpha_{d}\right)|Y(k, \ell)|^{2} \\
+&H_{1}^{\prime}(k, \ell): \hat{\lambda}_{d}(k, \ell+1)=\hat{\lambda}_{d}(k, \ell)
+\end{aligned}</script><blockquote>
+<p>第一行意思是，如果假设当前帧子带存在语音，那么用当前帧子带的噪声谱与信号谱加权平均，来当作下一时刻的噪声谱的估计。$\alpha_{d}$ 是<strong>平滑因子</strong><br>第二行意思是，如果假设当前帧子带不存在语音，那么直接用当前帧子带的噪声谱来当作对下一时刻的噪声谱的估计。</p>
+</blockquote>
+<p>那么“语音存在与否”，这个信息相当的关键，我们定义<strong>语音存在的条件概率</strong>为</p>
+<script type="math/tex; mode=display">
+p^{\prime}(k, \ell) \triangleq P\left(H_{1}^{\prime}(k, \ell) \mid Y(k, \ell)\right)</script><p> 那么对于<strong>噪声估计的递归方程</strong>改写为：（把两种假设融合在了一起）</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\hat{\lambda}_{d}(k, \ell+1)&=\hat{\lambda}_{d}(k, \ell) p^{\prime}(k, \ell) 
++\left[\alpha_{d} \hat{\lambda}_{d}(k, \ell)+\left(1-\alpha_{d}\right)|Y(k, \ell)|^{2}\right]\left(1-p^{\prime}(k, \ell)\right) \\
+&=\tilde{\alpha}_{d}(k, \ell) \hat{\lambda}_{d}(k, \ell)+\left[1-\tilde{\alpha}_{d}(k, \ell)\right]|Y(k, \ell)|^{2} \\
+\\
+\tilde{\alpha}_{d}(k, \ell) &\triangleq \alpha_{d}+\left(1-\alpha_{d}\right) p^{\prime}(k, \ell)
+\end{aligned}</script><p>所以问题的关键落在了：<strong>如何求取语音存在的概率</strong>$p^{\prime}(k, \ell)$？</p>
+<h4 id="语音存在（条件）概率"><a href="#语音存在（条件）概率" class="headerlink" title="语音存在（条件）概率"></a>语音存在（条件）概率</h4><p>这里采用 认为 语音存在概率 与  <strong>当前带噪语音的能量谱（也叫局部能量 local energy)</strong> $S(k,\ell)$ 和  <strong>指定长度窗内 带噪语音的能量谱最小值</strong> $S_{min}(k,\ell)$ 的 <strong>比值</strong> 有关。</p>
+<h5 id="求-S-k-ell"><a href="#求-S-k-ell" class="headerlink" title="求 $S(k,\ell)$"></a>求 $S(k,\ell)$</h5><p>注意 ，这里的能量谱是 经过频域和时间域的平滑操作 得到的能量谱。</p>
+<p><strong>频域平滑</strong>，</p>
+<script type="math/tex; mode=display">
+S_{f}(k, \ell)=\sum_{i=-w}^{w} b(i)|Y(k-i, \ell)|^{2}</script><p>$b(i)$是频域窗，一般取窗函数参数 $w$ 为 1 或者 2 ,物理意义上就是对能量谱进行小范围内的加权平均。</p>
+<p><strong>时域平滑</strong></p>
+<script type="math/tex; mode=display">
+S(k, \ell)=\alpha_{s} S(k, \ell-1)+\left(1-\alpha_{s}\right) S_{f}(k, \ell)</script><p>$\alpha_{s}$是是local ernergy 的时域 <strong>平滑因子</strong></p>
+<h5 id="求-S-min-k-ell"><a href="#求-S-min-k-ell" class="headerlink" title="求 $S_{min}(k,\ell)$"></a>求 $S_{min}(k,\ell)$</h5><p>采用局部最小值追踪的方案，设定一个时间窗$L$，作为参考,搜索局部最小值。</p>
+<p><strong>初始化</strong></p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+S_{\min }(k, \ell) &=S(k, 0)\\
+S_{t m p}(k, \ell) &=S(k, 0)
+\end{aligned}</script><p><strong>逐帧比较</strong> （ $\ell $ 递增）</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+S_{\min }(k, \ell) &=\min \left\{S_{\min }(k, \ell-1), S(k, \ell)\right\} \\
+S_{t m p}(k, \ell) &=\min \left\{S_{t m p}(k, \ell-1), S(k, \ell)\right\}
+\end{aligned}</script><p>当比较了L帧 $(\bmod (\ell, \mathrm{L})=0)$ 后</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&S_{\min }(k, \ell)=\min \left\{S_{t m p}(k, \ell-1), S(k, \ell)\right\} \\
+&S_{t m p}(k, \ell)=S(k, \ell)
+\end{aligned}</script><p>​搜索窗的长度L会影响到噪声的跟踪速度，一般按照经验选0.5s~1.5s左右。</p>
+<h5 id="求-p-prime-k-ell"><a href="#求-p-prime-k-ell" class="headerlink" title="求$p^{\prime}(k, \ell)$"></a>求$p^{\prime}(k, \ell)$</h5><p>定义:</p>
+<script type="math/tex; mode=display">\quad S_{r}(k, \ell) \triangleq \frac{S(k, \ell)}{S_{\min }(k, \ell)}</script><p>则语音是否存在的判决式为:</p>
+<script type="math/tex; mode=display">
+S_r(k,\ell)\overset{H_{1}^{\prime}}{ \underset{H_{0}^{\prime}}{\gtrless} }  \delta</script><p>根据上式，可以得到语音存在概率的迭代估计:</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\hat{p^{\prime}}(k, \ell)&=\alpha_{p} \hat{p}^{\prime}(k, \ell-1)+\left(1-\alpha_{p}\right) I(k, \ell) \\
+I(k, \ell)&=\left\{\begin{matrix}
+ 0 &  S_{r}(k, \ell)> \delta\\
+ 1 &  otherwise
+\end{matrix}\right.
+\end{aligned}</script><p>其中$\delta $为，预定的门限  $\alpha_{p}\left(0&lt;\alpha_{p}&lt;1\right)$ 是语音存在概率的<strong>平滑因子</strong>。</p>
+<h4 id="总结：MCRA-噪声估计流程"><a href="#总结：MCRA-噪声估计流程" class="headerlink" title="总结：MCRA 噪声估计流程"></a>总结：MCRA 噪声估计流程</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">流程</th>
+<th style="text-align:center">需要的公式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">最小值跟踪法获得带噪语音的最小值，即噪声的初步估计</td>
+<td style="text-align:center">$S_{min}(k,\ell)$</td>
+</tr>
+<tr>
+<td style="text-align:center">根据噪声的初步估计，计算语音存在概率</td>
+<td style="text-align:center">$\hat{p^{\prime}}(k, \ell)=\alpha_{p} \hat{p}^{\prime}(k, \ell-1)+\left(1-\alpha_{p}\right) I(k, \ell) $</td>
+</tr>
+<tr>
+<td style="text-align:center">根据语音存在概率，计算噪声估计的平滑因子</td>
+<td style="text-align:center">$ \tilde{\alpha}_{d}(k, \ell) \triangleq \alpha_{d}+\left(1-\alpha_{d}\right) p^{\prime}(k, \ell) $</td>
+</tr>
+<tr>
+<td style="text-align:center">用递归平均法得到噪声估计</td>
+<td style="text-align:center">$ \hat{\lambda}_{d}(k, \ell+1)=\tilde{\alpha}_{d}(k, \ell) \hat{\lambda}_{d}(k, \ell)+[1-\tilde{\alpha}_{d}(k, \ell)]</td>
+<td>Y(k, \ell)</td>
+<td>^{2}$</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>MCRA 参数参考表</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&N=512(32 m s) \\
+&M=128(75 \% \text { overlap }) \\
+&\alpha_{d}=0.95 \\
+&w=1 \\
+&\alpha_{s}=0.8 \\
+&L=125(1 \text { s minima search window }) \\
+&\delta=5 \\
+&\alpha_{p}=0.2
+\end{aligned}</script><h2 id="2-3、-增益因子-的确定"><a href="#2-3、-增益因子-的确定" class="headerlink" title="2.3、 增益因子 的确定"></a>2.3、 增益因子 的确定</h2><p>Q:当噪声估计已知以后，如何进行噪声抑制？<br>A:”增益因子”与“带噪语音相乘”即可</p>
+<script type="math/tex; mode=display">
+\hat{X}(k,\ell)=G(k,\ell)Y(k,\ell)</script><p>或者写成 $G(k,\ell)Y$ ，在传统的语音降噪领域，我们将其称为”增益因子”，在基于深度学习的领域 普遍称其为 “Mask估计”，Ideal Mask/Ratio MasK ，后者 与传统的降噪 等价</p>
+<script type="math/tex; mode=display">
+|\hat{X}(k,\ell)|^2=G^2(k,\ell)Y^2(k,\ell)</script><p>确定增益因子的方法：</p>
+<ul>
+<li>谱减法</li>
+<li>维纳滤波</li>
+<li>MMSE</li>
+<li>……</li>
+</ul>
+<h4 id="2-3-1、谱减法-：求增益因子"><a href="#2-3-1、谱减法-：求增益因子" class="headerlink" title="2.3.1、谱减法 ：求增益因子"></a>2.3.1、谱减法 ：求增益因子</h4><p>基本假设：噪声是平稳的，缓慢变化的</p>
+<p>思想： 将把接收信号中的噪声谱减去即可</p>
+<p>根据等式：</p>
+<script type="math/tex; mode=display">
+|\hat{X}(k)|^{2}=G^{2}(k)|Y(k)|^{2}</script><p>得到增益因子的表达式:</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+G(k)=\sqrt{\frac{|\hat{X}(k)|^{2}}{|Y(k)|^{2}}} &=\sqrt{\frac{|Y(k)|^{2}-|\widehat{D}(k)|^{2}}{|Y(k)|^{2}}}=\sqrt{\frac{|Y(k)|^{2}-\lambda_{d}(k)}{|Y(k)|^{2}}} \\
+&=\sqrt{1-\frac{\lambda_{d}(k)}{|Y(k)|^{2}}}=\sqrt{1-\frac{1}{\gamma(k)}}
+\end{aligned}</script><p>其中$\begin{aligned} \gamma(k)=\frac{|Y(k)|^{2}}{\lambda_d(k)}\end{aligned}$ 称为后验信噪比。 （但是请注意，这并非严格意义上的信噪比，因为信噪比的定义是信号能量比上噪声能量，而这个式子只有分母 满足要求是噪声能量，但是分子确实接受信号的能量，也即 信号能量加上噪声能量。）</p>
+<p>所以总结来说，谱减法 的增益因子 由所谓的后验信噪比决定。</p>
+<h4 id="2-3-2、维纳滤波-（频域）-求增益因子"><a href="#2-3-2、维纳滤波-（频域）-求增益因子" class="headerlink" title="2.3.2、维纳滤波 （频域） 求增益因子"></a>2.3.2、维纳滤波 （频域） 求增益因子</h4><p>思想：估计出的纯净语音幅度谱与真实幅度谱的均方误差最小</p>
+<p>频域估计误差 :</p>
+<script type="math/tex; mode=display">
+E(k)=X(k)-\hat{X}(k)=X(k)-G(k) Y(k)</script><p>目标函数 :</p>
+<script type="math/tex; mode=display">
+J=E\left[|E(k)|^{2}\right]</script><p>其实和时域的维纳滤波没什么不同，本质上都是 使得目标函数（参考信号与输出信号的差）最小化。时序得到是系统（滤波器）系数，频域得到的就是“增益因子”</p>
+<p>最小化目标函数，可以得到频域维纳滤波器的增益因子 :</p>
+<script type="math/tex; mode=display">
+G(k)=\frac{\lambda_{x}(k)}{\lambda_{x}(k)+\lambda_{d}(k)}=\frac{\xi(k)}{\xi(k)+1}</script><p>这一步<br>这里有一个<a target="_blank" rel="noopener" href="https://www.cnblogs.com/icoolmedia/p/weiner_audio_ns.html">推导</a>，但一些步骤不是很懂</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\lambda_x(k)&=E\left[\left|X(k) \right|^2 \right]\\
+\xi(k)&=\frac{\lambda_x(k)}{\lambda_{d}(k)}
+\end{aligned}</script><p>$\xi(k)$称为先验信噪比，直观上，先验信噪比 更符合信噪比的定义，似乎也更精确，但是 缺点就是 ，<strong>先验信噪比不好算</strong>。 因为原始纯净信号不知道啊</p>
+<h5 id="先验信噪比-amp-后验信噪比"><a href="#先验信噪比-amp-后验信噪比" class="headerlink" title="先验信噪比 &amp; 后验信噪比"></a>先验信噪比 &amp; 后验信噪比</h5><p>先验信噪比：</p>
+<script type="math/tex; mode=display">\xi(k)=\frac{\lambda_x(k)}{\lambda_{d}(k)}</script><p>后验信噪比：</p>
+<script type="math/tex; mode=display">\begin{aligned} \gamma(k)=\frac{|Y(k)|^{2}}{\lambda_d(k)}\end{aligned}</script><p><strong>根据后验信噪比估计先验信噪比</strong> ：<strong>判决引导法 （Decision Direct）</strong></p>
+<script type="math/tex; mode=display">
+\xi(k, l)=\alpha_{D D} \frac{|\hat{X}(k, l-1)|^{2}}{\lambda_{d}(k, l-1)}+\left(1-\alpha_{D D}\right) \max \{\gamma(k, l)-1,0\}</script><p>有时第一项的分母也可以用$\lambda_{d}(k, l)$<br>$\alpha_{D D}$ 的经验值为：0.95-0.98</p>
+<p>总结一下，</p>
+<ul>
+<li>在谱减法当中 采用 后验信噪比 来算 增益因子</li>
+<li>在维纳滤波当中 采用 先验信噪比 来算 增益因子</li>
+</ul>
+<h4 id="2-3-3、-MMSE-求增益因子"><a href="#2-3-3、-MMSE-求增益因子" class="headerlink" title="2.3.3、 MMSE 求增益因子"></a>2.3.3、 MMSE 求增益因子</h4><script type="math/tex; mode=display">
+\begin{aligned}
+&G(k)=\Gamma(1.5) \frac{\sqrt{v(k)}}{\gamma(k)} \exp \left(-\frac{v(k)}{2}\right)\left[(1+v(k)) I_{0}\left(\frac{v(k)}{2}\right)+v(k) I_{1}\left(\frac{v(k)}{2}\right)\right] \\
+&v(k)=\frac{\xi(k)}{1+\xi(k)} \gamma(k)
+\end{aligned}</script><p>可以看到，他同时用到了先验信噪比和后验信噪比</p>
+<p>论文：Speech Enhancement Using a Minimum Mean-square Error Short-Time Spectral Amplitude Estimator. Ephraim &amp; Malah, 1984”</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>目前为止，已经讲了完了 单通道 平稳噪声的 两大 降噪步骤， 噪声估计 和增益因子的确定，其中，噪声估计的估计质量 直接影响后续增益因子 从而  影响 降噪质量。<br>另外，对于三种 增益因子的确定方案 ：谱减法 其实效果 不是特别好，容易产生音乐噪声 ；维纳滤波 和 MMSE 的估计方案 用的更多一些。</p>
+<h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a>推荐阅读</h1><p>SPEECH ENHANCEMENT Theory and Practice 【Philipos C. Loizou】<br>中文版《语音增强理论与实践》 </p>
 
         </div>
         <!-- .entry-content -->
@@ -430,36 +708,19 @@
       <div class="toc" style="background: none;"></div>
       <section class="post-squares nextprev">
         
-          
-            <div class="post-nepre half previous">
-          
-            <a href="/2022/05/21/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%9B%9B%EF%BC%89%E5%99%AA%E5%A3%B0%E6%8A%91%E5%88%B6/" rel="prev">
-              <div class="background">
-                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/05/22/71jLVUWzQbiSeZ9.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://s2.loli.net/2022/05/22/71jLVUWzQbiSeZ9.jpg">
-              </div>
-              <span class="label">
-              Previous Post</span>
-              <div class="info">
-                <h3>
-                语音信号处理（四）噪声抑制</h3>
-                <hr>
-              </div>
-            </a>
-          </div>
-        
         
           
-            <div class="post-nepre half next">
+            <div class="post-nepre full next">
           
-            <a href="/2022/05/16/%E3%80%8A%E5%AE%9E%E6%97%B6%E8%AF%AD%E9%9F%B3%E5%A4%84%E7%90%86%E3%80%8B%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%20%E5%8F%91%E5%A3%B0%E6%9C%BA%E7%90%86/" rel="next">
+            <a href="/2022/05/17/%E3%80%8A%E5%AE%9E%E6%97%B6%E8%AF%AD%E9%9F%B3%E5%A4%84%E7%90%86%E3%80%8B%E8%AF%AD%E9%9F%B3%E7%AB%AF%E7%82%B9%E6%A3%80%E6%B5%8B/" rel="next">
               <div class="background">
-                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/05/16/GgQ5D9nwpHSJm6u.png" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://s2.loli.net/2022/05/16/GgQ5D9nwpHSJm6u.png">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="">
               </div>
               <span class="label">
               Next Post</span>
               <div class="info">
                 <h3>
-                《实时语音信号处理》学习笔记 信号处理基础 发声机理</h3>
+                《实时语音处理》语音端点检测</h3>
                 <hr>
               </div>
             </a>
