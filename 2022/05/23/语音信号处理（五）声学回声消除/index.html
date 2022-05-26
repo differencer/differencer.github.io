@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   
-  <title itemprop="name">post | t&#39;blog</title>
+  <title itemprop="name">语音信号处理（五）声学回声消除 | t&#39;blog</title>
   
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -380,19 +380,36 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
 <div class="pattern-center-blank"></div>
 
+  <div class="pattern-center single-center">
+    <!-- 有配图默认渲染第一张 -->
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://s2.loli.net/2022/05/25/ZmMOqLyHFsYDS79.png);" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/05/25/ZmMOqLyHFsYDS79.png">
+    </div>
+    <header class="pattern-header single-header">
+      <h1 class="entry-title">
+      语音信号处理（五）声学回声消除</h1>
+      <p class="entry-census">
+        <span>
+          <a href="/about/">
+            <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/custom/avatar.jpg">
+          </a>
+        </span>
+        <span>
+          <a href="/about/">differencer</a>
+        </span>
+        <span class="bull">
+        ·</span>
+        2022-5-23<span class="bull">
+        ·</span>
+      <span id="busuanzi_value_page_pv"></span>次阅读</p>
+    </header>
+  </div>
+
 <div id="content" class="site-content">
   <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
       <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
         <div class="toc"></div>
         <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
-        
-          <header class="entry-header">
-            <h1 class="entry-title">post</h1>
-            <p class="entry-census">differencer&nbsp;·&nbsp;2022-5-23&nbsp;·&nbsp;<span id="busuanzi_value_page_pv"></span>次阅读</p></p>
-
-            <hr>
-          </header>
         
         <div class="entry-content">
           <h1 id="一、声学回声消除-简介"><a href="#一、声学回声消除-简介" class="headerlink" title="一、声学回声消除 简介"></a>一、声学回声消除 简介</h1><ul>
@@ -447,7 +464,7 @@ r_{yx}(m)=\mathbf{F}^{-1}\{Y(k)X^*(k)\}=\mathbf{F}^{-1}\{P_{yx}(k)\}</script><bl
 <blockquote>
 <p>扩展：在webrtc 当中，计算时延的方式虽然不是这种GCC方案，但是其思路还是相关，在wbrtc中采用的是一种非常简化的、能够加速方式、他将两路信号的相关采用一种 比特异或的方式来实现，会把两信号的功率谱做一个01的量化（如果在一个频点上的功率超过一定的门限就会将其量化为1，反之为0）……</p>
 </blockquote>
-<h3 id="线性回声消除"><a href="#线性回声消除" class="headerlink" title="线性回声消除"></a>线性回声消除</h3><p>典型的自适应滤波场景（子带） 有两种状态</p>
+<h2 id="2-2、线性回声消除"><a href="#2-2、线性回声消除" class="headerlink" title="2.2、线性回声消除"></a>2.2、线性回声消除</h2><p>典的自适应滤波场景（子带） 有两种状态</p>
 <h4 id="状态一：FILTER-滤波模式"><a href="#状态一：FILTER-滤波模式" class="headerlink" title="状态一：FILTER 滤波模式"></a>状态一：FILTER 滤波模式</h4><script type="math/tex; mode=display">
 y(n)=\mathbf{x}^{T}\mathbf{w}^*(n) \\
 e(n)=d(n)-y(n)</script><p>注意：采用频域自适应滤波时进行卷积运算的操作时，将采用博客上一节当讲到的 第二种形式的DFT，是一种扩展了窗函数，但是没有扩展W因子的DFT。</p>
@@ -455,13 +472,13 @@ e(n)=d(n)-y(n)</script><p>注意：采用频域自适应滤波时进行卷积运
 <script type="math/tex; mode=display">
 \mathbf{w}(n+1)=\mathbf{w}(n)+2\mu\frac{\mathbf{w}(n)}{\mathbf{w}^H\mathbf{x}(n)}e^*(n)</script><p>由于时子带自适应滤波，时域的结果可能是复数，故写成上式。</p>
 <h3 id="线性回声消除模块的状态机表示"><a href="#线性回声消除模块的状态机表示" class="headerlink" title="线性回声消除模块的状态机表示"></a>线性回声消除模块的状态机表示</h3><p><img src="https://s2.loli.net/2022/05/25/ZmMOqLyHFsYDS79.png" alt=""><br>可以看到，控制状态转换的机制就是双讲检测</p>
-<h3 id="双讲检测-Double-Talk-Test"><a href="#双讲检测-Double-Talk-Test" class="headerlink" title="双讲检测 Double Talk Test"></a>双讲检测 Double Talk Test</h3><p>判断是否有双讲状况（麦克风接受有是否有回音）存在<br>1、能量法</p>
+<h2 id="2-3、-双讲检测-Double-Talk-Test"><a href="#2-3、-双讲检测-Double-Talk-Test" class="headerlink" title="2.3、 双讲检测 Double Talk Test"></a>2.3、 双讲检测 Double Talk Test</h2><p>判断是否有双讲状况（麦克风接受有是否有回音）存在<br>1、能量法</p>
 <script type="math/tex; mode=display">
 \frac{|Y(k,l)|}{|X(k,l)|}>\alpha(k),"double talk"
 \frac{|Y(k,l)|}{|X(k,l)|}<\alpha(k),"single talk"</script><p>一般用类似回波损耗比（ERL，echo return loss）来表示</p>
 <p>当永远没有 近端语音存在时（只有背景声、回声时），这个比值会趋于一个稳定的值，当存在 近端语音信号时，这个比例一般会变大</p>
 <p>2、利用残余回声抑制的结果</p>
-<h3 id="残余回声抑制-（Residual-Echo-Suppression-RES）"><a href="#残余回声抑制-（Residual-Echo-Suppression-RES）" class="headerlink" title="残余回声抑制 （Residual Echo Suppression,RES）"></a>残余回声抑制 （Residual Echo Suppression,RES）</h3><h4 id="作用一：抑制残余回声"><a href="#作用一：抑制残余回声" class="headerlink" title="作用一：抑制残余回声"></a>作用一：抑制残余回声</h4><p>方法，采用NS的思路</p>
+<h2 id="2-4、-残余回声抑制-（Residual-Echo-Suppression-RES）"><a href="#2-4、-残余回声抑制-（Residual-Echo-Suppression-RES）" class="headerlink" title="2.4、 残余回声抑制 （Residual Echo Suppression,RES）"></a>2.4、 残余回声抑制 （Residual Echo Suppression,RES）</h2><h4 id="作用一：抑制残余回声"><a href="#作用一：抑制残余回声" class="headerlink" title="作用一：抑制残余回声"></a>作用一：抑制残余回声</h4><p>方法，采用NS的思路</p>
 <p><img src="https://s2.loli.net/2022/05/26/3qj1nzvYuogPX5b.png" alt=""></p>
 <p>如图，本质上RES与NS流程基本一致，就是把残余回声（线性回声消除部分的残差视为噪声，信噪比换成了信号残差比SER）</p>
 <blockquote>
