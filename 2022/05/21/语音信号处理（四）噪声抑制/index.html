@@ -420,7 +420,7 @@
 \begin{aligned}
 X(k) &=\sum_{n=0}^{N-1} x(n) W_{N}^{n k} \\
 X(k, l) &=\sum_{n=0}^{N-1} x(l+n) W_{N}^{n k}
-\end{aligned}</script><p>k: frequency bin index （频率（点）序号）<br>l:frame index ( 帧移 frame shift 总 大小)<br>n: time  bin index (帧内，时间序号)<br>N:frame length<br>如图：以每次帧移为1举例（其实这样右很大的overlap）</p>
+\end{aligned}</script><p>k: frequency bin index （频率（点）序号）<br>l:frame index ( 帧移 frame shift 总 大小)<br>n: time  bin index (帧内，时间序号)<br>N:frame length<br>如图：以每次帧移为1举例（其实这样有很大的overlap）</p>
 <p><img src="https://s2.loli.net/2022/05/22/23yo4cuPxJtb9eF.png" alt=""></p>
 <p>红圈部分可以视为一个子(频)带。</p>
 <p>选取合适的帧移因子(也可以叫抽取因子，因为这是每隔M个点抽取) $M$ ,则有</p>
@@ -493,10 +493,11 @@ A<span class="token text string">[加L长的窗函数到目前处理的信号块
 <li>谱减法</li>
 <li>维纳滤波</li>
 <li>MMSE</li>
-<li>……<h2 id="2-2、噪声估计-：以-MCRA-模型-为例"><a href="#2-2、噪声估计-：以-MCRA-模型-为例" class="headerlink" title="2.2、噪声估计 ：以 MCRA 模型 为例"></a>2.2、噪声估计 ：以 MCRA 模型 为例</h2>Minima Controlled Recursive Averaging (MCRA) 最小追踪递归平均</li>
+<li>……</li>
 </ul>
 </li>
 </ul>
+<h2 id="2-2、噪声估计-：以-MCRA-模型-为例"><a href="#2-2、噪声估计-：以-MCRA-模型-为例" class="headerlink" title="2.2、噪声估计 ：以 MCRA 模型 为例"></a>2.2、噪声估计 ：以 MCRA 模型 为例</h2><p> Minima Controlled Recursive Averaging (MCRA) 最小追踪递归平均</p>
 <p>传统噪声估计的方法(步骤) 有：</p>
 <ul>
 <li>递归平均 Recursive Averaging<ul>
@@ -708,9 +709,26 @@ G(k)=\frac{\lambda_{x}(k)}{\lambda_{x}(k)+\lambda_{d}(k)}=\frac{\xi(k)}{\xi(k)+1
       <div class="toc" style="background: none;"></div>
       <section class="post-squares nextprev">
         
+          
+            <div class="post-nepre half previous">
+          
+            <a href="/2022/05/23/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E4%BA%94%EF%BC%89%E5%A3%B0%E5%AD%A6%E5%9B%9E%E5%A3%B0%E6%B6%88%E9%99%A4/" rel="prev">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="">
+              </div>
+              <span class="label">
+              Previous Post</span>
+              <div class="info">
+                <h3>
+                post</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
         
           
-            <div class="post-nepre full next">
+            <div class="post-nepre half next">
           
             <a href="/2022/05/17/%E3%80%8A%E5%AE%9E%E6%97%B6%E8%AF%AD%E9%9F%B3%E5%A4%84%E7%90%86%E3%80%8B%E8%AF%AD%E9%9F%B3%E7%AB%AF%E7%82%B9%E6%A3%80%E6%B5%8B/" rel="next">
               <div class="background">
