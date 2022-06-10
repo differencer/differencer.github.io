@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   
-  <title itemprop="name">t&#39;blog</title>
+  <title itemprop="name">语音信号处理（七） 基于DNN的语音分离 | t&#39;blog</title>
   
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -376,390 +376,234 @@
   </div>
 </header>
 
-      <div class="blank" style="padding-top: 0px;"></div>
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
+<div class="pattern-center-blank"></div>
+
 <div id="content" class="site-content">
-  
-  <div class="notice" style="margin-top:60px">
-    <i class="iconfont icon-notification">
-    </i>
-    <div class="notice-content">小站正在施工中~嘻嘻</div>
-  </div>
-  
-  <div class="top-feature-row">
-  <h1 class="fes-title" style="font-family: 'Ubuntu', sans-serif;">
-  <i class="fa fa-anchor" aria-hidden="true">
-  </i>
-  兴趣</h1>
-  
-  <div class="top-feature-v2">
-    <div class="the-feature square from_left_and_right">
-      <a href="/theme-sakura/" target="_blank">
-        <div class="img">
-          <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/startdash/sakura.md.png">
-        </div>
-        <div class="info">
-          <h3>Sakura</h3>
-          <p>本站 hexo 主题</p>
-        </div>
-      </a>
-    </div>
-  </div>
-  
-  <div class="top-feature-v2">
-    <div class="the-feature square from_left_and_right">
-      <a href="https://space.bilibili.com/20713910/dynamic" target="_blank">
-        <div class="img">
-          <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/startdash/2233.png">
-        </div>
-        <div class="info">
-          <h3>Bilibili</h3>
-          <p>博主的b站视频</p>
-        </div>
-      </a>
-    </div>
-  </div>
-  
-  <div class="top-feature-v2">
-    <div class="the-feature square from_left_and_right">
-      <a href="/about/" target="_blank">
-        <div class="img">
-          <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/custom/avatar.jpg">
-        </div>
-        <div class="info">
-          <h3>about</h3>
-          <p>关于我？</p>
-        </div>
-      </a>
-    </div>
-  </div>
-  
-</div>
   <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
-      <h1 class="main-title" style="font-family: 'Ubuntu', sans-serif;">
-      <i class="fa fa-envira" aria-hidden="true"></i>
-      发现</h1>
-      
-  <!-- 首页默认取最最新文章集 -->
-  
-    
-<article  class="post post-list-thumb post-list-thumb-left"  class="post post-list-thumb" itemscope="" itemtype="https://schema.org/BlogPosting">
-
-  <div class="post-thumb">
-    <a href="/2022/04/27/communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%E4%B8%89/">
-      <img class="lazyload" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/04/28/s8bUNcpEZrxFgKq.png">
-    </a>
-  </div>
-  <div class="post-content-wrap">
-    <div class="post-content">
-      <div class="post-date">
-        <i class="iconfont icon-time">
-        </i>2022-4-27 10:04</div>
-      <a href="/2022/04/27/communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%E4%B8%89/" class="post-title">
-        <h3>无线信号波形发生器-communication toolbox 学习记录（三）</h3>
-      </a>
-      <div class="post-meta">
-        <span><i class="fa fa-tags"></i>
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
         
-            <a href="/tags/matlab/">matlab<em>·</em></a>
-          
-            <a href="/tags/%E9%80%9A%E4%BF%A1/">通信<em>·</em></a>
-          
-        </span>
-        <span>
-          <i class="iconfont icon-file"></i>
-          
-            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-          
-            <a href="/categories/%E6%8A%80%E6%9C%AF/%E9%80%9A%E4%BF%A1/">通信</a>
-          
-        </span>
-      </div>
-      <div class="float-content">
-        <p></p>
-        <div class="post-bottom">
-          <a href="/2022/04/27/communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%E4%B8%89/" class="button-normal">
-            <i class="iconfont icon-caidan"></i>
-          </a>
+          <header class="entry-header">
+            <h1 class="entry-title">语音信号处理（七） 基于DNN的语音分离</h1>
+            <p class="entry-census">differencer&nbsp;·&nbsp;2022-5-30&nbsp;·&nbsp;<span id="busuanzi_value_page_pv"></span>次阅读</p></p>
+
+            <hr>
+          </header>
+        
+        <div class="entry-content">
+          <p>本章主要为<strong>单通道</strong>的语音分离，具体多通道的不会再这里展开</p>
+<h1 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h1><h2 id="语音分离"><a href="#语音分离" class="headerlink" title="语音分离"></a>语音分离</h2><ul>
+<li>目标：从背景干扰音中分理出目标语音</li>
+<li>可以视为一种监督学习的任务</li>
+<li>包含： <ul>
+<li>语音增强，(区分语音和非语音)</li>
+<li>说话人分离，(多个说话人)</li>
+<li>语音解混响</li>
+</ul>
+</li>
+</ul>
+<h1 id="二、基于DNN-的语音分离"><a href="#二、基于DNN-的语音分离" class="headerlink" title="二、基于DNN 的语音分离"></a>二、基于DNN 的语音分离</h1><p>模型：</p>
+<script type="math/tex; mode=display">
+y^{(m)}=s_d*h^{(m)}+n^{(m)}</script><p>目标：从接收信号$y^{(m)}$(包含语音的混响、以及加性噪声)当中抽离出来干净的语音数据$s_d$</p>
+<p>简单来说 通过深度学习的方式去处理就是这几大步骤<br><img src="https://s2.loli.net/2022/05/30/P8ukiZD67gzKvyx.png" alt=""></p>
+<h2 id="1、训练数据-training-data"><a href="#1、训练数据-training-data" class="headerlink" title="1、训练数据 training data"></a>1、训练数据 training data</h2><p>准备 输入输出对的语音数据<br>输入是带噪语音，输出是纯净语音</p>
+<p>常用基于模拟的方案。<strong>自己加</strong>混响（冲激响应函数） 和 噪声（各种日常的噪声，如敲门等）</p>
+<p>纯净语音与混响函数卷积，再叠加噪声。</p>
+<p>这样就得到了输入输出对</p>
+<h2 id="2、特征提取-feature-extraction"><a href="#2、特征提取-feature-extraction" class="headerlink" title="2、特征提取 feature extraction"></a>2、特征提取 feature extraction</h2><p>常用的特征有：</p>
+<ul>
+<li>1、语音识别等领域  MFCC、filter bank</li>
+<li>2、DSP等领域 MFCC、PLP、PNCC、PITCH、GFCC</li>
+</ul>
+<h2 id="3、神经网络模型结构部分"><a href="#3、神经网络模型结构部分" class="headerlink" title="3、神经网络模型结构部分"></a>3、神经网络模型结构部分</h2><p>1、基础神经网络模型结构</p>
+<ul>
+<li>全连接神经网络</li>
+<li>CNN</li>
+<li>RNN</li>
+<li>LSTM</li>
+<li>Transformer</li>
+</ul>
+<p>2、损失函数选择</p>
+<ul>
+<li>分类任务：softmax&amp;cross entropy</li>
+<li>回归任务： linear（或 sigmiod 等）、MSE</li>
+<li>GANs（基本上回归任务东可以用GAN网络改造）</li>
+<li>Multi-task Joint training：Speech separation &amp; ASR</li>
+</ul>
+<h2 id="4、Training-target"><a href="#4、Training-target" class="headerlink" title="4、Training target"></a>4、Training target</h2><ul>
+<li>Masking-based Targets<br> • Ideal Binary Mask (IdBM)<br>  • Target Binary Mask (TBM)<br>  • Ideal Ratio Mask (IRM)<br>  • Spectral Magnitude Mask (SMM)<br>  • Phase-Sensitive Mask (PSM)<br>  • Complex Ideal Ratio Mask (cIRM)</li>
+</ul>
+<p>一篇关于Masking-based Targets的介绍性的<a target="_blank" rel="noopener" href="https://www.cnblogs.com/LXP-Never/p/14142108.html">博客</a></p>
+<ul>
+<li>Mapping-based Targets<br> • Target Magnitude Spectrum (TMS)<br>  • Gammatone Frequency Target Power Spectrum (GT-TPS)<br>  • Signal Approximation</li>
+</ul>
+<h1 id="三、单通道语音分离算法"><a href="#三、单通道语音分离算法" class="headerlink" title="三、单通道语音分离算法"></a>三、单通道语音分离算法</h1><p>3 Monaural separation algorithms 用途<br>3.1 Speech enhancement<br>3.2 Speech dereverberation<br>3.3 Speaker separation</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/kodoshinichi/article/details/123276279">全部</a></p>
+
         </div>
-      </div>
-    </div>
-  </div>
-</article>
-  
-    
-<article  class="post post-list-thumb" itemscope="" itemtype="https://schema.org/BlogPosting">
-
-  <div class="post-thumb">
-    <a href="/2022/04/22/communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%E5%9B%9B%EF%BC%9Aturbo%E7%A0%81%E7%BC%96%E7%A0%81%E5%99%A8/">
-      <img class="lazyload" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/04/22/LUo2pfNlRyFKGBr.png">
-    </a>
-  </div>
-  <div class="post-content-wrap">
-    <div class="post-content">
-      <div class="post-date">
-        <i class="iconfont icon-time">
-        </i>2022-4-22 21:04</div>
-      <a href="/2022/04/22/communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%E5%9B%9B%EF%BC%9Aturbo%E7%A0%81%E7%BC%96%E7%A0%81%E5%99%A8/" class="post-title">
-        <h3>commnication toolbox 学习记录四：turbo码编码器对象，以及turbo码入门</h3>
-      </a>
-      <div class="post-meta">
-        <span><i class="fa fa-tags"></i>
-        
-            <a href="/tags/matlab/">matlab<em>·</em></a>
-          
-            <a href="/tags/%E9%80%9A%E4%BF%A1/">通信<em>·</em></a>
-          
-            <a href="/tags/%E7%BC%96%E7%A0%81/">编码<em>·</em></a>
-          
-        </span>
-        <span>
-          <i class="iconfont icon-file"></i>
-          
-            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-          
-            <a href="/categories/%E6%8A%80%E6%9C%AF/%E9%80%9A%E4%BF%A1/">通信</a>
-          
-        </span>
-      </div>
-      <div class="float-content">
-        <p></p>
-        <div class="post-bottom">
-          <a href="/2022/04/22/communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%E5%9B%9B%EF%BC%9Aturbo%E7%A0%81%E7%BC%96%E7%A0%81%E5%99%A8/" class="button-normal">
-            <i class="iconfont icon-caidan"></i>
-          </a>
+        <!-- .entry-content -->
+        <div class="single-reward">
+          <div class="reward-open">赏
+            <div class="reward-main">
+              <ul class="reward-row">
+                <li class="alipay-code"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/custom/donate/AliPayQR.jpg"></li>
+                <li class="wechat-code"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/custom/donate/WeChanQR.jpg"></li>
+              </ul>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
-</article>
-  
-    
-<article  class="post post-list-thumb post-list-thumb-left"  class="post post-list-thumb" itemscope="" itemtype="https://schema.org/BlogPosting">
-
-  <div class="post-thumb">
-    <a href="/2022/04/09/%E5%B0%8F%E8%AF%B4%E8%AF%84%E9%89%B4/">
-      <img class="lazyload" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/04/09/J8VN4LqQeyCzvHo.jpg">
-    </a>
-  </div>
-  <div class="post-content-wrap">
-    <div class="post-content">
-      <div class="post-date">
-        <i class="iconfont icon-time">
-        </i>2022-4-9 16:04</div>
-      <a href="/2022/04/09/%E5%B0%8F%E8%AF%B4%E8%AF%84%E9%89%B4/" class="post-title">
-        <h3>小说评鉴</h3>
-      </a>
-      <div class="post-meta">
-        <span><i class="fa fa-tags"></i>
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
+      </article>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
         
-            <a href="/tags/%E9%98%85%E8%AF%BB/">阅读<em>·</em></a>
           
-        </span>
-        <span>
-          <i class="iconfont icon-file"></i>
+            <div class="post-nepre half previous">
           
-            <a href="/categories/%E5%85%B6%E4%BB%96/">其他</a>
+            <a href="/2022/06/01/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AB%EF%BC%89%E7%AB%AF%E5%88%B0%E7%AB%AF%E8%AF%AD%E9%9F%B3%E5%88%86%E7%A6%BB%E4%B8%8E%E7%9B%AE%E6%A0%87%E8%AF%B4%E8%AF%9D%E4%BA%BA%E6%8A%BD%E5%8F%96/" rel="prev">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="">
+              </div>
+              <span class="label">
+              Previous Post</span>
+              <div class="info">
+                <h3>
+                语音信号处理（八）端到端语音分离与目标说话人抽取</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+        
           
-        </span>
-      </div>
-      <div class="float-content">
-        <p></p>
-        <div class="post-bottom">
-          <a href="/2022/04/09/%E5%B0%8F%E8%AF%B4%E8%AF%84%E9%89%B4/" class="button-normal">
-            <i class="iconfont icon-caidan"></i>
-          </a>
+            <div class="post-nepre half next">
+          
+            <a href="/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/05/28/JC1r8h7nuGQ4PyK.png" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://s2.loli.net/2022/05/28/JC1r8h7nuGQ4PyK.png">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                语音信号处理（六） 阵列信号处理</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
+      <!--
+  原来 ：
+<script src="//cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js"></script>
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "",
+        appKey: "",
+        path: window.location.pathname,
+        placeholder: "快来留言鸭~ ..."
+      })
+  }
+</script>
+ -->
+
+
+  <div id="vcomments"></div>
+  <!-- 先引入样式,从footer提前 -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js"></script>
+  <!-- 评论框美化 -->
+  <script>
+      new Valine({
+          el: '#vcomments',
+          appId: "DpQvbSVQXSeUV8lRSV5zHiOY-gzGzoHsz",
+          appKey: "j8tFI5wuIwD7gTt7KJe5ohod",
+         notify: 'false' === 'false',
+         verify: 'true' === 'true',
+         visitor: 'false' === 'false',
+          path: window.location.pathname,
+          verify: true,
+          avatar: 'monsterid',//小怪物头像
+          placeholder: "你是我一生只会遇见一次的惊喜 ..."  
+      });
+      //   自定义邮箱审核规则
+      document.body.addEventListener('click', function(e) {
+          if (e.target.classList.contains('vsubmit')) {
+              const email = document.querySelector('input[type=email]');
+              const nick = document.querySelector('input[name=nick]');
+              const reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+              if (!email.value || !nick.value || !reg.test(email.value)) {
+                  const str = `<div class="valert text-center"><div class="vtext">请填写正确的昵称和邮箱！</div></div>`;
+                  const vmark = document.querySelector('.vmark');
+                  vmark.innerHTML = str;
+                  vmark.style.display = 'block';
+                  setTimeout(function() {
+                      vmark.style.display = 'none';
+                      vmark.innerHTML = '';
+                  }, 2500);
+              }
+          }
+      });
+      // 点击回复直接评论,官方版本点击回复时都是跳回到页面上方的评论框进行回复，评论框是固定不动的
+      // 参考https://immmmm.com/valine-diy,用到jQuery
+      $(document).ready(function(){
+          //$('.vemoji-btn').text('😀');
+          $("#vcomments").on('click', 'span.vat',function(){
+              $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
+              $('textarea#veditor').focus();
+          })
+      })
+  </script>
+  <!-- 今日诗词：随机返回一句古诗词名句的接口，宅到用来做 Valine 的 placeholder 显示内容 -->
+  <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+  <script type="text/javascript">
+      jinrishici.load(function(result) {
+          var jrsc_plac =  result.data.content + "\n「" + result.data.origin.title + "」" + result.data.origin.dynasty + " · " + result.data.origin.author
+          document.getElementById("veditor").setAttribute("placeholder",jrsc_plac);
+      });
+  </script>
+  
+  
+  
+
+
+
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope="" itemtype="https://schema.org/Person">
+          <a href="/about/" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/custom/avatar.jpg" itemprop="image" alt="differencer" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="/about/" itemprop="url" rel="author">differencer</a>
+            </h3>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
-</article>
-  
-    
-<article  class="post post-list-thumb" itemscope="" itemtype="https://schema.org/BlogPosting">
-
-  <div class="post-thumb">
-    <a href="/2022/03/27/communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%E4%BA%8C%EF%BC%9AOFDM/">
-      <img class="lazyload" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/03/28/qlVNcWvT3dgf1mr.png">
-    </a>
-  </div>
-  <div class="post-content-wrap">
-    <div class="post-content">
-      <div class="post-date">
-        <i class="iconfont icon-time">
-        </i>2022-3-27 22:03</div>
-      <a href="/2022/03/27/communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%E4%BA%8C%EF%BC%9AOFDM/" class="post-title">
-        <h3>Communications Toolbox 学习记录 二 ：OFDM 入门</h3>
-      </a>
-      <div class="post-meta">
-        <span><i class="fa fa-tags"></i>
-        
-            <a href="/tags/matlab/">matlab<em>·</em></a>
-          
-            <a href="/tags/%E9%80%9A%E4%BF%A1/">通信<em>·</em></a>
-          
-        </span>
-        <span>
-          <i class="iconfont icon-file"></i>
-          
-            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-          
-            <a href="/categories/%E6%8A%80%E6%9C%AF/%E9%80%9A%E4%BF%A1/">通信</a>
-          
-        </span>
-      </div>
-      <div class="float-content">
-        <p></p>
-        <div class="post-bottom">
-          <a href="/2022/03/27/communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%E4%BA%8C%EF%BC%9AOFDM/" class="button-normal">
-            <i class="iconfont icon-caidan"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</article>
-  
-    
-<article  class="post post-list-thumb post-list-thumb-left"  class="post post-list-thumb" itemscope="" itemtype="https://schema.org/BlogPosting">
-
-  <div class="post-thumb">
-    <a href="/2022/03/17/communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%E4%B8%80/">
-      <img class="lazyload" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/03/18/eyjk9Mdng4VTfS8.jpg">
-    </a>
-  </div>
-  <div class="post-content-wrap">
-    <div class="post-content">
-      <div class="post-date">
-        <i class="iconfont icon-time">
-        </i>2022-3-17 16:03</div>
-      <a href="/2022/03/17/communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%E4%B8%80/" class="post-title">
-        <h3>Communications Toolbox 学习记录一:仿真框架</h3>
-      </a>
-      <div class="post-meta">
-        <span><i class="fa fa-tags"></i>
-        
-            <a href="/tags/matlab/">matlab<em>·</em></a>
-          
-            <a href="/tags/%E9%80%9A%E4%BF%A1/">通信<em>·</em></a>
-          
-        </span>
-        <span>
-          <i class="iconfont icon-file"></i>
-          
-            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
-          
-            <a href="/categories/%E6%8A%80%E6%9C%AF/%E9%80%9A%E4%BF%A1/">通信</a>
-          
-        </span>
-      </div>
-      <div class="float-content">
-        <p></p>
-        <div class="post-bottom">
-          <a href="/2022/03/17/communication-toolbox-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%E4%B8%80/" class="button-normal">
-            <i class="iconfont icon-caidan"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</article>
-  
-    
-<article  class="post post-list-thumb" itemscope="" itemtype="https://schema.org/BlogPosting">
-
-  <div class="post-thumb">
-    <a href="/2022/03/17/%E6%97%A5%E6%BC%AB%EF%BC%88%E6%BC%AB%E7%94%BB%EF%BC%89%E8%AF%84%E9%89%B4/">
-      <img class="lazyload" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/03/18/oaY8HWPGmsiruex.jpg">
-    </a>
-  </div>
-  <div class="post-content-wrap">
-    <div class="post-content">
-      <div class="post-date">
-        <i class="iconfont icon-time">
-        </i>2022-3-17 11:03</div>
-      <a href="/2022/03/17/%E6%97%A5%E6%BC%AB%EF%BC%88%E6%BC%AB%E7%94%BB%EF%BC%89%E8%AF%84%E9%89%B4/" class="post-title">
-        <h3>日漫（漫画、动漫）评鉴</h3>
-      </a>
-      <div class="post-meta">
-        <span><i class="fa fa-tags"></i>
-        
-            <a href="/tags/%E9%98%85%E8%AF%BB/">阅读<em>·</em></a>
-          
-        </span>
-        <span>
-          <i class="iconfont icon-file"></i>
-          
-            <a href="/categories/%E5%85%B6%E4%BB%96/">其他</a>
-          
-        </span>
-      </div>
-      <div class="float-content">
-        <p></p>
-        <div class="post-bottom">
-          <a href="/2022/03/17/%E6%97%A5%E6%BC%AB%EF%BC%88%E6%BC%AB%E7%94%BB%EF%BC%89%E8%AF%84%E9%89%B4/" class="button-normal">
-            <i class="iconfont icon-caidan"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</article>
-  
-    
-<article  class="post post-list-thumb post-list-thumb-left"  class="post post-list-thumb" itemscope="" itemtype="https://schema.org/BlogPosting">
-
-  <div class="post-thumb">
-    <a href="/2022/03/16/%E6%98%8E%E5%85%89%E6%9D%91%E8%81%8C%E4%B8%9A%E6%8A%80%E6%9C%AF%E5%AD%A6%E6%A0%A1%E5%B0%8F%E5%90%83%E5%9B%BE%E9%89%B4/">
-      <img class="lazyload" onerror="imgError(this,3)" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/03/17/z4AmZTfytIwDeLF.jpg">
-    </a>
-  </div>
-  <div class="post-content-wrap">
-    <div class="post-content">
-      <div class="post-date">
-        <i class="iconfont icon-time">
-        </i>2022-3-16 22:03</div>
-      <a href="/2022/03/16/%E6%98%8E%E5%85%89%E6%9D%91%E8%81%8C%E4%B8%9A%E6%8A%80%E6%9C%AF%E5%AD%A6%E6%A0%A1%E5%B0%8F%E5%90%83%E5%9B%BE%E9%89%B4/" class="post-title">
-        <h3>明光村职业技术学校小吃图鉴</h3>
-      </a>
-      <div class="post-meta">
-        <span><i class="fa fa-tags"></i>
-        
-            <a href="/tags/%E8%83%A1%E5%90%83%E6%B5%B7%E5%A1%9E%EF%BC%81/">胡吃海塞！<em>·</em></a>
-          
-        </span>
-        <span>
-          <i class="iconfont icon-file"></i>
-          
-            <a href="/categories/%E7%94%9F%E6%B4%BB/">生活</a>
-          
-        </span>
-      </div>
-      <div class="float-content">
-        <p></p>
-        <div class="post-bottom">
-          <a href="/2022/03/16/%E6%98%8E%E5%85%89%E6%9D%91%E8%81%8C%E4%B8%9A%E6%8A%80%E6%9C%AF%E5%AD%A6%E6%A0%A1%E5%B0%8F%E5%90%83%E5%9B%BE%E9%89%B4/" class="button-normal">
-            <i class="iconfont icon-caidan"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</article>
-  
-
-
-    </main>
-      <!-- 首页默认取最最新文章集 -->
-    <!-- 
-      <nav class="navigator">
-        
-        <a class="extend prev" rel="prev" href="/">&lt;i class&#x3D;&quot;iconfont icon-back&quot;&gt;&lt;&#x2F;i&gt;</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
-      </nav>
-     -->
-  </div>
-  
+        <hr>
+        <p><i class="iconfont icon-write"></i></p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
 </div>
+
+
 
     </div>    
     <div class="ins-search">

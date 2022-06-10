@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   
-  <title itemprop="name">语音信号处理（五）声学回声消除 | t&#39;blog</title>
+  <title itemprop="name">语音信号处理（八）端到端语音分离与目标说话人抽取 | t&#39;blog</title>
   
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -380,30 +380,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
 <div class="pattern-center-blank"></div>
 
-  <div class="pattern-center single-center">
-    <!-- 有配图默认渲染第一张 -->
-    <div class="pattern-attachment-img lazyload" style="background-image: url(https://s2.loli.net/2022/05/25/ZmMOqLyHFsYDS79.png);" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/05/25/ZmMOqLyHFsYDS79.png">
-    </div>
-    <header class="pattern-header single-header">
-      <h1 class="entry-title">
-      语音信号处理（五）声学回声消除</h1>
-      <p class="entry-census">
-        <span>
-          <a href="/about/">
-            <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/custom/avatar.jpg">
-          </a>
-        </span>
-        <span>
-          <a href="/about/">differencer</a>
-        </span>
-        <span class="bull">
-        ·</span>
-        2022-5-23<span class="bull">
-        ·</span>
-      <span id="busuanzi_value_page_pv"></span>次阅读</p>
-    </header>
-  </div>
-
 <div id="content" class="site-content">
   <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
@@ -411,81 +387,191 @@
         <div class="toc"></div>
         <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
         
-        <div class="entry-content">
-          <h1 id="一、声学回声消除-简介"><a href="#一、声学回声消除-简介" class="headerlink" title="一、声学回声消除 简介"></a>一、声学回声消除 简介</h1><ul>
-<li>应用场景<ul>
-<li>语音通信场景：<br>在一般的通话场景中，如果能听到自己的回声，往往原因发生在“对端”，由于“对端”的回声抑制没有做好导致的</li>
-<li>语音交互场景（打断场景）<br>如 对正在播放音乐的 智能音箱 说“切歌”<ul>
-<li>在这种场景下，我们将扬声器端 叫做 远端信号或参考信号（far -end signal，reference signal），他是扬声器原始的音乐，没有没任何噪声污染 ；麦克可风 输入信号（实采信号，input signal） 包含了  近端信号 （near -end signal ），也是我们想识别的语音信号，此外还有其他信号比如噪声以及扬声器播放信号的干扰。</li>
-<li>AEC：的任务就是把在回声存在的前提下，怎么把近端语音信号提取出来。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p>AEC的基本原理：对消</p>
-<ul>
-<li>如果能设计一组自适应滤波器，使得自适应滤波器，他的输出 刚好与麦克风接受的回声信号反向，那么只需将自适应的输出信号与接收信号相叠加即可消除回声信号。</li>
-</ul>
-<h1 id="二、-基本模块构成"><a href="#二、-基本模块构成" class="headerlink" title="二、 基本模块构成"></a>二、 基本模块构成</h1><ul>
-<li>AEC 模块的<strong>输入</strong>有两个： 1、参考信号（远端信号），也即扬声器播放的纯净信号 2、麦克风接受信号</li>
-<li>AEC 使用的模块： <ul>
-<li>1、 时延估计模块（time delay estimation TDE） ：任何自适应滤波器的时延追踪能力时有限的。<ul>
-<li>通过补偿的方式，让两路输入信号在时间上尽可能的对齐。从而为后续的自适应滤波器模块尽可能发挥跟踪学习的作用。</li>
-</ul>
-</li>
-<li>2、 回声消除模块：<ul>
-<li>主要是 自适应滤波器器模块</li>
-<li>自适应滤波只能消除线性回声部分，所以，还有部分非线性回声（回声分量中有截幅）难以消除，所以通常还会在线性回声消除模块后面再追加一个 残余回声消除（抑制）模块</li>
-</ul>
-</li>
-<li>3、 双讲检测（double talk test DTT）<ul>
-<li>双讲检测 的目的就是告诉整个AEC 模块，应该处于 哪种 工作状态 。 </li>
-<li>一般认为，麦克风输入信号没有近端信号参与的时候收敛性能最好，能够迅速收敛到最佳状态，反之，当有近端信号时，收敛性能可能会变差</li>
-<li>所以双讲检测的目的就是告诉 输入信号中是否存在近端信号，如果存在就不进行滤波器系数的更新，只用做简单的滤波器就好</li>
-</ul>
-</li>
-<li>4、残余回声抑制模块<ul>
-<li>见第二部分</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="2-1、时延估计模块"><a href="#2-1、时延估计模块" class="headerlink" title="2.1、时延估计模块"></a>2.1、时延估计模块</h2><p>   将麦克风信号 y(n) 和参考信号 x(n) 的时延调整到合适的范围。<br>   时延估计的出发点是信号的相关性。</p>
-<h3 id="互相关法-CC"><a href="#互相关法-CC" class="headerlink" title="互相关法 CC"></a>互相关法 CC</h3><script type="math/tex; mode=display">
-r_{yx}(m)=\mathbf{F}^{-1}\{Y(k)X^*(k)\}=\mathbf{F}^{-1}\{P_{yx}(k)\}</script><blockquote>
-<p>从公式中就可以知道如何估计回声的时延：先分别 麦克风信号与 参考信号的 DFT，相乘后 做傅里叶反变换，就能得到相关函数，求相关函数的最大值对应的 time index 就是我们要的时延。（也即互相关法，Cross Correlation）</p>
-</blockquote>
-<h3 id="广义互相关法-GCC"><a href="#广义互相关法-GCC" class="headerlink" title="广义互相关法 GCC"></a>广义互相关法 GCC</h3><p>除此之外还有<strong>广义互相关法</strong>（Generalized Cross Correlation，GCC）<br> 就是在互功率谱的基础上除去一个“模值”（也即幅度值），那么时延信息将只体现于相位上，而与幅度无关。即</p>
-<script type="math/tex; mode=display">
- r_{yx}(m)=\mathbf{F}^{-1}\{\frac{P_{yx}(k)}{|P_{yx}(k)|}\}</script><p> $ P_{yx}(k)$为y(n)与x(n)的互功率谱密度<br>如果麦克风信号和参考信号的真实时延为$\tilde{m} $，那么理想情况下，互相关函数在$r_{xy}\{\tilde{m} \}$处取最大值。</p>
-<p> 这种互功率谱加权方式，称为GCC-PHAT（PHAse Transformation）相位变换加权互相关法，或CSP（Cross Spectral Phase）<br> 之所以去掉幅度谱的信息，只保留相位谱的信息，就是因为我们认为延时信息主要体现于功率谱的相位上，而与幅度谱没有什么关系，时域上的延时对应的是频域上相位的移位。<br> 这种操作也类似于白化操作，（白噪声有着非常好的性质，相关函数只有在零点有尖峰，但在其他地方（等价于时延）相关性就会非常的弱），这会方便我们求取相关函数的峰值。如果我们去除了功率谱幅度影响，其实就等价于对信号进行了白化的操作，对于这种广义互相关函数，他的峰值将会更加尖锐，这样在时域当中搜索峰值的时候会更加容易，不容易出错</p>
-<blockquote>
-<p>扩展：在webrtc 当中，计算时延的方式虽然不是这种GCC方案，但是其思路还是相关，在wbrtc中采用的是一种非常简化的、能够加速方式、他将两路信号的相关采用一种 比特异或的方式来实现，会把两信号的功率谱做一个01的量化（如果在一个频点上的功率超过一定的门限就会将其量化为1，反之为0）……</p>
-</blockquote>
-<h2 id="2-2、线性回声消除"><a href="#2-2、线性回声消除" class="headerlink" title="2.2、线性回声消除"></a>2.2、线性回声消除</h2><p>典的自适应滤波场景（子带） 有两种状态</p>
-<h4 id="状态一：FILTER-滤波模式"><a href="#状态一：FILTER-滤波模式" class="headerlink" title="状态一：FILTER 滤波模式"></a>状态一：FILTER 滤波模式</h4><script type="math/tex; mode=display">
-y(n)=\mathbf{x}^{T}\mathbf{w}^*(n) \\
-e(n)=d(n)-y(n)</script><p>注意：采用频域自适应滤波时进行卷积运算的操作时，将采用博客上一节当讲到的 第二种形式的DFT，是一种扩展了窗函数，但是没有扩展W因子的DFT。</p>
-<h4 id="状态二：ADAPTION-自适应滤波模式"><a href="#状态二：ADAPTION-自适应滤波模式" class="headerlink" title="状态二：ADAPTION 自适应滤波模式"></a>状态二：ADAPTION 自适应滤波模式</h4><p>以NLMS为例</p>
-<script type="math/tex; mode=display">
-\mathbf{w}(n+1)=\mathbf{w}(n)+2\mu\frac{\mathbf{w}(n)}{\mathbf{w}^H\mathbf{x}(n)}e^*(n)</script><p>由于时子带自适应滤波，时域的结果可能是复数，故写成上式。</p>
-<h3 id="线性回声消除模块的状态机表示"><a href="#线性回声消除模块的状态机表示" class="headerlink" title="线性回声消除模块的状态机表示"></a>线性回声消除模块的状态机表示</h3><p><img src="https://s2.loli.net/2022/05/25/ZmMOqLyHFsYDS79.png" alt=""><br>可以看到，控制状态转换的机制就是双讲检测</p>
-<h2 id="2-3、-双讲检测-Double-Talk-Test"><a href="#2-3、-双讲检测-Double-Talk-Test" class="headerlink" title="2.3、 双讲检测 Double Talk Test"></a>2.3、 双讲检测 Double Talk Test</h2><p>判断是否有双讲状况（麦克风接受有是否有回音）存在<br>1、能量法</p>
-<script type="math/tex; mode=display">
-\frac{|Y(k,l)|}{|X(k,l)|}>\alpha(k),"double talk"
-\frac{|Y(k,l)|}{|X(k,l)|}<\alpha(k),"single talk"</script><p>一般用类似回波损耗比（ERL，echo return loss）来表示</p>
-<p>当永远没有 近端语音存在时（只有背景声、回声时），这个比值会趋于一个稳定的值，当存在 近端语音信号时，这个比例一般会变大</p>
-<p>2、利用残余回声抑制的结果</p>
-<h2 id="2-4、-残余回声抑制-（Residual-Echo-Suppression-RES）"><a href="#2-4、-残余回声抑制-（Residual-Echo-Suppression-RES）" class="headerlink" title="2.4、 残余回声抑制 （Residual Echo Suppression,RES）"></a>2.4、 残余回声抑制 （Residual Echo Suppression,RES）</h2><h4 id="作用一：抑制残余回声"><a href="#作用一：抑制残余回声" class="headerlink" title="作用一：抑制残余回声"></a>作用一：抑制残余回声</h4><p>方法，采用NS的思路</p>
-<p><img src="https://s2.loli.net/2022/05/26/3qj1nzvYuogPX5b.png" alt=""></p>
-<p>如图，本质上RES与NS流程基本一致，就是把残余回声（线性回声消除部分的残差视为噪声，信噪比换成了信号残差比SER）</p>
-<blockquote>
-<p>在webrtc 当中，他的RES模块叫做 NLP（并非自然语言处理，而叫做非线性处理），基于维纳滤波的非线性处理</p>
-</blockquote>
-<h4 id="作用二：修正DTD"><a href="#作用二：修正DTD" class="headerlink" title="作用二：修正DTD"></a>作用二：修正DTD</h4><p>修正双讲检测结果的判决。<br>原理利用 (线性回声消除模块输出的)回声信号、残差信号、输入信号之间的“相关性”。<br><img src="https://s2.loli.net/2022/05/26/MHTR82li5SqfbwU.png" alt=""><br>如图，如果回声信号与输入信号越 不相关，就代表这输入信号中包含 近端语音 的概率 比较大，因为，语音信号份量越大，这二者越不相关；同理如果输入信号与残差信号越相关 也代表输入信号中包含近端输入的可能越大（这是因为线性回声消除模块无法抑制近端输入信号）。<br>如果输入信号中回声与近端输入分量同时存在，就表明时双讲状态，这是，（RES模块的）增益因子就要取得保守一些，因为设置的过大就会影响线性回声抑制的结果。<br>反之，就是单讲状态，就是没有近端语音，只有回声部分。所以可以把RES模块的增益银子设置的更激进一些</p>
+          <header class="entry-header">
+            <h1 class="entry-title">语音信号处理（八）端到端语音分离与目标说话人抽取</h1>
+            <p class="entry-census">differencer&nbsp;·&nbsp;2022-6-1&nbsp;·&nbsp;<span id="busuanzi_value_page_pv"></span>次阅读</p></p>
 
+            <hr>
+          </header>
+        
+        <div class="entry-content">
+          <p>这一章 主要介绍近几年来 语音分离 技术路线 的分类</p>
+<p>语音分离与目标说话人抽取的区别就是</p>
+<ul>
+<li>输出侧：<br> 语音分离是当有多个说话人时，会将每一个说话人的语音分别输出出来。而目标说话人抽取就是只将特定说话人（感兴趣的）的语音提取出来。</li>
+<li>输入侧：<br> 目标说话人抽取。输入测除了接收语音输入之外，还要接收目标说话人的声纹特征（参考信息）。</li>
+</ul>
+<p>传统语音分离：非负矩阵分解、主成分分析</p>
+<h1 id="一、端到端语音分离基本框架"><a href="#一、端到端语音分离基本框架" class="headerlink" title="一、端到端语音分离基本框架"></a>一、端到端语音分离基本框架</h1><h2 id="1-1、三段式的基本框架"><a href="#1-1、三段式的基本框架" class="headerlink" title="1.1、三段式的基本框架"></a>1.1、三段式的基本框架</h2><p>Encoder - Separator - Decoder （ESD框架）</p>
+<ul>
+<li><p>Encoder<br>— 将输入信号从时域变换到另一个域（domain）或潜空间（latent space）中，在潜空间中完成语音分<br>离<br>注意：一般分为频域与时域的方案。频域（傅里叶变换等，或其他频域变换方式）是早些年比较常用的，近些年来多采用时域的方案，就是将混合的时域语音信号输入到一种网络当中，这个网络将时域信号变化为另外的域当中，这种域很难用显示的公式表达出来，我们及将其称为潜空间。</p>
+</li>
+<li><p>Separator (+ Extractor)<br>— 在潜空间中，为每个独立声源估计mask；<br>这个mask 称为一种广义的mask，</p>
+<ul>
+<li>如果是频域，就是频域（幅度谱）的mask，就是有着明显物理意义的mask，比如说ideal mask 等等</li>
+<li>如果是潜空间中的mask，其物理含义并不太明显<br>— 通过mask 和 语音的 变换域信号 做元素级别相乘，得到每个独立声源在潜空间中的估计</li>
+</ul>
+</li>
+<li>Decoder：<br>— 将分离后的各个源信号反变换回到时域。</li>
+</ul>
+<p><img src="https://s2.loli.net/2022/06/06/MpKElFwBChYHkzg.png" alt=""></p>
+<h2 id="1-2、步骤"><a href="#1-2、步骤" class="headerlink" title="1.2、步骤"></a>1.2、步骤</h2><p>时域观测信号:</p>
+<script type="math/tex; mode=display">
+x(t)=\sum_{i=1}^{C} s_{i}(t)+n(t),</script><p>$s_i(t)$分别表示$C$个说话人各自的时域语音。<br>Encoder变换：</p>
+<script type="math/tex; mode=display">
+\mathbf{X}(k, n)=\sum_{t=0}^{L-1} x(t+k H) u_{n}(t), \quad n \in\{0, \ldots, N-1\},</script><p>其中 k 为 frame index，L 为分析滤波器的长度，H 为 hop size，N 为分析滤波器个数。<br>这个公式代表了一种广义的变换措施。如果不能理解，可以带入简单的短时傅里叶变换来帮助理解。</p>
+<p>Separator:</p>
+<script type="math/tex; mode=display">
+\mathcal{M N}(\mathcal{G}(\mathbf{X}))=\left[\mathbf{M}_{1}, \ldots, \mathbf{M}_{C}\right]</script><p>简单来说就是针对每一声源都估计一个mask， 吧所有的mask 放在一起就是一个mask network，</p>
+<p>Extractor:</p>
+<script type="math/tex; mode=display">
+\mathbf{Y}_{i}=\mathcal{G}(\mathbf{X}) \odot \mathbf{M}_{i}, \quad i \in\{1, \ldots, C\}</script><p>Decoder变换：</p>
+<script type="math/tex; mode=display">
+\hat{s}_{i}(t)=\sum_{k=0}^{K-1} \sum_{n=0}^{N-1} \mathbf{Y}_{i}(k, n) v_{n}(t-k H)</script><h2 id="1-3、举例"><a href="#1-3、举例" class="headerlink" title="1.3、举例"></a>1.3、举例</h2><ul>
+<li>举例：如果Encoder 与Decoder 是一种 <strong>人为设计好</strong>的变换 （handcrafted transformation ）<br>如 将变换设定为傅里叶变换，将时域信号转换到频域 （如STFT）<br>对应的Encoder与Decoder的形式如下<script type="math/tex; mode=display">
+u_n(t)=h_a(t)e^{-2j\pi n/N}\\
+v_n(t)=h_s(t)e^{-2j\pi n/N}</script>$h_a(t)$、$h_s(t)$分别是分析窗和综合窗。</li>
+</ul>
+<p>之后Separator的操作就是利用机器学习来学习mask 。。。 </p>
+<ul>
+<li>举例：如果Encoder与Decoder不是一种设计好的、而是一种数据驱动的、<strong>需要学习的变换</strong> learned transformation：<br>— 滤波器$u_n(t)$和$v_n(t)$的系数由网络自己学习，它们既<strong>可以与separator联合学习</strong>，也可以分别学习。<br>— 1-D CNN 是将时域信号变换到潜空间中的一个典型应用</li>
+</ul>
+<h2 id="1-4、基于time-frequency-masking的分离方法-频域"><a href="#1-4、基于time-frequency-masking的分离方法-频域" class="headerlink" title="1.4、基于time-frequency masking的分离方法  (频域)"></a>1.4、基于time-frequency masking的分离方法  (频域)</h2><p>优点：</p>
+<ul>
+<li>与经典的信号处理算法（如频域波束形成，较为容易的可以嵌入到频域的框架当中）更好的相容</li>
+<li>mask具有较强的可解释性（interpretability） mask 直接对应于 频域谱 的 幅值（ideal mask） or 相位 （相位mask） 而变换到这种频域当中，语音信号具有稀疏性，也就是这种mask具有较强的可解释性和物理意义</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>STFT是一种通用的信号变换工具（特征），对于语音分离这一特定任务而言未必是最优的。好比与语音识别通常使用MFCC等特征，但是到其他任务当中就不行了</li>
+<li>准确的相位重建比较困难；因为一般基于mask的方案只在幅度上估计，不会考虑相位，所以导致反变换时只用只有幅度变换时不够的</li>
+<li>需要较高的频率分辨率（窗长需要足够大），所以延迟较大，不太适用于对实时性要求较高的场景</li>
+</ul>
+<p>LOSS</p>
+<ul>
+<li>MSE</li>
+</ul>
+<p>举例：<br>Deep Clustering 、 Deep attractor network、 u-PIT 、 Deep CASA 、Voice filter 、SpeakerBeam 、 SBF-MTSAL-Concat 、</p>
+<h2 id="1-5-基于-时域的分离的方法-TasNet"><a href="#1-5-基于-时域的分离的方法-TasNet" class="headerlink" title="1.5 基于 时域的分离的方法 TasNet"></a>1.5 基于 时域的分离的方法 TasNet</h2><p>TasNet的优缺点几乎与频域方案完全相反</p>
+<p>优点：</p>
+<ul>
+<li>利用数据驱动的思想，让网络自己学习声音信号的声学特征表征，取代STFT，（利用一种一维的CNN来自己学习特征， 它解决了：既然不知道用什么样的特征更适合语音分离的任务，那不妨网络自己学习适合的特征）</li>
+<li>无需显式地处理相位重建的问题；（因为这个网络通常就是实数域的变换，没有这种又傅里叶变换带来的相位问题）</li>
+<li>短延时（如：2ms in Conv-TasNet， 2 samples in DPRNN-TasNet）</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>mask的可解释性较弱</li>
+<li>不易与经典的信号处理算法相容 （与频域波数形成等算法难以相容）</li>
+</ul>
+<p>Loss：</p>
+<ul>
+<li>SI-SDR</li>
+</ul>
+<p>举例<br> TasNet、Conv-TasNet 、 Conditional-TasNet、 DPRNN-TasNet 、 SpEx 、SpEx+ 、Voice Separation 、LaFurca、Wavesplit 、 DPTNet、TasTas</p>
+<h2 id="1-6、SI-SDR-定义-（关于-评估语音分离的好坏）"><a href="#1-6、SI-SDR-定义-（关于-评估语音分离的好坏）" class="headerlink" title="1.6、SI-SDR 定义 （关于 评估语音分离的好坏）"></a>1.6、SI-SDR 定义 （关于 评估语音分离的好坏）</h2><p>见<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/139462968">博客</a></p>
+<p>PS: 基本上基于但麦克风的 都是采用 制度不变的SDR评估指标（SI-SDR ），但是对于 阵列麦克风就要注意。分离之后后接了一些波束形成，波束形成模块对于分离后的每一路信号的输出的尺度是有依赖的，如果在这种情况下，再用尺度不变的SDR 作为 任务的Target 就有些不合理了，这样 一般就采用标准的 SNR作为LOSS即可。</p>
+<h2 id="1-7、目标说话人抽取"><a href="#1-7、目标说话人抽取" class="headerlink" title="1.7、目标说话人抽取"></a>1.7、目标说话人抽取</h2><p>所谓目标说话人抽取（Target Speaker Extraction），是指从一段混合语音当中抽取出特定说话人语音的分离技术</p>
+<ul>
+<li>“说话人相关”的分离任务；（一般要提取的语音 与参考信号语音来自一个声源）</li>
+<li>不需要关注输出维度问题；（语音分离任务一般还要指定有多少个说话人（输出通路））</li>
+<li>不需要关注排序问题 （与上面类似 输出排序）</li>
+<li>输出一路信号，无需在多路信号中选择目标信号；（一般 向智能音箱 与要考虑 听哪一路说话人的）</li>
+<li>代价：需要“参考信息”作为辅助（需要目标说话人的声纹 信息 ）</li>
+</ul>
+<p><img src="https://s2.loli.net/2022/06/06/LaERAGsh1edfkjU.png" alt=""></p>
+<p>可以看到他在原来三段式的结构上增加了一个辅助网络，辅助网络可以提取出目标说话人的声纹信息 （Speaker Embedding）。</p>
+<h1 id="二、端到端的单通道语音分离"><a href="#二、端到端的单通道语音分离" class="headerlink" title="二、端到端的单通道语音分离"></a>二、端到端的单通道语音分离</h1><h2 id="2-1-排序问题和输出维度问题"><a href="#2-1-排序问题和输出维度问题" class="headerlink" title="2.1 排序问题和输出维度问题"></a>2.1 排序问题和输出维度问题</h2><p>单目标（降噪）： 很明显 无需考虑 维度 和 降噪问题</p>
+<p>多目标： </p>
+<ul>
+<li>排序问题： 需要考虑、怎样排序？</li>
+<li>维度问题： 分离几个人的声音（需要先假设） 没多出一个通道都要改变网络结构</li>
+</ul>
+<h2 id="2-2-举例"><a href="#2-2-举例" class="headerlink" title="2.2 举例"></a>2.2 举例</h2><h3 id="2-2-1-语音分离：DPCL"><a href="#2-2-1-语音分离：DPCL" class="headerlink" title="2.2.1 语音分离：DPCL"></a>2.2.1 语音分离：DPCL</h3><p><strong>Deep Clustering</strong>： A partition-learning method<br>本质上属于频域Mask的方法，但是他估算mask的方式是根据一种聚类网络来学习到的。是目前来说最早用深度学习来进行语音分离任务的方法。</p>
+<p><img src="https://s2.loli.net/2022/06/06/hqywmuLWoART41Z.png" alt=""><br>流程</p>
+<ul>
+<li>首先把时域的语音信号转换到频域当中，</li>
+<li>把其输入到 一个训练好的Spectrogram embedding generation network 当中，把输入从频域（时频域）变化到一种”embedding 域 “，从域上看，输入信号从一个二位的 时频谱变成了一个三维的谱。 这样可以到到一个效果，就是属于不同声源的embedding距离足够远，而属于同一个声源的embedding足够近</li>
+<li>将这些embedding 利用kmeans网络聚类 得到  频域的mask 比如说分成两类，属于a语音的mask 是A，属于b语音的mask是B。</li>
+</ul>
+<p>对于以上模型的关键就是<strong>如何训练</strong>的带这样的一个网络，能让同意说话人的频点对应的embedding举例足够近，不同说话人 足够远。<br>应采用Partition-based  Training<br>— 寻找能够准确聚类的embedding的生成方式。<br>— 损失函数：$C(\theta)=||VV^T-YY^T||^2_W$<br>Y: labels<br>YY T: ideal affinity matrix<br>VV T: model’s affinity matrix<br>W: weighted F-norm</p>
+<p>由于是基于聚类的语音分离算法，所以，一般即使具有不同数量的说话人时，这种算法也能可能通过聚类的方式推断输出维度应该是多少，缓解输出维度问题，但是对于排序问题不能解决。</p>
+<h3 id="2-2-2-语音分离：Permutation-Invariant-Training（PIT）置换不变训练"><a href="#2-2-2-语音分离：Permutation-Invariant-Training（PIT）置换不变训练" class="headerlink" title="2.2.2 语音分离：Permutation Invariant Training（PIT）置换不变训练"></a>2.2.2 语音分离：Permutation Invariant Training（PIT）置换不变训练</h3><p>PIT解决了 语音分离任务的排序问题，它本质上是一种训练方式</p>
+<p>其思想是：可所有可能的排序列出来，并把其中损失最小的排序作为输出排序。<br><img src="https://s2.loli.net/2022/06/08/iZhIpDlKTN9HUB8.png" alt=""><br>步骤</p>
+<ul>
+<li>给定一个分离网络，为混合语音中的每个声源生成对应的mask；</li>
+<li>穷举所有可能的排序（N!）；</li>
+<li>label assignment: 使用loss最小的排序，更新分离网络</li>
+<li>重复上述过程直至收敛；</li>
+<li>可以解决排序问题，但无法解决输出维度问题。</li>
+</ul>
+<h3 id="2-2-3-语音分离：Deep-CASA"><a href="#2-2-3-语音分离：Deep-CASA" class="headerlink" title="2.2.3 语音分离：Deep CASA"></a>2.2.3 语音分离：Deep CASA</h3><p>来源于王德亮老师 Computational Auditory Scene Analysis （计算听觉场景分析，CASA）的<strong>框架</strong><br>也是一种基于频域的语音分离技术。</p>
+<p>CASA矿机主要分为两大步骤，Deep CASA 采用分而治之的思想将两大步骤分别用 深度网络 和 深度聚类网络来分别实现。<br><img src="https://s2.loli.net/2022/06/08/CxNmlHsy1dao94u.png" alt=""></p>
+<p><strong>步骤一：Computational Auditory Scene Analysis</strong><br>总体上：利用PIT实现帧级别分离，即分离出同一帧里分别属于不同声源的谱分量。</p>
+<p>具体步骤（见图（a），从下往上看）</p>
+<blockquote>
+<p>信号经过频域变换后（Complex Mixture），将其送入神经网络，假设只用分离两种语音，将为两种声源分别估计出两个Mask,将Mask于原来缓和语音的谱做点乘，就得到了每一个独立声源的输出。  然后再用PIT 选择最小Loss 的排序 并输出。并将最后的Loss 反过来训练用于分离的神经网络。</p>
+</blockquote>
+<p>这个步骤其实完成的是帧级别的语音分离</p>
+<p><strong>步骤二：sequential grouping （序列追踪）</strong><br>总体上类似聚类的方案<br>利用聚类网络实现每个独立说话人声源的追踪。训练规则类似DPCL，属于同一说话人的embedding距离尽可能接近，属于不同说话人的embedding距离尽可能远离。</p>
+<p>具体步骤： </p>
+<blockquote>
+<p>将 排序好的语音信号（上一个步骤得到的结果），和原来的混合语音谱 作为输入进TCN网络（TCN网络是 在时域语音分离中用的比较多）， 用TCN网络产生 谱对应的 embedding，然后 embedding 通过一个K-means的聚类 得到分属于不同说话人的label（每一个label 对应着一个独立说话人的输出）。</p>
+</blockquote>
+<h3 id="2-2-4-、目标说话人抽取：Voice-Filter"><a href="#2-2-4-、目标说话人抽取：Voice-Filter" class="headerlink" title="2.2.4 、目标说话人抽取：Voice-Filter"></a>2.2.4 、目标说话人抽取：Voice-Filter</h3><p>早期的voicce filter 除了呼和语音输入，还需要 d-vector 输入（相当于一个声纹信息）<br><img src="https://s2.loli.net/2022/06/08/J2iFCsmjBH4OrI8.png" alt=""><br>其分离网络（separator）是由 一个CNN 网络、一个双向的LSTM网络 以及一个全连接层 组成， 这样通过输入升温信息，只用输出特定说话人的信息</p>
+<p>现在的voice filter ( VoiceFilter-Lite 2020)<br><img src="https://s2.loli.net/2022/06/08/gSdtiPUnRyQZLMB.png" alt=""><br>可以看到，他 直接在特征层面（Filter bank）完成的分离， 此外在Loss fuction 上面做了一个优化 避免了over -suppression的问题<br>— 面向ASR任务，无需重建信号波形；<br>— 输入：声学特征，e.g. stacked filterbank energies；<br>— 输出：增强特征；<br>— 避免over-suppression问题(保证输出不会有太大的失真)<br>$L_{asym}=\sum_t \sum_f \left(  g_{asym}(S_{cln}(t,f)-S_{enh}(t,f),a)\right)^2$</p>
+<h3 id="2-2-5、语音分离（时域）：Tasnet"><a href="#2-2-5、语音分离（时域）：Tasnet" class="headerlink" title="2.2.5、语音分离（时域）：Tasnet"></a>2.2.5、语音分离（时域）：Tasnet</h3><p>上面基本上是基于 频域的 语音分离技术，现在技术而言，基于时域的语音分离技术他在割裂数据集上的性能提升方面显得更强一些，TasNet开启了基于时域语音分离技术的先河。<br> 由罗毅博士Yi Luo,提出<br><img src="https://s2.loli.net/2022/06/08/t2NZXkrgRuMn7eo.png" alt=""><br>可以看到它明显是一个三段式结构</p>
+<p>encoder 与 decoder 都是一种 一维卷积的变换网络<br>中间的网路结构是一种 TCN 的结构， TCN 本质上是一种膨胀式 的CNN （感受野，增加？），估算出Mask 与潜空间的混合语音普做元素级别的相乘。</p>
+<p>在Conv-TasNet 之后又出现了类似的 改进版本，如Dual-Path RNN-TasNet（DP RNN TasNet）如下<br><img src="https://s2.loli.net/2022/06/08/2XqmH7hVOnSdAZ6.png" alt=""><br>相对于Conv-TasNet，其Encoder与DeCoder都没有变化，变化的只有Separator,使用的upassRNN？ 用两组RNN来实现 introRNN interRNN （块间RNN，块内部的RNN ） 感受野比TasNetRNN</p>
+<p>之后又出现了Multi-Path RNN-TasNet<br>考虑了句子间的关联， 感受野进一步增大</p>
+<h3 id="2-2-6-目标说话人抽取-（时域）：SpEx-amp-SpEx"><a href="#2-2-6-目标说话人抽取-（时域）：SpEx-amp-SpEx" class="headerlink" title="2.2.6 目标说话人抽取 （时域）：SpEx &amp; SpEx+"></a>2.2.6 目标说话人抽取 （时域）：SpEx &amp; SpEx+</h3><p>SpEx<br><img src="https://s2.loli.net/2022/06/08/9ziyEsZbGNv3IgD.png" alt="SpEx.png"><br>参考信号通过Speaker Encoder 网络（辅助网络）输入，作为Speaker Embedding 提取的方式，然把Speaker Embedding 嵌入到每一层 tcn上，变成一种抽取的结构<br>SpEx+<br><img src="https://s2.loli.net/2022/06/08/n5T8WFm2jOXbxQz.png" alt="SpEx+.png"><br>SpEx+ 相对于SpEx的改进就是，原来的SpEx 混合语音输入的“Encoder”网络与参考语音的“Encoder”网络结构是不同的的，SpEx+ 将他们两个做成了结构一样的网络结构</p>
+<h2 id="2-3、-语音分离技术路线-总结"><a href="#2-3、-语音分离技术路线-总结" class="headerlink" title="2.3、 语音分离技术路线 总结"></a>2.3、 语音分离技术路线 总结</h2><p>按照 Separator、Encoder/Decoder、Training mechanisim、 usage of spkr-embedding 分类</p>
+<h3 id="Separator"><a href="#Separator" class="headerlink" title="Separator"></a>Separator</h3><p><img src="https://s2.loli.net/2022/06/08/clZxouXDjbSiBE3.png" alt="Separator.png"></p>
+<ul>
+<li><p>最早的Separator 使用 双向的LSTM做的，encoder、decoder 通常是傅里叶变换，整体以上是一个基于频域的语音分离框架</p>
+</li>
+<li><p>TasNet 将Separator 转变成了TCN，而将encoder decoder 变成1D-CNN</p>
+</li>
+<li><p>随后为了扩大分离器的感受野，是他能感受、更加长时的语音特征（增大感受野），将中间的TCN换成了DPRNN，或者是MPRNN</p>
+</li>
+<li><p>也有打破这种三段式结构的，如U-net、WaveNet<br>U-Net最早用于音乐分离（如分离伴奏和人声）网络，它是一种U型的网络，左半边可以看作是一种广义的Encoder，右半边视为Decoder ,是一种 wave-form to wave-form 的网络结构。<br>WaveNet 最早用于语音合成领域</p>
+</li>
+</ul>
+<h3 id="Encoder-Decoder"><a href="#Encoder-Decoder" class="headerlink" title="Encoder/Decoder"></a>Encoder/Decoder</h3><script type="math/tex; mode=display">
+\mathbf{X}(k, n)=\sum_{t=0}^{L-1} x(t+k H) u_{n}(t), \quad n \in\{0, \ldots, N-1\},</script><p>大致可以分为三类，重点关注$u_n(t)$</p>
+<ul>
+<li><p>固定滤波器 Fixed filters : STFT, mel filterbank, gammatone filterbank, </p>
+</li>
+<li><p>自由滤波器 Free filters : all weights are jointly or separately learned.<br>嵌入到Separator 与其共同学习得到 如TasNet</p>
+</li>
+</ul>
+<ul>
+<li>参数化滤波器（介于上面二者之间） Parameterized filters : a family of filters whose parameters are learned with the network.<br>如三角滤波器组，如果给出中心频率就可以算出三角滤波器组的所有系数，所以只需要学习一些关键参数即可不用学习滤波器所有参数</li>
+</ul>
+<p>现在的一些试验机过表明对于 Encoder与Decoder 用一位卷积网络，或者更多维的卷积网络来生成，也许效果回更好，而且；两边不一定要对称；</p>
+<p>此外也可以采用更多尺度（scale）的encoder，如 Separator 中为了 获得更大的感受野，用了块内、块见、句子见、等不同维度的 RNN 一样，encoder也可以采用这种方式。所谓尺度简单来说就是窗长。</p>
+<h3 id="Training-mechanism-训练机制"><a href="#Training-mechanism-训练机制" class="headerlink" title="Training mechanism 训练机制"></a>Training mechanism 训练机制</h3><ul>
+<li><p>两步训练法Two-step training<br>思路是encoder与decoder先单独训练、之后再单独训练中间的Separator<br>因为如果encdoer与Decoder是简单的傅里叶变换，在理论意义上可以精准还原回来，但是如果encoder与Decoder是一个网络，很可能引入误差， 所以他先悬链两端，使得两端变换引入的误差尽可能的小，再继续进行后续Separator的训练</p>
+</li>
+<li><p>Dynamic mixing for data augmentation 动态混合<br>它是一种典型的数据增广的一种方式，尽可能地多利用训练数据</p>
+</li>
+<li><p>Mixup-breakdown training (MBT)<br>腾讯</p>
+</li>
+<li><p>Conditional chain model<br> 适用于说话人个数未知的场景<br>思想是将说话人语音一个一个地输出，并且再后续输出过程中，会利用已经分离地说话人语音，是一种串型分离地思路。停止条件需要设计，在一定程度上可以解决输出维度问题</p>
+</li>
+<li><p>One-and-rest PIT, OR-PIT<br>与上面类似也是串型接收<br>一般这种串型分离地方案，在少于五个说话人之人的数据表现性能还可以。</p>
+</li>
+</ul>
+<h3 id="usage-of-spkr-embedding（针对说话人提取）-抽取网络设计"><a href="#usage-of-spkr-embedding（针对说话人提取）-抽取网络设计" class="headerlink" title="usage of spkr-embedding（针对说话人提取） 抽取网络设计"></a>usage of spkr-embedding（针对说话人提取） 抽取网络设计</h3><ul>
+<li>无embedding:<br> Conv-TasNet, DPRNN-TasNet, …</li>
+<li>固定的embedding:<br> Fbank, x-vector, d-vector, …<br>例如： Voice filter</li>
+<li>网络学习出的embedding:<br> 通常会有一个显式的 speaker encoder 与抽取器联合训练；<br>通常会引入CE loss；<br>speaker encoder 与 speech encoder 的配合；<br>例如： SpEx, SpEx+, Wavesplit, Atss-Net</li>
+</ul>
+<h1 id="3、多通道语音分离技术"><a href="#3、多通道语音分离技术" class="headerlink" title="3、多通道语音分离技术"></a>3、多通道语音分离技术</h1><p>大致分为三种方法：</p>
+<h2 id="3-1-Separation-wise-methods"><a href="#3-1-Separation-wise-methods" class="headerlink" title="3.1 Separation-wise methods"></a>3.1 Separation-wise methods</h2><p> 利用多通道带来的<strong>空间信息</strong>帮助一个<strong>分离网络</strong>更好的工作；<br>使用固定类<strong>空间特征</strong>：IPD、ILD、…；<br> 使用网络学习的空间特征 </p>
+<h2 id="3-2-Beamforming-wise-methods"><a href="#3-2-Beamforming-wise-methods" class="headerlink" title="3.2 Beamforming-wise methods"></a>3.2 Beamforming-wise methods</h2><p>将分离网络看作一个前端模块，帮助<strong>Beamformer</strong>更好的工作；<br>Beam-TasNet: 为频域波束形成（如MVDR）提供更可靠的统计量估计<br>FaSNet: 直接估计波束形成器中每个滤波器的系数</p>
+<h2 id="3-3-Pipeline-end-to-end-solution"><a href="#3-3-Pipeline-end-to-end-solution" class="headerlink" title="3.3 Pipeline / end-to-end solution"></a>3.3 Pipeline / end-to-end solution</h2><p>unmixing, fix-beamformer, extraction (UFE) [34]<br>end-to-end UFE (E2E-UFE)</p>
+<h1 id="4、实战"><a href="#4、实战" class="headerlink" title="4、实战"></a>4、实战</h1>
         </div>
         <!-- .entry-content -->
         <div class="single-reward">
@@ -513,36 +599,19 @@ e(n)=d(n)-y(n)</script><p>注意：采用频域自适应滤波时进行卷积运
       <div class="toc" style="background: none;"></div>
       <section class="post-squares nextprev">
         
-          
-            <div class="post-nepre half previous">
-          
-            <a href="/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/" rel="prev">
-              <div class="background">
-                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/05/28/JC1r8h7nuGQ4PyK.png" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://s2.loli.net/2022/05/28/JC1r8h7nuGQ4PyK.png">
-              </div>
-              <span class="label">
-              Previous Post</span>
-              <div class="info">
-                <h3>
-                语音信号处理（六） 阵列信号处理</h3>
-                <hr>
-              </div>
-            </a>
-          </div>
-        
         
           
-            <div class="post-nepre half next">
+            <div class="post-nepre full next">
           
-            <a href="/2022/05/21/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%9B%9B%EF%BC%89%E5%99%AA%E5%A3%B0%E6%8A%91%E5%88%B6/" rel="next">
+            <a href="/2022/05/30/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E4%B8%83%EF%BC%89%20%E5%9F%BA%E4%BA%8EDNN%E7%9A%84%E8%AF%AD%E9%9F%B3%E5%88%86%E7%A6%BB/" rel="next">
               <div class="background">
-                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/05/22/71jLVUWzQbiSeZ9.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://s2.loli.net/2022/05/22/71jLVUWzQbiSeZ9.jpg">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="">
               </div>
               <span class="label">
               Next Post</span>
               <div class="info">
                 <h3>
-                语音信号处理（四）噪声抑制</h3>
+                语音信号处理（七） 基于DNN的语音分离</h3>
                 <hr>
               </div>
             </a>
