@@ -1,418 +1,182 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang=zh>
 <head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
-  
-  <title itemprop="name">语音信号处理（六） 阵列信号处理 | t&#39;blog</title>
-  
-    <link rel="shortcut icon" href="/images/favicon.ico">
-  
-  <meta http-equiv="x-dns-prefetch-control" content="on">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+SerifMerriweather|Merriweather+Sans|Source+Code+Pro|Ubuntu:400,700|Noto+Serif+SC" media="all">
-  <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
-  <link rel="stylesheet" id="saukra_css-css" href="/css/style.css" type="text/css" media="all">
-  <link rel="stylesheet" href="/css/lib.min.css" media="all">
-  <link rel="stylesheet" href="/css/font.css" media="all">
-  <link rel="stylesheet" href="/css/insight.css" media="all">
-  <link rel="stylesheet" href="/css/jquery.fancybox.min.css" media="all">
-  <link rel="stylesheet" href="/css/zoom.css" media="all">
-  <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
-<!--   <link rel="stylesheet" id="saukra_css-css" href="https://2heng.xin/wp-content/cache/autoptimize/css/autoptimize_ad42a61f4c7d4bdd9f91afcff6b5dda5.css
-" type="text/css" media="all"> -->
-  <script>
-  /*Initial Variables*/
-  var mashiro_option = new Object();
-  var mashiro_global = new Object();
-  mashiro_option.NProgressON = true;
-  /* 
-   * 邮箱信息之类的东西可以填在这里，这些js变量基本都作用于sakura-app.js
-   * 这样的设置仅是为了方便在基于PHP开发的主题中设置js变量，既然移植到了Node上，我想或许可以精简这一逻辑吧
-   */
-  mashiro_option.email_domain = "";
-  mashiro_option.email_name = "";
-  mashiro_option.cookie_version_control = "";
-  mashiro_option.qzone_autocomplete = false;
-  mashiro_option.site_name = "没错就是爱折腾";
-  mashiro_option.author_name = "就是爱折腾";
-  mashiro_option.site_url = "/about/";
-  /*
-  mashiro_option.v_appId = "";
-  mashiro_option.v_appKey = "";
-  */
-  mashiro_option.v_appId = "";
-  mashiro_option.v_appKey = "";
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="一、阵列信号处理的基本概念阵列信号处理大致可以分为两种用途：一个是滤波一个是估计。这两个用途其实在单通道的信号处理也有相似的概念，只不过这种滤波和估计被拓展到空间域之上。 1.1、阵列信号模型考虑一个三维立体模型，里面有n个任意位置摆放的阵元，且阵元都是全向阵元。声源从a方向入射。如图所示，模型可以提取两种信息：  1、N个权阵元的摆放位置 2、声源入射方向在这样两层信息的加持下，就可以写阵列输入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="语音信号处理（六） 阵列信号处理">
+<meta property="og:url" content="http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/index.html">
+<meta property="og:site_name" content="t&#39;blog">
+<meta property="og:description" content="一、阵列信号处理的基本概念阵列信号处理大致可以分为两种用途：一个是滤波一个是估计。这两个用途其实在单通道的信号处理也有相似的概念，只不过这种滤波和估计被拓展到空间域之上。 1.1、阵列信号模型考虑一个三维立体模型，里面有n个任意位置摆放的阵元，且阵元都是全向阵元。声源从a方向入射。如图所示，模型可以提取两种信息：  1、N个权阵元的摆放位置 2、声源入射方向在这样两层信息的加持下，就可以写阵列输入">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/05/28/JC1r8h7nuGQ4PyK.png">
+<meta property="article:published_time" content="2022-05-26T07:11:36.000Z">
+<meta property="article:modified_time" content="2022-05-30T08:45:55.545Z">
+<meta property="article:author" content="taotaozi">
+<meta property="article:tag" content="语音信号处理">
+<meta property="article:tag" content="阵列信号处理">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/05/28/JC1r8h7nuGQ4PyK.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>语音信号处理（六） 阵列信号处理</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
 
-  
-  mashiro_option.mathjax = "1";
-  mashiro_option.qq_api_url = "https://api.mashiro.top/qqinfo/"; 
-  mashiro_option.qq_avatar_api_url = "https://api.mashiro.top/qqinfo/";
-
-  // mashiro_option.jsdelivr_css_src = "https://cdn.jsdelivr.net/gh/moezx/cdn@3.4.5/css/lib.min.css";
-  // mashiro_option.float_player_on = true;
-
-  /*End of Initial Variables*/
-  </script>
-  <script type="text/javascript">
-  var bg = "https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/cover/(1).jpg.webp,https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/cover/(2).jpg.webp,https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/cover/(3).jpg.webp,https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/cover/(4).jpg.webp,https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/cover/(5).jpg.webp,https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/cover/(6).jpg.webp,https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/cover/(7).jpg.webp,https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/cover/(8).jpg.webp".split(",");
-  var bgindex = Math.floor(Math.random()*bg.length);
-  if (!!window.ActiveXObject || "ActiveXObject" in window) { //is IE?
-    alert('朋友，IE浏览器未适配哦~');
-  }
-  </script>
-  <style type="text/css">
-  .hljs-ln{border-collapse:collapse}.hljs-ln td{padding:0}.hljs-ln-n:before{content:attr(data-line-number)}
-  </style>
-  <style type="text/css">.site-top .lower nav{display:block !important;}.author-profile i,.post-like a,.post-share .show-share,.sub-text,.we-info a,span.sitename,.post-more i:hover,#pagination a:hover,.post-content a:hover,.float-content i:hover{color:#FE9600}.feature i,.download,.navigator i:hover,.links ul li:before,.ar-time i,span.ar-circle,.object,.comment .comment-reply-link,.siren-checkbox-radio:checked + .siren-checkbox-radioInput:after{background:#FE9600}::-webkit-scrollbar-thumb{background:#FE9600}.download,.navigator i:hover,.link-title,.links ul li:hover,#pagination a:hover,.comment-respond input[type='submit']:hover{border-color:#FE9600}.entry-content a:hover,.site-info a:hover,.comment h4 a,#comments-navi a.prev,#comments-navi a.next,.comment h4 a:hover,.site-top ul li a:hover,.entry-title a:hover,#archives-temp h3,span.page-numbers.current,.sorry li a:hover,.site-title a:hover,i.iconfont.js-toggle-search.iconsearch:hover,.comment-respond input[type='submit']:hover{color:#FE9600}.comments .comments-main{display:block !important;}.comments .comments-hidden{display:none !important;}background-position:center center;background-attachment:inherit;}
-  </style>
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+			tex2jax: {
+			  skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+			  inlineMath: [['$','$']]
+			}
+		  });
+		</script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+	
 <meta name="generator" content="Hexo 6.1.0"></head>
 
-<body class="page-template page-template-user page-template-page-analytics page-template-userpage-analytics-php page page-id-1297 chinese-font serif isWebKit">
-  <div class="scrollbar" id="bar">
-  </div>
-  <a href="#" class="cd-top faa-float animated"></a>
-  <section id="main-container">
-    <div class="headertop filter-dot">
-  <div id="banner_wave_1"></div>
-  <div id="banner_wave_2"></div>
-  <figure id="centerbg" class="centerbg">
-    <div class="focusinfo no-select">
-      <div class="header-tou">
-        <a href="/about/">
-          <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/custom/avatar.jpg">
-        </a>
-      </div>
-      <div class="header-info">
-        <p>Better to ask the way than go astray</p>
-        <div class="top-social_v2">
-          <li id="bg-pre">
-            <img class="flipx" src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/next-b.svg">
-          </li>
-          
-            
-              
-                <li>
-                  <a href="http://github.com/differencer" target="_blank" class="social-github" title="github">
-                    <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/social/github.png">
-                  </a>
-                </li>
-              
-            
-              
-                <li>
-                  <a href="https://weibo.com/u/5856795355" target="_blank" class="social-github" title="sina">
-                    <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/social/sina.png">
-                  </a>
-                </li>
-              
-            
-              
-                <li>
-                  <a href="https://space.bilibili.com/20713910" target="_blank" class="social-github" title="bilibili">
-                    <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/social/bilibili.png">
-                  </a>
-                </li>
-              
-            
-              
-                <li>
-                  <a href="https://blog.csdn.net/differencer?type=blog" target="_blank" class="social-github" title="CSDN">
-                    <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/social/csdn.png">
-                  </a>
-                </li>
-              
-            
-              
-                <li class="wechat">
-                  <a href="/#">
-                    <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/social/wechat.png">
-                  </a>
-                  <div class="wechatInner">
-                    <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/custom/wechat.jpg">
-                  </div>
-                </li>
-              
-            
-              
-                <li class="wechat">
-                  <a href="/#">
-                    <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/social/qq.png">
-                  </a>
-                  <div class="wechatInner">
-                    <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/custom/qq.jpg">
-                  </div>
-                </li>
-              
-            
-          
-          <li id="bg-next">
-            <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/next-b.svg">
-          </li>
-        </div>
-      </div>
-    </div>
-  </figure>
-  <div id="video-container" style="">
-    <video style="object-fit: fill" id="bgvideo" class="video" video-name="" src="" width="auto" preload="auto">
-    </video>
-    <div id="video-btn" class="loadvideo videolive">
-    </div>
-    <div id="video-add">
-    </div>
-    <div class="video-stu">
-    </div>
-  </div>
-  <div class="headertop-down faa-float animated" onclick="headertop_down()">
-    <span>
-      <i class="fa fa-chevron-down" aria-hidden="true">
-      </i>
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
     </span>
-  </div>
-</div>
-    <div id="page" class="site wrapper">
-      <header class="site-header no-select gizle sabit" role="banner">
-  <div class="site-top">
-    <div class="site-branding">
-      <span class="site-title">
-        <span class="logolink moe-mashiro">
-          <a href="/">
-            <span class="sakurasono">没错</span>
-            <span class="shironeko">就是爱折腾</span>
-          </a>
-        </span>
-      </span>
-    </div>
-    <div class="searchbox search-form-submit">
-      <i class="iconfont js-toggle-search iconsearch icon-search">
-      </i>
-    </div>
-    <div id="show-nav" class="showNav mobile-fit">
-      <div class="line line1">
-      </div>
-      <div class="line line2">
-      </div>
-      <div class="line line3">
-      </div>
-    </div>
-    <div class="lower-cantiner">
-      <div class="lower">
-        <nav class="mobile-fit-control hide">
-          <ul id="menu-new" class="menu">
-            
-              <li>
-                <a href="/">
-                  <span class="faa-parent animated-hover">
-                    <i class="fa  fa-fort-awesome faa-shake" aria-hidden="true"></i>
-                    首页
-                  </span>
-                </a>
-                
-              </li>
-            
-              <li>
-                <a href="/archives">
-                  <span class="faa-parent animated-hover">
-                    <i class="fa  fa-archive faa-shake" aria-hidden="true"></i>
-                    归档
-                  </span>
-                </a>
-                
-                  <ul class="sub-menu">
-                    
-                      <li>
-                        <a href="/archives">
-                          <i class="fa fa-archive faa-shake" aria-hidden="true"></i>
-                          时轴
-                        </a>
-                      </li>
-                    
-                      <li>
-                        <a href="/categories/%E6%8A%80%E6%9C%AF/">
-                          <i class="fa fa-code" aria-hidden="true"></i>
-                          技术
-                        </a>
-                      </li>
-                    
-                      <li>
-                        <a href="/categories/%E7%94%9F%E6%B4%BB/">
-                          <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                          生活
-                        </a>
-                      </li>
-                    
-                      <li>
-                        <a href="/categories/%E5%85%B6%E4%BB%96/">
-                          <i class="fa fa-book" aria-hidden="true"></i>
-                          其他
-                        </a>
-                      </li>
-                    
-                  </ul>
-                
-              </li>
-            
-              <li>
-                <a href="javascript:;">
-                  <span class="faa-parent animated-hover">
-                    <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
-                    清单
-                  </span>
-                </a>
-                
-                  <ul class="sub-menu">
-                    
-                      <li>
-                        <a href="/tags/%E9%98%85%E8%AF%BB/">
-                          <i class="fa fa fa-book faa-bounce" aria-hidden="true"></i>
-                          书单
-                        </a>
-                      </li>
-                    
-                      <li>
-                        <a href="/bangumi/">
-                          <i class="fa fa-film faa-vertical" aria-hidden="true"></i>
-                          番组
-                        </a>
-                      </li>
-                    
-                      <li>
-                        <a href="/music/">
-                          <i class="fa fa-headphones" aria-hidden="true"></i>
-                          歌单
-                        </a>
-                      </li>
-                    
-                  </ul>
-                
-              </li>
-            
-              <li>
-                <a href="javascript:;">
-                  <span class="faa-parent animated-hover">
-                    <i class="fa  fa-bar-chart faa-shake" aria-hidden="true"></i>
-                    统计
-                  </span>
-                </a>
-                
-                  <ul class="sub-menu">
-                    
-                      <li>
-                        <a href="/tags/">
-                          <i class="fa fa-book faa-bounce" aria-hidden="true"></i>
-                          标签
-                        </a>
-                      </li>
-                    
-                      <li>
-                        <a href="/categories/">
-                          <i class="fa fa-tasks faa-shake" aria-hidden="true"></i>
-                          分类
-                        </a>
-                      </li>
-                    
-                  </ul>
-                
-              </li>
-            
-              <li>
-                <a href="/comment/">
-                  <span class="faa-parent animated-hover">
-                    <i class="fa  fa-pencil-square-o faa-tada" aria-hidden="true"></i>
-                    留言板
-                  </span>
-                </a>
-                
-              </li>
-            
-              <li>
-                <a href="/donate/">
-                  <span class="faa-parent animated-hover">
-                    <i class="fa  fa-heart faa-pulse" aria-hidden="true"></i>
-                    赞赏
-                  </span>
-                </a>
-                
-              </li>
-            
-              <li>
-                <a href="javascript:;">
-                  <span class="faa-parent animated-hover">
-                    <i class="fa  fa-leaf faa-wrench" aria-hidden="true"></i>
-                    关于
-                  </span>
-                </a>
-                
-                  <ul class="sub-menu">
-                    
-                      <li>
-                        <a href="/links/">
-                          <i class="fa fa-link faa-shake" aria-hidden="true"></i>
-                          友链
-                        </a>
-                      </li>
-                    
-                      <li>
-                        <a href="/about/">
-                          <i class="fa fa-meetup" aria-hidden="true"></i>
-                          我？
-                        </a>
-                      </li>
-                    
-                      <li>
-                        <a href="/theme-sakura/">
-                          <i class="fa iconfont icon-sakura" aria-hidden="true"></i>
-                          主题
-                        </a>
-                      </li>
-                    
-                  </ul>
-                
-              </li>
-            
-          </ul>
-        </nav>
-      </div>
-    </div>
-  </div>
-</header>
-
-      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
-<div class="pattern-center-blank"></div>
-
-  <div class="pattern-center single-center">
-    <!-- 有配图默认渲染第一张 -->
-    <div class="pattern-attachment-img lazyload" style="background-image: url(https://s2.loli.net/2022/05/28/JC1r8h7nuGQ4PyK.png);" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/05/28/JC1r8h7nuGQ4PyK.png">
-    </div>
-    <header class="pattern-header single-header">
-      <h1 class="entry-title">
-      语音信号处理（六） 阵列信号处理</h1>
-      <p class="entry-census">
-        <span>
-          <a href="/about/">
-            <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/custom/avatar.jpg">
-          </a>
-        </span>
-        <span>
-          <a href="/about/">differencer</a>
-        </span>
-        <span class="bull">
-        ·</span>
-        2022-5-26<span class="bull">
-        ·</span>
-      <span id="busuanzi_value_page_pv"></span>次阅读</p>
-    </header>
-  </div>
-
-<div id="content" class="site-content">
-  <div id="primary" class="content-area">
-    <main id="main" class="site-main" role="main">
-      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
-        <div class="toc"></div>
-        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+    <br/>
+    <span id="actions">
+      <ul>
         
-        <div class="entry-content">
-          <h1 id="一、阵列信号处理的基本概念"><a href="#一、阵列信号处理的基本概念" class="headerlink" title="一、阵列信号处理的基本概念"></a>一、阵列信号处理的基本概念</h1><p><img src="https://s2.loli.net/2022/05/26/OCAJvDKHnyYb8WP.png" alt=""><br>阵列信号处理大致可以分为两种用途：一个是滤波一个是估计。这两个用途其实在单通道的信号处理也有相似的概念，只不过这种滤波和估计被拓展到空间域之上。</p>
+        <li><a class="icon" aria-label="上一篇" href="/2022/05/30/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E4%B8%83%EF%BC%89%20%E5%9F%BA%E4%BA%8EDNN%E7%9A%84%E8%AF%AD%E9%9F%B3%E5%88%86%E7%A6%BB/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2022/05/23/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E4%BA%94%EF%BC%89%E5%A3%B0%E5%AD%A6%E5%9B%9E%E5%A3%B0%E6%B6%88%E9%99%A4/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/&text=语音信号处理（六） 阵列信号处理"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/&title=语音信号处理（六） 阵列信号处理"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/&is_video=false&description=语音信号处理（六） 阵列信号处理"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=语音信号处理（六） 阵列信号处理&body=Check out this article: http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/&title=语音信号处理（六） 阵列信号处理"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/&title=语音信号处理（六） 阵列信号处理"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/&title=语音信号处理（六） 阵列信号处理"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/&title=语音信号处理（六） 阵列信号处理"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/&name=语音信号处理（六） 阵列信号处理&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/&t=语音信号处理（六） 阵列信号处理"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">一、阵列信号处理的基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1%E3%80%81%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.1.</span> <span class="toc-text">1.1、阵列信号模型</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%B3%A2%E6%9D%9F%E6%88%90%E5%BD%A2"><span class="toc-number">2.</span> <span class="toc-text">二、波束成形</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1%E3%80%81%E6%B3%A2%E6%9D%9F%E5%BD%A2%E6%88%90%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="toc-number">2.1.</span> <span class="toc-text">2.1、波束形成的概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2%E3%80%81%E4%B8%BE%E4%BE%8B%EF%BC%8C%E4%BB%A5%E5%9D%87%E5%8C%80%E7%BA%BF%E6%80%A7%E9%98%B5%E5%88%97%EF%BC%88ULA%EF%BC%89%E4%B8%BA%E4%BE%8B"><span class="toc-number">2.2.</span> <span class="toc-text">2.2、举例，以均匀线性阵列（ULA）为例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3%E3%80%81%E4%B8%BB%E6%B3%A2%E6%9D%9F%E8%B0%83%E5%90%91-beam-steering"><span class="toc-number">2.3.</span> <span class="toc-text">2.3、主波束调向(beam  steering)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4%E3%80%81%E6%96%B9%E5%90%91%E5%9B%BE%E5%90%88%E6%88%90"><span class="toc-number">2.4.</span> <span class="toc-text">2.4、方向图合成</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#cosine-%E5%8A%A0%E6%9D%83"><span class="toc-number">2.4.1.</span> <span class="toc-text">cosine 加权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hamming-%E5%8A%A0%E6%9D%83"><span class="toc-number">2.4.2.</span> <span class="toc-text">hamming 加权</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5%E3%80%81%E9%9B%B6%E7%82%B9%E8%B0%83%E5%90%91%EF%BC%88null-steering-sidelobe-canceller%EF%BC%89"><span class="toc-number">2.5.</span> <span class="toc-text">2.5、零点调向（null steering &#x2F; sidelobe canceller）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%B6%E7%82%B9%E8%B0%83%E5%90%91"><span class="toc-number">2.5.1.</span> <span class="toc-text">零点调向</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%B8%B8%E8%A7%81%E7%9A%84%E6%B3%A2%E6%9D%9F%E5%BD%A2%E6%88%90%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">三、常见的波束形成方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1%E3%80%81Delay-and-sum-DS-Beamformer"><span class="toc-number">3.1.</span> <span class="toc-text">3.1、Delay-and-sum (DS) Beamformer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2%E3%80%81Minimum-Variance-Distortionless-Response%EF%BC%88MVDR%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">3.2、Minimum Variance Distortionless Response（MVDR）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3%E3%80%81Linearly-Constrained-Minimum-Variance-LCMV"><span class="toc-number">3.3.</span> <span class="toc-text">3.3、Linearly Constrained Minimum Variance (LCMV)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4%E3%80%81Generalized-Sidelobe-Canceller-GSC"><span class="toc-number">3.4.</span> <span class="toc-text">3.4、Generalized Sidelobe Canceller (GSC)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#GSC-%E5%90%84%E4%B8%AA%E6%A8%A1%E5%9D%97-%E7%9A%84%E7%89%A9%E7%90%86%E6%84%8F%E4%B9%89"><span class="toc-number">3.4.1.</span> <span class="toc-text">GSC 各个模块 的物理意义:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GSC%E7%AE%97%E6%B3%95%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F%EF%BC%9A"><span class="toc-number">3.4.2.</span> <span class="toc-text">GSC算法的实现方式：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#FBF-Fixed-Beamforming"><span class="toc-number">3.4.2.1.</span> <span class="toc-text">FBF- Fixed Beamforming</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ABM-%E2%80%93-Adaptive-Blocking-Matrix"><span class="toc-number">3.4.2.2.</span> <span class="toc-text">ABM – Adaptive Blocking Matrix</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AIC-%E2%80%93-Adaptive-Interference-Canceller"><span class="toc-number">3.4.2.3.</span> <span class="toc-text">AIC – Adaptive Interference Canceller</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%A3%B0%E6%BA%90%E5%AE%9A%E4%BD%8D%E6%8A%80%E6%9C%AF"><span class="toc-number">4.</span> <span class="toc-text">四、声源定位技术</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1%E3%80%81Maximizing-the-Steered-response-power%EF%BC%88SRP%EF%BC%89"><span class="toc-number">4.1.</span> <span class="toc-text">4.1、Maximizing the Steered-response-power（SRP）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SRP-based-Source-Localization"><span class="toc-number">4.1.1.</span> <span class="toc-text">SRP-based Source Localization</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2%E3%80%81High-resolution-spectral-estimation"><span class="toc-number">4.2.</span> <span class="toc-text">4.2、High-resolution spectral estimation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TDOA-based-Source-Localization"><span class="toc-number">4.3.</span> <span class="toc-text">TDOA-based Source Localization</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        语音信号处理（六） 阵列信号处理
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">differencer</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-05-26T07:11:36.000Z" itemprop="datePublished">2022-05-26</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/" rel="tag">语音信号处理</a>, <a class="tag-link-link" href="/tags/%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/" rel="tag">阵列信号处理</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+<div class="article-gallery">
+    
+    <a class="gallery-item" target="_blank" href="https://s2.loli.net/2022/05/28/JC1r8h7nuGQ4PyK.png" rel="gallery_cl480t3df002mugwobty34bo1 noopener">
+        <img src="https://s2.loli.net/2022/05/28/JC1r8h7nuGQ4PyK.png" itemprop="image" />
+    </a>
+    
+</div>
+
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="一、阵列信号处理的基本概念"><a href="#一、阵列信号处理的基本概念" class="headerlink" title="一、阵列信号处理的基本概念"></a>一、阵列信号处理的基本概念</h1><p><img src="https://s2.loli.net/2022/05/26/OCAJvDKHnyYb8WP.png" alt=""><br>阵列信号处理大致可以分为两种用途：一个是滤波一个是估计。这两个用途其实在单通道的信号处理也有相似的概念，只不过这种滤波和估计被拓展到空间域之上。</p>
 <h2 id="1-1、阵列信号模型"><a href="#1-1、阵列信号模型" class="headerlink" title="1.1、阵列信号模型"></a>1.1、阵列信号模型</h2><p>考虑一个三维立体模型，里面有n个任意位置摆放的阵元，且阵元都是全向阵元。声源从a方向入射。<br><img src="https://s2.loli.net/2022/05/26/ESxFIT9MP15zCOZ.png" alt=""><br>如图所示，模型可以提取两种信息：</p>
 <ul>
 <li>1、N个权阵元的摆放位置</li>
@@ -836,582 +600,150 @@ P_{\text {MUSIC }}(\mathbf{k})=\frac{1}{\mathbf{v}_{\mathbf{k}}^{H}(\mathbf{k}) 
 <p>再次回顾GCC(Generalized cross correlation)方案估计时延差<br><img src="https://s2.loli.net/2022/05/30/xVZ1nQ9trqJa6Og.png" alt=""></p>
 <script type="math/tex; mode=display">
 R_{i j}(\tau)=\frac{1}{2 \pi} \int_{-\infty}^{\infty} \Psi_{i j}(\omega) X_{i}(\omega) X_{j}^{*}(\omega) e^{j \omega \tau} d \omega</script>
-        </div>
-        <!-- .entry-content -->
-        <div class="single-reward">
-          <div class="reward-open">赏
-            <div class="reward-main">
-              <ul class="reward-row">
-                <li class="alipay-code"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/custom/donate/AliPayQR.jpg"></li>
-                <li class="wechat-code"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/custom/donate/WeChanQR.jpg"></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
-        <footer class="post-footer">
-          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
-          <div class="post-tags">
-          </div>
-          <div class="post-share">
-            <div class="social-share sharehidden share-component"></div>
-            <i class="iconfont show-share icon-forward"></i>
-          </div>
-        </footer><!-- .entry-footer -->
-      </article>
-      <!-- #post-## -->
-      <div class="toc" style="background: none;"></div>
-      <section class="post-squares nextprev">
-        
-          
-            <div class="post-nepre half previous">
-          
-            <a href="/2022/05/30/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E4%B8%83%EF%BC%89%20%E5%9F%BA%E4%BA%8EDNN%E7%9A%84%E8%AF%AD%E9%9F%B3%E5%88%86%E7%A6%BB/" rel="prev">
-              <div class="background">
-                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="">
-              </div>
-              <span class="label">
-              Previous Post</span>
-              <div class="info">
-                <h3>
-                语音信号处理（七） 基于DNN的语音分离</h3>
-                <hr>
-              </div>
-            </a>
-          </div>
-        
-        
-          
-            <div class="post-nepre half next">
-          
-            <a href="/2022/05/23/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E4%BA%94%EF%BC%89%E5%A3%B0%E5%AD%A6%E5%9B%9E%E5%A3%B0%E6%B6%88%E9%99%A4/" rel="next">
-              <div class="background">
-                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://s2.loli.net/2022/05/25/ZmMOqLyHFsYDS79.png" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)" src="https://s2.loli.net/2022/05/25/ZmMOqLyHFsYDS79.png">
-              </div>
-              <span class="label">
-              Next Post</span>
-              <div class="info">
-                <h3>
-                语音信号处理（五）声学回声消除</h3>
-                <hr>
-              </div>
-            </a>
-          </div>
-        
-      </section>
-      <!--
-  原来 ：
-<script src="//cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js"></script>
-<div id="vcomments"></div>
-<script>
-  window.onload = function(){
-      var valine = new Valine();
-      valine.init({
-        el: '#vcomments',
-        appId: "",
-        appKey: "",
-        path: window.location.pathname,
-        placeholder: "快来留言鸭~ ..."
-      })
-  }
-</script>
- -->
-
-
-  <div id="vcomments"></div>
-  <!-- 先引入样式,从footer提前 -->
-  <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js"></script>
-  <!-- 评论框美化 -->
-  <script>
-      new Valine({
-          el: '#vcomments',
-          appId: "DpQvbSVQXSeUV8lRSV5zHiOY-gzGzoHsz",
-          appKey: "j8tFI5wuIwD7gTt7KJe5ohod",
-         notify: 'false' === 'false',
-         verify: 'true' === 'true',
-         visitor: 'false' === 'false',
-          path: window.location.pathname,
-          verify: true,
-          avatar: 'monsterid',//小怪物头像
-          placeholder: "你是我一生只会遇见一次的惊喜 ..."  
-      });
-      //   自定义邮箱审核规则
-      document.body.addEventListener('click', function(e) {
-          if (e.target.classList.contains('vsubmit')) {
-              const email = document.querySelector('input[type=email]');
-              const nick = document.querySelector('input[name=nick]');
-              const reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
-              if (!email.value || !nick.value || !reg.test(email.value)) {
-                  const str = `<div class="valert text-center"><div class="vtext">请填写正确的昵称和邮箱！</div></div>`;
-                  const vmark = document.querySelector('.vmark');
-                  vmark.innerHTML = str;
-                  vmark.style.display = 'block';
-                  setTimeout(function() {
-                      vmark.style.display = 'none';
-                      vmark.innerHTML = '';
-                  }, 2500);
-              }
-          }
-      });
-      // 点击回复直接评论,官方版本点击回复时都是跳回到页面上方的评论框进行回复，评论框是固定不动的
-      // 参考https://immmmm.com/valine-diy,用到jQuery
-      $(document).ready(function(){
-          //$('.vemoji-btn').text('😀');
-          $("#vcomments").on('click', 'span.vat',function(){
-              $(this).parent('div.vmeta').next("div.vcontent").after($("div.vwrap"));
-              $('textarea#veditor').focus();
-          })
-      })
-  </script>
-  <!-- 今日诗词：随机返回一句古诗词名句的接口，宅到用来做 Valine 的 placeholder 显示内容 -->
-  <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
-  <script type="text/javascript">
-      jinrishici.load(function(result) {
-          var jrsc_plac =  result.data.content + "\n「" + result.data.origin.title + "」" + result.data.origin.dynasty + " · " + result.data.origin.author
-          document.getElementById("veditor").setAttribute("placeholder",jrsc_plac);
-      });
-  </script>
-  
-  
-  
-
-
-
-      <section class="author-profile">
-        <div class="info" itemprop="author" itemscope="" itemtype="https://schema.org/Person">
-          <a href="/about/" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.5/img/custom/avatar.jpg" itemprop="image" alt="differencer" height="70" width="70"></a>
-          <div class="meta">
-            <span class="title">Author</span>
-            <h3 itemprop="name">
-            <a href="/about/" itemprop="url" rel="author">differencer</a>
-            </h3>
-          </div>
-        </div>
-        <hr>
-        <p><i class="iconfont icon-write"></i></p>
-      </section>
-    </main><!-- #main -->
-  </div><!-- #primary -->
-</div>
-
-
-
-    </div>    
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="请输入关键词..."/>
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: '文章',
-            // PAGES: '页面',
-            CATEGORIES: '分类',
-            TAGS: '标签',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-    <!-- <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2022 taotaozi<br>
-      powered_by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
   </div>
-</footer> -->
-<footer id="colophon" class="site-footer" role="contentinfo">
-  <div class="site-info">
-    <div class="footertext">
-      <div class="img-preload">
-        <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/wordpress-rotating-ball-o.svg">
-        <img src="https://cdn.jsdelivr.net/gh/honjun/cdn@1.6/img/other/disqus-preloader.svg">
-      </div>
-      <p style="color: #666666;">&copy 2018</p>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
     </div>
-    <div class="footer-device">
-    <p style="font-family: 'Ubuntu', sans-serif;">
-        <span style="color: #b9b9b9;">Theme <a href="https://github.com/honjun/hexo-theme-sakura" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Sakura</a> <i class="iconfont icon-sakura rotating" style="color: #ffc0cb;display:inline-block"></i> by <a href="https://2heng.xin/" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Mashiro</a>&<a href="https://www.hojun.cn/" target="_blank" style="color: #b9b9b9;;text-decoration: underline dotted rgba(0, 0, 0, .1);">Hojun</a>, Powered by Hexo, Hosted by Coding Pages</a>
-        </span>
-      </p>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">一、阵列信号处理的基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1%E3%80%81%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.1.</span> <span class="toc-text">1.1、阵列信号模型</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%B3%A2%E6%9D%9F%E6%88%90%E5%BD%A2"><span class="toc-number">2.</span> <span class="toc-text">二、波束成形</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1%E3%80%81%E6%B3%A2%E6%9D%9F%E5%BD%A2%E6%88%90%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="toc-number">2.1.</span> <span class="toc-text">2.1、波束形成的概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2%E3%80%81%E4%B8%BE%E4%BE%8B%EF%BC%8C%E4%BB%A5%E5%9D%87%E5%8C%80%E7%BA%BF%E6%80%A7%E9%98%B5%E5%88%97%EF%BC%88ULA%EF%BC%89%E4%B8%BA%E4%BE%8B"><span class="toc-number">2.2.</span> <span class="toc-text">2.2、举例，以均匀线性阵列（ULA）为例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3%E3%80%81%E4%B8%BB%E6%B3%A2%E6%9D%9F%E8%B0%83%E5%90%91-beam-steering"><span class="toc-number">2.3.</span> <span class="toc-text">2.3、主波束调向(beam  steering)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4%E3%80%81%E6%96%B9%E5%90%91%E5%9B%BE%E5%90%88%E6%88%90"><span class="toc-number">2.4.</span> <span class="toc-text">2.4、方向图合成</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#cosine-%E5%8A%A0%E6%9D%83"><span class="toc-number">2.4.1.</span> <span class="toc-text">cosine 加权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hamming-%E5%8A%A0%E6%9D%83"><span class="toc-number">2.4.2.</span> <span class="toc-text">hamming 加权</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5%E3%80%81%E9%9B%B6%E7%82%B9%E8%B0%83%E5%90%91%EF%BC%88null-steering-sidelobe-canceller%EF%BC%89"><span class="toc-number">2.5.</span> <span class="toc-text">2.5、零点调向（null steering &#x2F; sidelobe canceller）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%B6%E7%82%B9%E8%B0%83%E5%90%91"><span class="toc-number">2.5.1.</span> <span class="toc-text">零点调向</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%B8%B8%E8%A7%81%E7%9A%84%E6%B3%A2%E6%9D%9F%E5%BD%A2%E6%88%90%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">三、常见的波束形成方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1%E3%80%81Delay-and-sum-DS-Beamformer"><span class="toc-number">3.1.</span> <span class="toc-text">3.1、Delay-and-sum (DS) Beamformer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-2%E3%80%81Minimum-Variance-Distortionless-Response%EF%BC%88MVDR%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">3.2、Minimum Variance Distortionless Response（MVDR）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-3%E3%80%81Linearly-Constrained-Minimum-Variance-LCMV"><span class="toc-number">3.3.</span> <span class="toc-text">3.3、Linearly Constrained Minimum Variance (LCMV)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-4%E3%80%81Generalized-Sidelobe-Canceller-GSC"><span class="toc-number">3.4.</span> <span class="toc-text">3.4、Generalized Sidelobe Canceller (GSC)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#GSC-%E5%90%84%E4%B8%AA%E6%A8%A1%E5%9D%97-%E7%9A%84%E7%89%A9%E7%90%86%E6%84%8F%E4%B9%89"><span class="toc-number">3.4.1.</span> <span class="toc-text">GSC 各个模块 的物理意义:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GSC%E7%AE%97%E6%B3%95%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F%EF%BC%9A"><span class="toc-number">3.4.2.</span> <span class="toc-text">GSC算法的实现方式：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#FBF-Fixed-Beamforming"><span class="toc-number">3.4.2.1.</span> <span class="toc-text">FBF- Fixed Beamforming</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ABM-%E2%80%93-Adaptive-Blocking-Matrix"><span class="toc-number">3.4.2.2.</span> <span class="toc-text">ABM – Adaptive Blocking Matrix</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AIC-%E2%80%93-Adaptive-Interference-Canceller"><span class="toc-number">3.4.2.3.</span> <span class="toc-text">AIC – Adaptive Interference Canceller</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%A3%B0%E6%BA%90%E5%AE%9A%E4%BD%8D%E6%8A%80%E6%9C%AF"><span class="toc-number">4.</span> <span class="toc-text">四、声源定位技术</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1%E3%80%81Maximizing-the-Steered-response-power%EF%BC%88SRP%EF%BC%89"><span class="toc-number">4.1.</span> <span class="toc-text">4.1、Maximizing the Steered-response-power（SRP）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SRP-based-Source-Localization"><span class="toc-number">4.1.1.</span> <span class="toc-text">SRP-based Source Localization</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2%E3%80%81High-resolution-spectral-estimation"><span class="toc-number">4.2.</span> <span class="toc-text">4.2、High-resolution spectral estimation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TDOA-based-Source-Localization"><span class="toc-number">4.3.</span> <span class="toc-text">TDOA-based Source Localization</span></a></li></ol></li></ol>
     </div>
-  </div><!-- .site-info -->
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/&text=语音信号处理（六） 阵列信号处理"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/&title=语音信号处理（六） 阵列信号处理"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/&is_video=false&description=语音信号处理（六） 阵列信号处理"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=语音信号处理（六） 阵列信号处理&body=Check out this article: http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/&title=语音信号处理（六） 阵列信号处理"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/&title=语音信号处理（六） 阵列信号处理"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/&title=语音信号处理（六） 阵列信号处理"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/&title=语音信号处理（六） 阵列信号处理"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/&name=语音信号处理（六） 阵列信号处理&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2022/05/26/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AD%EF%BC%89%E9%98%B5%E5%88%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/&t=语音信号处理（六） 阵列信号处理"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2023
+    taotaozi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
 </footer>
 
-
-
-<!-- <script src="/js/tocbot.js"></script> -->
-<script type="text/javascript" src="/js/lib.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
-<script type="text/javascript" src="/js/InsightSearch.js"></script>
-<script type="text/javascript" src="/js/jquery.fancybox.min.js"></script>
-<script type="text/javascript" src="/js/zoom.min.js"></script>
-<script type="text/javascript" src="/js/sakura-app.js"></script>
-<!--<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>-->
-<script src="//code.bdstatic.com/npm/leancloud-storage@4.12.0/dist/av-min.js"></script>
-<!--<script src='//unpkg.com/valine@1.3.4/dist/Valine.min.js'></script>-->
-<script src='https://cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js'></script>
-
-
-<script src="/js/botui.js"></script>
-<!-- 不蒜子 网页计数器 -->
-<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script> -->
-<script type="text/javascript">
-/* <![CDATA[ */
-if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
-  var Poi = {"pjax":"0","movies":{"url": "https://cdn.jsdelivr.net/gh/honjun/hojun@1.2","name":"Unbroken.mp4","live":"close"},"windowheight":"fixed","codelamp":"close","ajaxurl":"","order":"asc","formpostion":"bottom"};
-} else {
-  var Poi = {"pjax":"0","movies":{"url": "https://cdn.jsdelivr.net/gh/honjun/hojun@1.2","name":"Unbroken.mp4","live":"open"},"windowheight":"auto","codelamp":"close","ajaxurl":"","order":"asc","formpostion":"bottom"};
-}
-/* ]]> */
-
-</script>
-<script>
-$(document).ready(function() {
-  if ($(".toc").length > 0 && document.body.clientWidth > 1200) {
-    if ($(".pattern-center").length > 0) { //有图的情况
-      tocbot.init({
-          // Where to render the table of contents.
-          tocSelector: '.toc', // 放置目录的容器
-          // Where to grab the headings to build the table of contents.
-          contentSelector: '.entry-content', // 正文内容所在
-          // Which headings to grab inside of the contentSelector element.
-          scrollSmooth: true,
-          headingSelector: 'h1, h2, h3, h4, h5', // 需要索引的标题级别
-          headingsOffset: -400,
-          scrollSmoothOffset: -85
-      });
-    } else {
-      tocbot.init({
-          // Where to render the table of contents.
-          tocSelector: '.toc', // 放置目录的容器
-          // Where to grab the headings to build the table of contents.
-          contentSelector: '.entry-content', // 正文内容所在
-          // Which headings to grab inside of the contentSelector element.
-          scrollSmooth: true,
-          headingSelector: 'h1, h2, h3, h4, h5', // 需要索引的标题级别
-          headingsOffset: -85,
-          scrollSmoothOffset: -85
-      });
-    }
-    var offsetTop = $('.toc').offset().top - 95;
-    window.onscroll = function() {
-      var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-      if (scrollTop >= offsetTop) {
-        $('.toc').addClass('toc-fixed');
-      } else {
-        $('.toc').removeClass('toc-fixed');
-      }
-    }
-  }
-});
-</script>
-
-    <div class="openNav no-select" style="height: 50px;">
-      <div class="iconflat no-select" style="width: 50px; height: 50px;">
-        <div class="icon"></div>
-      </div>
-      <div class="site-branding search-form-submit">
-        <i class="iconfont js-toggle-search iconsearch icon-search"></i>
-      </div>
     </div>
-  </section>
-    <!-- 实现换肤功能 -->
-  <div class="skin-menu no-select" id="mainskin" style="position: fixed">
-    <div class="theme-controls row-container">
-     <ul class="menu-list">
-      <li id="white-bg"> <i class="fa fa-television" aria-hidden="true"></i></li>
-      <li id="sakura-bg"> <i class="iconfont icon-sakura"></i></li>
-      <li id="gribs-bg"> <i class="fa fa-slack" aria-hidden="true"></i></li>
-      <li id="KAdots-bg"> <i class="iconfont icon-dots"></i></li>
-      <li id="totem-bg"> <i class="fa fa-optin-monster" aria-hidden="true"></i></li>
-      <li id="pixiv-bg"> <i class="iconfont icon-pixiv"></i></li>
-      <li id="bing-bg"> <i class="iconfont icon-bing"></i></li>
-      <li id="dark-bg"> <i class="fa fa-moon-o" aria-hidden="true"></i></li>
-     </ul>
-    </div>
-   </div>
-   <canvas id="night-mode-cover"></canvas>
-    
-  <div class="changeSkin-gear no-select">
-    <div class="keys" id="setbtn"> 
-     <span id="open-skinMenu"> 切换主题 | SCHEME TOOL  
-       <i class="iconfont icon-gear inline-block rotating"></i> 
-     </span>
-    </div>
-  </div>
+    <!-- styles -->
+
   
+    <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.8.1/css/justifiedGallery.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/> 
+   
 
-  <div id="mo-nav" class="">
-  <div class="m-avatar">
-    <img src="https://cdn.jsdelivr.net/gh/differencer/MyCDN@1.0.6/img/custom/avatar.jpg">
-  </div>
-  <p style="text-align: center; color: #333; font-weight: 900; font-family: 'Ubuntu', sans-serif; letter-spacing: 1.5px">没错就是爱折腾</p>
-  <p style="text-align: center; word-spacing: 20px;">
-    
-      
-        <a href="http://github.com/honjun" class="fa fa-github" target="_blank" style="color: #333; margin-left:20px"></a>
-      
-        <a href="https://weibo.com/u/5856795355" class="fa fa-weibo" target="_blank" style="color: #dd4b39; margin-left:20px"></a>
-      
-        <a href="https://qm.qq.com/cgi-bin/qm/qr?k=zmOXfVpgH9H3Dx_n6PfhtJ3og3wdSh9K&noverify=0" class="fa fa-qq" target="_blank" style="color: #25c6fe; margin-left:20px"></a>
-      
-    
-  </p>
-  <ul id="menu-new-1" class="menu">
-    
-      <li>
-        <a href="/">
-          <span class="faa-parent animated-hover">
-            <i class="fa  fa-fort-awesome faa-shake" aria-hidden="true"></i>
-            首页
-          </span>
-        </a>
-        
-      </li>
-    
-      <li>
-        <a href="/archives">
-          <span class="faa-parent animated-hover">
-            <i class="fa  fa-archive faa-shake" aria-hidden="true"></i>
-            归档
-          </span>
-        </a>
-        
-          <ul class="sub-menu">
-            
-              <li>
-                <a href="/archives">
-                  <i class="fa fa-archive faa-shake" aria-hidden="true"></i>
-                  时轴
-                </a>
-              </li>
-            
-              <li>
-                <a href="/categories/%E6%8A%80%E6%9C%AF/">
-                  <i class="fa fa-code" aria-hidden="true"></i>
-                  技术
-                </a>
-              </li>
-            
-              <li>
-                <a href="/categories/%E7%94%9F%E6%B4%BB/">
-                  <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                  生活
-                </a>
-              </li>
-            
-              <li>
-                <a href="/categories/%E5%85%B6%E4%BB%96/">
-                  <i class="fa fa-book" aria-hidden="true"></i>
-                  其他
-                </a>
-              </li>
-            
-          </ul>
-        
-      </li>
-    
-      <li>
-        <a href="javascript:;">
-          <span class="faa-parent animated-hover">
-            <i class="fa  fa-list-ul faa-vertical" aria-hidden="true"></i>
-            清单
-          </span>
-        </a>
-        
-          <ul class="sub-menu">
-            
-              <li>
-                <a href="/tags/%E9%98%85%E8%AF%BB/">
-                  <i class="fa fa fa-book faa-bounce" aria-hidden="true"></i>
-                  书单
-                </a>
-              </li>
-            
-              <li>
-                <a href="/bangumi/">
-                  <i class="fa fa-film faa-vertical" aria-hidden="true"></i>
-                  番组
-                </a>
-              </li>
-            
-              <li>
-                <a href="/music/">
-                  <i class="fa fa-headphones" aria-hidden="true"></i>
-                  歌单
-                </a>
-              </li>
-            
-          </ul>
-        
-      </li>
-    
-      <li>
-        <a href="javascript:;">
-          <span class="faa-parent animated-hover">
-            <i class="fa  fa-bar-chart faa-shake" aria-hidden="true"></i>
-            统计
-          </span>
-        </a>
-        
-          <ul class="sub-menu">
-            
-              <li>
-                <a href="/tags/">
-                  <i class="fa fa-book faa-bounce" aria-hidden="true"></i>
-                  标签
-                </a>
-              </li>
-            
-              <li>
-                <a href="/categories/">
-                  <i class="fa fa-tasks faa-shake" aria-hidden="true"></i>
-                  分类
-                </a>
-              </li>
-            
-          </ul>
-        
-      </li>
-    
-      <li>
-        <a href="/comment/">
-          <span class="faa-parent animated-hover">
-            <i class="fa  fa-pencil-square-o faa-tada" aria-hidden="true"></i>
-            留言板
-          </span>
-        </a>
-        
-      </li>
-    
-      <li>
-        <a href="/donate/">
-          <span class="faa-parent animated-hover">
-            <i class="fa  fa-heart faa-pulse" aria-hidden="true"></i>
-            赞赏
-          </span>
-        </a>
-        
-      </li>
-    
-      <li>
-        <a href="javascript:;">
-          <span class="faa-parent animated-hover">
-            <i class="fa  fa-leaf faa-wrench" aria-hidden="true"></i>
-            关于
-          </span>
-        </a>
-        
-          <ul class="sub-menu">
-            
-              <li>
-                <a href="/links/">
-                  <i class="fa fa-link faa-shake" aria-hidden="true"></i>
-                  友链
-                </a>
-              </li>
-            
-              <li>
-                <a href="/about/">
-                  <i class="fa fa-meetup" aria-hidden="true"></i>
-                  我？
-                </a>
-              </li>
-            
-              <li>
-                <a href="/theme-sakura/">
-                  <i class="fa iconfont icon-sakura" aria-hidden="true"></i>
-                  主题
-                </a>
-              </li>
-            
-          </ul>
-        
-      </li>
-    
-  </ul>
-  <p style="text-align: center; font-size: 13px; color: #b9b9b9;">&copy 2019 hexo-sakura</p>
-</div>
-<button onclick="topFunction()" class="mobile-cd-top" id="moblieGoTop" title="Go to top" style="display: none;"><i class="fa fa-chevron-up" aria-hidden="true"></i></button>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
-<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
-<!-- require MetingJS -->
-<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
-<style>
-  .aplayer .aplayer-lrc {
-    height: 35px;
-  }
-  .aplayer .aplayer-lrc p{
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 18px !important;
-  }
-  .aplayer .aplayer-lrc p.aplayer-lrc-current{
-    color: #FF1493;
-  }
-  .aplayer.aplayer-narrow .aplayer-body{
-    left: -66px !important;
-  }
-  .aplayer.aplayer-fixed .aplayer-lrc {
-    display: none;
-  }
-  .aplayer .aplayer-lrc.aplayer-lrc-hide {
-      display:none !important;
-  }
-  .aplayer.aplayer-fixed .lrc-show {
-    display: block;
-    background: rgba(255, 255, 255, 0.8);
-  }
-</style>
-<meting-js
 
-    id="2660651585"
 
-    server="netease"
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
 
-    type="playlist"
 
-    fixed="true"
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
 
-    autoplay="false"
 
-    loop="all"
 
-    order="random"
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js" crossorigin="anonymous"></script> 
+   
 
-    preload="auto"
 
-    volume="0.7"
+<!-- clipboard -->
 
-    mutex="true"
-
-</meting-js>
-<script>
-  $(function(){
-    $('body').on('click', '.aplayer', function(){
-      if($('.aplayer-button').hasClass('aplayer-play')) {
-        $('.aplayer-lrc').removeClass('lrc-show');
-      } else {
-        $('.aplayer-lrc').addClass('lrc-show');
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
       }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
     })
-  });
-</script>
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
 </body>
 </html>
