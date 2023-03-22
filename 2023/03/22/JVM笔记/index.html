@@ -1,0 +1,408 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>JVM笔记 | t'blog</title><meta name="author" content="taotaozi"><meta name="copyright" content="taotaozi"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="JVM笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM笔记">
+<meta property="og:url" content="https://differencer.github.io/2023/03/22/JVM%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="t&#39;blog">
+<meta property="og:description" content="JVM笔记">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://differencer.github.io/img/avatar.png">
+<meta property="article:published_time" content="2023-03-22T09:43:21.000Z">
+<meta property="article:modified_time" content="2023-03-22T14:51:51.309Z">
+<meta property="article:author" content="taotaozi">
+<meta property="article:tag" content="java进阶">
+<meta property="article:tag" content="JVM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://differencer.github.io/img/avatar.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://differencer.github.io/2023/03/22/JVM%E7%AC%94%E8%AE%B0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"prismjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'JVM笔记',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-03-22 22:51:51'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.1.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fa fa-sitemap"></i><span> 关于我</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly/"><i class="fa-fw fa fa-heart"></i><span> 关于主题</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="t'blog"><span class="site-name">t'blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fa fa-sitemap"></i><span> 关于我</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly/"><i class="fa-fw fa fa-heart"></i><span> 关于主题</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">JVM笔记</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-03-22T09:43:21.000Z" title="发表于 2023-03-22 17:43:21">2023-03-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-03-22T14:51:51.309Z" title="更新于 2023-03-22 22:51:51">2023-03-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF/java/">java</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="JVM笔记"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h5 id="jvm-jre-jdk"><a href="#jvm-jre-jdk" class="headerlink" title="jvm jre jdk?"></a>jvm jre jdk?</h5><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230322165354858.png" style="zoom:50%;" /></p>
+<p>JDK:</p>
+<ul>
+<li>Java程序的运行环境-JRE<ul>
+<li>JVM java虚拟机<ul>
+<li>jvm有自己完善的硬件<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=架构&amp;spm=1001.2101.3001.7020">架构</a>，如处理器、栈区、寄存器等。</li>
+<li><strong>jvm是一个虚拟的中间平台，只负责将编译后的字节码文件转换成当前计算机能理解并执行的指令，其他都不关心。jvm是java“一次编译，到处执行”的原因。</strong></li>
+</ul>
+</li>
+<li><strong>核心类库</strong> java.lang java.utils 等</li>
+</ul>
+</li>
+<li>Java的<strong>基础类库</strong>（Java API）重要的语法结构和基本的线程、图形和IO等</li>
+<li>Java的一些工具包(JDK的bin目录下)（其中包含了javac源码编译器，还有一些其他的命令：jdb，javah，jmp等）</li>
+</ul>
+<h2 id="JVM内存结构"><a href="#JVM内存结构" class="headerlink" title="JVM内存结构"></a>JVM内存结构</h2><h3 id="java程序的执行过程"><a href="#java程序的执行过程" class="headerlink" title="java程序的执行过程"></a>java程序的执行过程</h3><p>编译阶段： java 文件 编译器把 .java 源代码文件编译成 .class 字节码（二进制）文件</p>
+<p>运行阶段：Java类加载器将 .class 字节码文件加载到内存，在 JVM 中进行解释并生成可执行代码</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230322175621937.png" alt="image-20230322175621937" style="zoom:50%;" /></p>
+<p>运行阶段最重要：</p>
+<ul>
+<li><p><strong>类加载器</strong>讲字节码文件加载到 <strong>JVM 内存</strong>中运行</p>
+<ul>
+<li>类放在放在方法区</li>
+<li>类的实例对象放在 堆内存</li>
+<li><p>队中的对象调用方法是会用到 虚拟机栈、程序计数器、本地方法栈中</p>
+</li>
+<li><p>方法执行时，每行代码由执行引擎中的解释器逐行执行，方法中的热点代码由JIT 编译器进行优化 执行引擎中的GC模块用于垃圾回收</p>
+</li>
+<li>Java 代码不方便实现的功能需要借助 本地方法接口调用系统接口</li>
+</ul>
+</li>
+</ul>
+<h4 id="PC-程序计数器-寄存器"><a href="#PC-程序计数器-寄存器" class="headerlink" title="PC 程序计数器(寄存器)"></a>PC <strong>程序计数器</strong>(寄存器)</h4><ul>
+<li><p>作用：是记住下一条jvm指令的执行地址（执行引擎的代码解释器需要知道下一条代码才能）</p>
+</li>
+<li><p>特点</p>
+<ul>
+<li><p><strong>是线程私有的</strong> （随着线程的创建而创建销毁而销毁）</p>
+</li>
+<li><p>不会存在内存溢出</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="Java-虚拟机栈"><a href="#Java-虚拟机栈" class="headerlink" title="Java 虚拟机栈"></a><strong>Java 虚拟机栈</strong></h4><ul>
+<li><p>每个线程运行时所需要的内存，称为虚拟机栈（线程私有）</p>
+</li>
+<li><p>每个栈由多个栈帧（Frame）组成，对应着每次方法调用时所占用的内存（其大小由方法的参数，局部局部变量所决定）</p>
+</li>
+<li><p>每个线程只能有一个活动栈帧，对应着当前正在执行的那个方法</p>
+</li>
+</ul>
+<p>问：</p>
+<ol>
+<li>垃圾回收是否涉及栈内存？弹栈就是垃圾回收过程，GC仅限于堆内存</li>
+<li>栈内存分配越大越好吗？通过JVM参数xss分配一般为1M。不是，栈内存越大反而使支持线程数变少，变大只会让递归调用次数变多</li>
+<li>方法内的局部变量是否线程安全？ 看线程共有的还是私有的</li>
+</ol>
+<p>​        - 如果方法内局部变量没有逃离方法的作用访问，它是线程安全的</p>
+<p>​        - 如果是局部变量引用了对象，或者静态成员变量，并逃离方法的作用范围，需要考虑线程安全</p>
+<p>栈内存溢出的原因？StackOverflowError</p>
+<ul>
+<li><p>栈帧过多导致栈内存溢出</p>
+<ul>
+<li>递归调用过多</li>
+</ul>
+</li>
+<li><p>栈帧过大导致栈内存溢出</p>
+<ul>
+<li>循环引用 </li>
+</ul>
+</li>
+</ul>
+<h4 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a><strong>本地方法栈</strong></h4><p>本地方法，无法通过java代码实现的功能，通过本地方法进行与操作系统接口交互，这种本地方法使用的内存叫做本地方法栈</p>
+<p>举例，object类的 native 方法（C实现） 包括 clone notify wait</p>
+<p>线程运行诊断</p>
+<p>案例1、cpu 占用过多</p>
+<ul>
+<li><p>用top定位哪个进程对cpu的占用过高</p>
+</li>
+<li><p>ps H -eo <strong>pid</strong>,<strong>tid</strong>,%cpu | grep 进程id （用ps命令进一步定位是哪个线程引起的cpu占用过高）</p>
+</li>
+<li><p>jstack 进程id</p>
+<p>可以根据线程id 找到有问题的线程，进一步定位到问题代码的源码行号</p>
+</li>
+</ul>
+<p>案例2：程序运行很长时间没有结果</p>
+<h4 id="Heap-堆"><a href="#Heap-堆" class="headerlink" title="Heap 堆"></a>Heap 堆</h4><ul>
+<li>通过 new 关键字，创建对象都会使用堆内存</li>
+</ul>
+<p>特点</p>
+<ul>
+<li><p>它是<strong>线程共享的</strong>，堆中对象都需要考虑线程安全的问题 OutOfMemoryError</p>
+</li>
+<li><p>有垃圾回收机制</p>
+</li>
+</ul>
+<p>堆内存诊断</p>
+<ul>
+<li>jps 工具</li>
+</ul>
+<p>查看当前系统中有哪些 java 进程</p>
+<ul>
+<li>jmap 工具</li>
+</ul>
+<p>查看堆内存占用情况 jmap - heap 进程id</p>
+<ul>
+<li>jconsole 工具</li>
+</ul>
+<p>图形界面的，多功能的监测工具，可以连续监测</p>
+<h4 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h4><ul>
+<li>首先方法去使JVM中所有线程共享的一块区域</li>
+<li>存储了 类的结构有关的方法 ，包括方法 构造器等代码</li>
+<li>方法其在虚拟机启动时建立，逻辑上属于堆的一部分<ul>
+<li>如 Oracle Hotspot 虚拟机 在1.8之前 实现叫做永久代使用了对的内存 1.8之后叫做元空间使用了系统内存一部分</li>
+<li>可以这样理解： <strong>方法区只是一个概念，或者标准。永久代和原空间属于方法区的不同实现</strong></li>
+<li>方法区内存溢出也会导致 out of memory</li>
+</ul>
+</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230322195237685.png" alt="image-20230322195237685" style="zoom: 33%;" /></p>
+<h5 id=""><a href="#" class="headerlink" title=" "></a> </h5><h5 id="java1-6-到-1-8-的方法区大区别"><a href="#java1-6-到-1-8-的方法区大区别" class="headerlink" title="java1.6 到 1.8 的方法区大区别"></a>java1.6 到 1.8 的方法区大区别</h5><ul>
+<li><p>1.6的方法区（永久代） 与堆内存共享JVM内存结构，宽泛意义上来说，方法去占用了或者属于堆内存区域），其中方法去包含 class classloader（可以加载类的二进制字节码） 常量池（常量池中包含StringTable）</p>
+</li>
+<li><p>1.8 相比于1.6  把方法区（元空间）移出了JVM内存，放在了本地内存， 并且把StringTable放到了堆内存</p>
+</li>
+<li><p>所以</p>
+<ul>
+<li><p>1.8之前会有以前会导致永久代内存溢出OutOfMemoryError: PermGen space</p>
+</li>
+<li><p>1.8之后会导致元空间内存溢出 java.lang.OutOfMemoryError: Metaspace</p>
+<ul>
+<li>1.8 之后会元空间有自己的垃圾回收机制，效率会高一些</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>场景： </p>
+<ul>
+<li><p>Spring 用CGlib 技术来生成代理类是AOP技术的核心</p>
+</li>
+<li><p>MyBatis CGlib 产生的Mapper接口的实现类</p>
+</li>
+<li><p>CGlib 用于<strong>运行期间动态生成二进制字节码实现动态字节码</strong></p>
+</li>
+<li><p>这些类的动态加载使用不当就会导致内存溢出</p>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a><strong>运行时常量池</strong></h5><ul>
+<li><p>什么是常量池？</p>
+<ul>
+<li><p>javac 编译为二进制的字节码： </p>
+</li>
+<li><p>包含三部分：类基本信息、常量池、类方法定义 都包含了虚拟机指令</p>
+<ul>
+<li>PS: 通过 javac 编译   java -v 反编译（反汇编）查看人能理解的”字节码“</li>
+</ul>
+</li>
+<li><p>常量池，就是一张表，虚拟机指令根据这张常量表找到要执行的类名、方法名、参数类型、字面量等信息</p>
+</li>
+<li><p>运行时常量池，常量池是 *.class 文件中的，当该类被加载，它的常量池信息就会放入运行时常量池，并把里面的符号地址变为真实地址</p>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="StringTable"><a href="#StringTable" class="headerlink" title="StringTable:"></a>StringTable:</h5><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token class-name">String</span> s1 <span class="token operator">=</span> <span class="token string">"a"</span><span class="token punctuation">;</span>
+<span class="token class-name">String</span> s2 <span class="token operator">=</span> <span class="token string">"b"</span><span class="token punctuation">;</span>
+<span class="token class-name">String</span> s3 <span class="token operator">=</span> <span class="token string">"a"</span> <span class="token operator">+</span> <span class="token string">"b"</span><span class="token punctuation">;</span>
+<span class="token class-name">String</span> s4 <span class="token operator">=</span> s1 <span class="token operator">+</span> s2<span class="token punctuation">;</span>
+<span class="token class-name">String</span> s5 <span class="token operator">=</span> <span class="token string">"ab"</span><span class="token punctuation">;</span>
+<span class="token class-name">String</span> s6 <span class="token operator">=</span> s4<span class="token punctuation">.</span><span class="token function">intern</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 问</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>s3 <span class="token operator">==</span> s4<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>s3 <span class="token operator">==</span> s5<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>s3 <span class="token operator">==</span> s6<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">String</span> x2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">"c"</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">"d"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">String</span> x1 <span class="token operator">=</span> <span class="token string">"cd"</span><span class="token punctuation">;</span>
+x2<span class="token punctuation">.</span><span class="token function">intern</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 问，如果调换了【最后两行代码】的位置呢，如果是jdk1.6呢</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>x1 <span class="token operator">==</span> x2<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>1、 上述前两行代码都是采用 惰加载的方式创建的，只有执行到这样代码时，才会讲字符串对应的字符串对象放入”串池“；同时注意，只有”串池“中没有这个数据才会向其添加，有的话只会将引用指向它</li>
+<li><p>2、<code>String s3 = &quot;a&quot; + &quot;b&quot;</code>; 编译器进行优化 直接优化为 <code>String s3 = &quot;ab&quot;</code> 所以 <code>System.out.println(s3 == s5)</code>结果为true；</p>
+</li>
+<li><p>3、<code>String s4 = s1 + s2</code>; 首先创建一个`StringBulider对象 在调用 append方法 把 s1 和 s2 拼起来 变成StringBuilder 类型的”ab“，</p>
+<p>然后toString 转成String 等价于 new String(“ab”) 这个对象不会放在常量池，而会放在堆内存</p>
+</li>
+<li><p>所以<code>System.out.println(s3 == s4);</code> 结果为<code>false</code> 因为一个在常量池一个在堆内存肯定地址不一样</p>
+</li>
+<li><p>4、</p>
+</li>
+</ul>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/java%E8%BF%9B%E9%98%B6/">java进阶</a><a class="post-meta__tags" href="/tags/JVM/">JVM</a></div><div class="post_share"></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2022/07/22/java%E5%9F%BA%E7%A1%80%E7%AF%87%E7%BB%BC%E5%90%88/" title="java 基础篇 综合"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">java 基础篇 综合</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">taotaozi</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/differencer"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/differencer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:1359114644@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">最近的新任务是 ： 努力啊</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#jvm-jre-jdk"><span class="toc-text">jvm jre jdk?</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84"><span class="toc-text">JVM内存结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#java%E7%A8%8B%E5%BA%8F%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="toc-text">java程序的执行过程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#PC-%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8-%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-text">PC 程序计数器(寄存器)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Java-%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88"><span class="toc-text">Java 虚拟机栈</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88"><span class="toc-text">本地方法栈</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Heap-%E5%A0%86"><span class="toc-text">Heap 堆</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E5%8C%BA"><span class="toc-text">方法区</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link"><span class="toc-text"> </span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#java1-6-%E5%88%B0-1-8-%E7%9A%84%E6%96%B9%E6%B3%95%E5%8C%BA%E5%A4%A7%E5%8C%BA%E5%88%AB"><span class="toc-text">java1.6 到 1.8 的方法区大区别</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E5%B8%B8%E9%87%8F%E6%B1%A0"><span class="toc-text">运行时常量池</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#StringTable"><span class="toc-text">StringTable:</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/03/22/JVM%E7%AC%94%E8%AE%B0/" title="JVM笔记">JVM笔记</a><time datetime="2023-03-22T09:43:21.000Z" title="发表于 2023-03-22 17:43:21">2023-03-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/07/22/java%E5%9F%BA%E7%A1%80%E7%AF%87%E7%BB%BC%E5%90%88/" title="java 基础篇 综合">java 基础篇 综合</a><time datetime="2022-07-22T08:00:48.000Z" title="发表于 2022-07-22 16:00:48">2022-07-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/06/22/java-%E5%9F%BA%E7%A1%80%E7%AF%87-String%E7%B1%BB/" title="java 基础篇 String类">java 基础篇 String类</a><time datetime="2022-06-22T05:53:45.000Z" title="发表于 2022-06-22 13:53:45">2022-06-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/06/01/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AB%EF%BC%89%E7%AB%AF%E5%88%B0%E7%AB%AF%E8%AF%AD%E9%9F%B3%E5%88%86%E7%A6%BB%E4%B8%8E%E7%9B%AE%E6%A0%87%E8%AF%B4%E8%AF%9D%E4%BA%BA%E6%8A%BD%E5%8F%96/" title="语音信号处理（八）端到端语音分离与目标说话人抽取">语音信号处理（八）端到端语音分离与目标说话人抽取</a><time datetime="2022-06-01T13:21:34.000Z" title="发表于 2022-06-01 21:21:34">2022-06-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/05/30/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E4%B8%83%EF%BC%89%20%E5%9F%BA%E4%BA%8EDNN%E7%9A%84%E8%AF%AD%E9%9F%B3%E5%88%86%E7%A6%BB/" title="语音信号处理（七） 基于DNN的语音分离">语音信号处理（七） 基于DNN的语音分离</a><time datetime="2022-05-30T08:54:05.000Z" title="发表于 2022-05-30 16:54:05">2022-05-30</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2023 By taotaozi</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>function loadGiscus () {
+  let nowTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+
+  const config = Object.assign({
+    src: 'https://giscus.app/client.js',
+    'data-repo': 'differencer/giscus',
+    'data-repo-id': 'R_kgDOJMrL1A',
+    'data-category-id': 'DIC_kwDOJMrL1M4CVC1y',
+    'data-mapping': 'pathname',
+    'data-theme': nowTheme,
+    'data-reactions-enabled': '1',
+    crossorigin: 'anonymous',
+    async: true
+  },null)
+
+  let ele = document.createElement('script')
+  for (let key in config) {
+    ele.setAttribute(key, config[key])
+  }
+  document.getElementById('giscus-wrap').insertAdjacentElement('afterbegin',ele)
+}
+
+function changeGiscusTheme () {
+  const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+
+  function sendMessage(message) {
+    const iframe = document.querySelector('iframe.giscus-frame');
+    if (!iframe) return;
+    iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+  }
+
+  sendMessage({
+    setConfig: {
+      theme: theme
+    }
+  });
+}
+
+if ('Giscus' === 'Giscus' || !false) {
+  if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+  else loadGiscus()
+} else {
+  function loadOtherComment () {
+    loadGiscus()
+  }
+}</script></div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="富强,民主,文明,和谐" data-fontsize="15px" data-random="true" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
