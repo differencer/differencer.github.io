@@ -1,0 +1,625 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>JVM笔记 垃圾回收机制 | t'blog</title><meta name="author" content="taotaozi"><meta name="copyright" content="taotaozi"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本文主要介绍JVM的垃圾回收机制 Java相对于C&#x2F;C++ 程序原来说，几乎不用考虑对象资源创建后的回收工作，这得益于JVM的垃圾回收机制GC 1 如何判断对象可以回收1.1  引用计数法 引用计数归零时进行垃圾回收  弊端：循环引用问题  早期的python使用这种方案   1.2  可达性分析算法 根对象（root：跟定不能被垃圾回收的对象叫做根对象）  Java 虚拟机中的垃圾回收器采用可达">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM笔记 垃圾回收机制">
+<meta property="og:url" content="https://differencer.github.io/2023/03/23/JVM%E7%AC%94%E8%AE%B0-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/index.html">
+<meta property="og:site_name" content="t&#39;blog">
+<meta property="og:description" content="本文主要介绍JVM的垃圾回收机制 Java相对于C&#x2F;C++ 程序原来说，几乎不用考虑对象资源创建后的回收工作，这得益于JVM的垃圾回收机制GC 1 如何判断对象可以回收1.1  引用计数法 引用计数归零时进行垃圾回收  弊端：循环引用问题  早期的python使用这种方案   1.2  可达性分析算法 根对象（root：跟定不能被垃圾回收的对象叫做根对象）  Java 虚拟机中的垃圾回收器采用可达">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://differencer.github.io/img/avatar.png">
+<meta property="article:published_time" content="2023-03-23T08:27:07.000Z">
+<meta property="article:modified_time" content="2023-03-23T15:21:01.733Z">
+<meta property="article:author" content="taotaozi">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://differencer.github.io/img/avatar.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://differencer.github.io/2023/03/23/JVM%E7%AC%94%E8%AE%B0-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"prismjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'JVM笔记 垃圾回收机制',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-03-23 23:21:01'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/background.css"><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-book"></i><span> 文档</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fa fa-sitemap"></i><span> 关于我</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly/"><i class="fa-fw fa fa-heart"></i><span> 关于主题</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://differencer.oss-cn-beijing.aliyuncs.com/img/cover(1).jpg.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="t'blog"><span class="site-name">t'blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-book"></i><span> 文档</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fa fa-sitemap"></i><span> 关于我</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly/"><i class="fa-fw fa fa-heart"></i><span> 关于主题</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">JVM笔记 垃圾回收机制</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-03-23T08:27:07.000Z" title="发表于 2023-03-23 16:27:07">2023-03-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-03-23T15:21:01.733Z" title="更新于 2023-03-23 23:21:01">2023-03-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>13分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="JVM笔记 垃圾回收机制"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>本文主要介绍JVM的垃圾回收机制</p>
+<p>Java相对于C/C++ 程序原来说，几乎不用考虑对象资源创建后的回收工作，这得益于JVM的垃圾回收机制GC</p>
+<h2 id="1-如何判断对象可以回收"><a href="#1-如何判断对象可以回收" class="headerlink" title="1 如何判断对象可以回收"></a>1 如何判断对象可以回收</h2><h3 id="1-1-引用计数法"><a href="#1-1-引用计数法" class="headerlink" title="1.1  引用计数法"></a>1.1  引用计数法</h3><ul>
+<li><p>引用计数归零时进行垃圾回收</p>
+</li>
+<li><p>弊端：循环引用问题</p>
+</li>
+<li><p>早期的python使用这种方案</p>
+</li>
+</ul>
+<h3 id="1-2-可达性分析算法"><a href="#1-2-可达性分析算法" class="headerlink" title="1.2  可达性分析算法"></a>1.2  可达性分析算法</h3><ul>
+<li><p>根对象（root：跟定不能被垃圾回收的对象叫做根对象）</p>
+</li>
+<li><p>Java 虚拟机中的垃圾回收器采用可达性分析来探索所有存活的对象</p>
+<p>扫描堆中的对象，看是否能够沿着 <code>GC Root</code>对象 为起点的引用链找到该对象，找不到，表示可以</p>
+<p>回收</p>
+</li>
+</ul>
+<h4 id="哪些对象可以作为-GC-Root"><a href="#哪些对象可以作为-GC-Root" class="headerlink" title="哪些对象可以作为 GC Root ?"></a>哪些对象可以作为 <code>GC Root</code> ?</h4><ul>
+<li>1、System Class 系统核心类 对象</li>
+<li>2、Native Stack JavaJVM与操作系统相关的类对象（详见<code>本地方法栈</code>）</li>
+<li>3、Busy Monitor 正在被加锁的对象</li>
+<li><p>4、Thread 活动线程 <strong>栈帧内使用的局部变量引用的对象</strong></p>
+<p>（PS：用MAT工具查看根对象）</p>
+</li>
+</ul>
+<h3 id="1-3-四种引用"><a href="#1-3-四种引用" class="headerlink" title="1.3 四种引用"></a>1.3 四种引用</h3><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230323165331810.png" style="zoom: 33%;" /></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230323170109210.png" alt="image-20230323170109210" style="zoom:50%;" /></p>
+<p>图中实线为强引用，</p>
+<ul>
+<li><p>强引用</p>
+<ul>
+<li>只有所有 GC Roots 对象都不通过【强引用】引用该对象，该对象才能被垃圾回收</li>
+</ul>
+</li>
+<li><p>软引用（SoftReference）</p>
+<ul>
+<li><p>仅有软引用引用该对象时，在<strong>垃圾回收后</strong>，<strong>内存仍不足</strong>时会<strong>再次出发垃圾回收</strong>，回收软引用对象</p>
+</li>
+<li><p><strong>可以</strong>配合<strong>引用队列</strong>来释放软引用自身（也可以不适用引用队列）</p>
+</li>
+<li><p>注意区分引用对象与引用自身</p>
+<ul>
+<li><p>```<br>byte[] array_b = new byte[_4MB]; // 强引用 其中 array_b 指引用自身 new byte[_4MB] 指引用对象</p>
+<pre class="line-numbers language-none"><code class="language-none">
+- &#96;&#96;&#96;
+  Software&lt;byte[]&gt; sarray_b &#x3D; new byte[_4MB]; &#x2F;&#x2F; 软引用 其中 sarray_b 指引用自身 new byte[_4MB]指引用对象<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>```<br>ReferenceQueue<byte[]> queue = new ReferencerQueue&lt;&gt;();<br>Software<byte[]> list = new ArrayList&lt;&gt;(new byte[_4MB],queue); // 如果要配合引用队列可以 创建时关联软引用队列，当软引用所关联的对象被回收时，软引用本身就会加入到引用队列中</p>
+<p>Reference&lt;? extend byte[]&gt; ref = queue.poll();</p>
+<pre class="line-numbers language-none"><code class="language-none">
+- 弱引用（WeakReference）
+
+  - 仅有弱引用引用该对象时，在**垃圾回收时**，**无论内存是否充足，都会回收弱引用对象**
+
+  - **可以**配合**引用队列**来释放弱引用自身（也可以不适用引用队列）
+
+&lt;img src&#x3D;&quot;https:&#x2F;&#x2F;differencer.oss-cn-beijing.aliyuncs.com&#x2F;img&#x2F;image-20230323170249597.png&quot; alt&#x3D;&quot;image-20230323170249597&quot; style&#x3D;&quot;zoom:50%;&quot; &#x2F;&gt;
+
+- 虚引用（PhantomReference）
+
+  - **必须**配合**引用队列**使用，主要配合 ByteBuffer 使用，被引用对象回收时，会将虚引用入队，
+
+  - 由 **Reference Handler** 线程调用虚引用相关方法释放直接内存
+
+&lt;img src&#x3D;&quot;https:&#x2F;&#x2F;differencer.oss-cn-beijing.aliyuncs.com&#x2F;img&#x2F;image-20230323170629271.png&quot; alt&#x3D;&quot;image-20230323170629271&quot; style&#x3D;&quot;zoom:50%;&quot; &#x2F;&gt;
+
+- 终结器引用（FinalReference）
+  - 无需手动编码，但其内部配合引用队列使用，在垃圾回收时，终结器引用入队（被引用对象暂时没有被回收），再由 Finalizer 线程通过终结器引用找到被引用对象并调用它的 finalize方法，第二次 GC 时才能回收被引用对象
+
+&lt;img src&#x3D;&quot;https:&#x2F;&#x2F;differencer.oss-cn-beijing.aliyuncs.com&#x2F;img&#x2F;image-20230323170855687.png&quot; alt&#x3D;&quot;image-20230323170855687&quot; style&#x3D;&quot;zoom:50%;&quot; &#x2F;&gt;
+
+
+
+
+
+## 2 垃圾回收基本算法
+
+### 2.2 标记清除  Mark Sweep
+
+&lt;img src&#x3D;&quot;https:&#x2F;&#x2F;differencer.oss-cn-beijing.aliyuncs.com&#x2F;img&#x2F;image-20230323173005911.png&quot; alt&#x3D;&quot;image-20230323173005911&quot; style&#x3D;&quot;zoom:50%;&quot; &#x2F;&gt;
+
+- 优点：速度较快
+- 缺点：会造成内存碎片
+
+### 2.2 标记整理 Mark Compact
+
+&lt;img src&#x3D;&quot;https:&#x2F;&#x2F;differencer.oss-cn-beijing.aliyuncs.com&#x2F;img&#x2F;image-20230323173107525.png&quot; alt&#x3D;&quot;image-20230323173107525&quot; style&#x3D;&quot;zoom:50%;&quot; &#x2F;&gt;
+
+- 缺点：速度慢
+- 优点：没有内存碎片
+
+### 2.3 复制 Copy
+
+- 不会有内存碎片
+
+- 需要占用双倍内存空间
+
+&lt;img src&#x3D;&quot;https:&#x2F;&#x2F;differencer.oss-cn-beijing.aliyuncs.com&#x2F;img&#x2F;image-20230323173219146.png&quot; alt&#x3D;&quot;image-20230323173219146&quot; style&#x3D;&quot;zoom:50%;&quot; &#x2F;&gt;
+
+## 3 分代垃圾回收
+
+实际的JVM垃圾回收机制不会单独只用一种方式 会考虑上述多种方式结合
+
+&lt;img src&#x3D;&quot;https:&#x2F;&#x2F;differencer.oss-cn-beijing.aliyuncs.com&#x2F;img&#x2F;image-20230323174227583.png&quot; alt&#x3D;&quot;image-20230323174227583&quot; style&#x3D;&quot;zoom:50%;&quot; &#x2F;&gt;
+
+主要分为两大块
+
+- 新生代
+  - 伊甸园区域
+  - 幸存区 From 
+  - 幸存区 To
+- 老年代
+
+
+
+- 1、对象首先分配在伊甸园区域
+
+  &lt;img src&#x3D;&quot;https:&#x2F;&#x2F;differencer.oss-cn-beijing.aliyuncs.com&#x2F;img&#x2F;image-20230323174809658.png&quot; alt&#x3D;&quot;image-20230323174809658&quot; style&#x3D;&quot;zoom:50%;&quot; &#x2F;&gt;
+
+- 2、新生代空间不足时，触发 minor gc （新生代垃圾回收），**伊甸园**和 **from** 存活的对象使用 copy 复制到 to 中，存活的
+
+  对象**年龄加 1**并且**交换 from to**
+
+  &lt;img src&#x3D;&quot;https:&#x2F;&#x2F;differencer.oss-cn-beijing.aliyuncs.com&#x2F;img&#x2F;image-20230323174736264.png&quot; alt&#x3D;&quot;image-20230323174736264&quot; style&#x3D;&quot;zoom:50%;&quot; &#x2F;&gt;
+
+- minor gc 会引发 **stop the world**（**STW**），暂停其它用户的线程，等垃圾回收结束，用户线程才恢复运行
+
+- 3、当对象寿命超过阈值时，会晋升至老年代，最大寿命是15（4bit）
+
+  &lt;img src&#x3D;&quot;https:&#x2F;&#x2F;differencer.oss-cn-beijing.aliyuncs.com&#x2F;img&#x2F;image-20230323174952940.png&quot; alt&#x3D;&quot;image-20230323174952940&quot; style&#x3D;&quot;zoom:50%;&quot; &#x2F;&gt;
+
+- 4、当老年代空间不足，会**先尝试触发 minor gc**，如果之后空间仍不足，**那么触发 full gc**，STW的时间更长（**相对于新生代的复制算法，老年代的垃圾回收是标记加整理算法**） 如果还不行，触发 out of memory Heap
+
+- PS: 大对象在创建时，发现新生代的伊甸园区放不进去时，会直接晋升为老年代，不在触发GC
+- PS：一个线程出发了OOM后，他所占用的内存空间会全部释放掉，从而不会影响其他线程的运行
+
+
+
+| **含义**             | **参数**                                                     |
+| -------------------- | ------------------------------------------------------------ |
+| 堆初始大小           | -Xms                                                         |
+| 堆最大大小           | -Xmx 或 -XX:MaxHeapSize&#x3D;size                                 |
+| 新生代大小           | -Xmn 或 (-XX:NewSize&#x3D;size + -XX:MaxNewSize&#x3D;size )            |
+| 线程栈（方法栈）大小 | --Xss 或 -XX:ThreadStackSize                                 |
+| 幸存区比例（动态）   | -XX:InitialSurvivorRatio&#x3D;ratio 和 -XX:+UseAdaptiveSizePolicy |
+| 幸存区比例           | -XX:SurvivorRatio&#x3D;ratio (默认8  即 8:1:1)                    |
+| 晋升阈值             | -XX:MaxTenuringThreshold&#x3D;threshold                           |
+| 晋升详情             | -XX:+PrintTenuringDistribution                               |
+| GC详情               | -XX:+PrintGCDetails -verbose:gc                              |
+| FullGC 前 MinorGC    | -XX:+ScavengeBeforeFullGC （默认是）                         |
+|                      |                                                              |
+
+
+
+
+
+## 4 垃圾回收器
+
+### 4.1 串型垃圾回收器
+
+- 单线程 ： 垃圾回收时 其他线程都暂停STW，只有一个线程来进行垃圾回收
+- 堆内存较小，适合个人电脑
+- &#96;-XX:+UseSerialGC &#x3D; Serial + SerialOld&#96;
+
+&lt;img src&#x3D;&quot;https:&#x2F;&#x2F;differencer.oss-cn-beijing.aliyuncs.com&#x2F;img&#x2F;image-20230323203141434.png&quot; alt&#x3D;&quot;image-20230323203141434&quot; style&#x3D;&quot;zoom: 50%;&quot; &#x2F;&gt;
+
+### 4.2 吞吐量优先的垃圾回收器（并行垃圾回收器）
+
+- 多线程
+
+- 堆内存较大，多核 cpu
+
+- 让单位时间内，STW 的时间最短 一小时内： 两次0.2 0.2 &#x3D; 0.4，垃圾回收时间占比最低，这样就称吞吐量高
+
+- &#96;&#96;&#96;
+  -XX:+UseParallelGC ~ -XX:+UseParallelOldGC （开关）
+  
+  -XX:+UseAdaptiveSizePolicy ( 动态调整 新生代大小比)
+  
+  -XX:GCTimeRatio&#x3D;ratio （调整垃圾回收时间和总时间占比   1&#x2F;（1+ratio） 达不到就增大堆空间  一般是 19  ：1&#x2F;（20））
+  
+  -XX:MaxGCPauseMillis&#x3D;ms （暂停毫秒数  与上面的参数是一个对冲参数 做不到将堆内存减小 默认 200ms）
+  
+  -XX:ParallelGCThreads&#x3D;n （并行线程数）<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230323203901664.png" alt="image-20230323203901664" style="zoom:50%;" /></p>
+</li>
+<li><p>CPU在GC时占用高，峰值明显</p>
+</li>
+</ul>
+<h3 id="4-3响应时间优先的垃圾回收器（CMS，并发标记垃圾清除垃圾回收器）"><a href="#4-3响应时间优先的垃圾回收器（CMS，并发标记垃圾清除垃圾回收器）" class="headerlink" title="4.3响应时间优先的垃圾回收器（CMS，并发标记垃圾清除垃圾回收器）"></a>4.3响应时间优先的垃圾回收器（CMS，并发标记垃圾清除垃圾回收器）</h3><ul>
+<li><p>多线程</p>
+</li>
+<li><p>堆内存较大，多核 cpu</p>
+</li>
+<li><p>最大特点是并大标记时不会STW，并发清理时 STW</p>
+</li>
+<li><p>尽可能让单次 STW 的时间最短  如 一小时内：五次 0.1 0.1 0.1 0.1 0.1 = 0.5</p>
+</li>
+<li><p>并行(parallel)：指在同一时刻，有多条指令在多个处理器上同时执行，所以无论从微观还是从宏观来看，二者都是一起执行的。</p>
+</li>
+<li><p>并发(concurrency)：指在同一时刻只能有一条指令执行，但多个进程指令被快速的轮换执行，使得在宏观上具有多个进程同时执行的效果，但在微观上并不是同时执行的，只是把时间分成若干段，使多个进程快速交替的执行。</p>
+</li>
+<li><p>```<br>-XX:+UseConcMarkSweepGC ~ -XX:+UseParNewGC ~ SerialOld<br> 开关：<br> UseConcMarkSweepGC （老年代）也即 CMS 基于标记清除算法的垃圾回收器，并且是并发的部分时间可以和用户线程也能工作 进一步减少了STW时间<br> UseParNewGC（新生代） 基于复制算法<br> 当CMS 发生并发失败时 会退化到SerialOld  基于标记整理的串型垃圾回收器</p>
+</li>
+</ul>
+<p>  -XX:ParallelGCThreads=n （并行的垃圾回收器个数一般和CPU核数一致）~ -XX:ConcGCThreads=threads （并发新线程数，一般为前者的1/4 ，可以理解为 1/4 的CPU用于垃圾回收，剩下的3/4 用于系统其他工作）</p>
+<p>  -XX:CMSInitiatingOccupancyFraction=percent<br>  当老年代 垃圾占到 整个比例就开始CMS（因为要预留一些空间给浮动垃圾，一般时 65%）</p>
+<p>  -XX:+CMSScavengeBeforeRemark<br>  重新标记时 ，新生代引用老年代对象，新生代对象<br>  在重新标记之前 对新生代进行垃圾回收，减轻重新标记的压力<br>  <pre class="line-numbers language-none"><code class="language-none">
+  
+
+&lt;img src&#x3D;&quot;https:&#x2F;&#x2F;differencer.oss-cn-beijing.aliyuncs.com&#x2F;img&#x2F;image-20230323203926944.png&quot; alt&#x3D;&quot;image-20230323203926944&quot; style&#x3D;&quot;zoom:50%;&quot; &#x2F;&gt;
+
+初试标记 （STW） -&gt; 并发标记 （并行不会STW）-&gt; 重新标记 （并行）-&gt; 并发清理（STW）
+
+- CMS 对CPU的占用没有 ParallelGC 高，但是由于用户工作线程也在运行，所以工作线程效率略低，所以对整个应用程序的吞吐量有一定影响
+- 用户线程能在垃圾回收时运行，也会产生新的垃圾，只能在下次GC清理，叫做浮动垃圾
+- **CMS 的最大缺点 由于标记清除 会导致大量内存碎片的产生，最终可能导致GC失败**，降级为 串型标记整理，耗费大量时间 造成长时间的卡顿
+
+
+
+
+
+### **4.4 G1**
+
+
+
+定义：Garbage First
+
+- 2004 论文发布
+- 2009 JDK 6u14 体验
+- 2012 JDK 7u4 官方支持
+- 2017 JDK 9 默认
+
+目前G1 主键逐渐取代了 CMS垃圾回收器
+
+适用场景
+
+- 同时注重吞吐量（Throughput）和低延迟（Low latency），默认的暂停目标是 200 ms
+- **超大堆内存**，会将**堆划分为多个大小相等的 Region**，每个区域都可以独立的作为伊甸园 幸存区 老年代
+- **整体上是 标记+整理 算法，两个区域之间是 复制 算法**
+
+
+
+相关 JVM 参数
+
+- &#96;&#96;&#96;
+  - -XX:+UseG1GC  开关 jdk9 默认开启
+  - -XX:G1HeapRegionSize&#x3D;size
+  - -XX:MaxGCPauseMillis&#x3D;time<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></p>
+<p>G1 算法的流程 总体来说时下面三个过程的循环</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230323221104993.png" alt="image-20230323221104993" style="zoom: 33%;" /></p>
+<ul>
+<li><p><strong>Young Collection</strong>（新生代GC）</p>
+<ul>
+<li>触发条件 ： 新生代满了</li>
+</ul>
+<blockquote>
+<ul>
+<li>刚开始会分配一些空间作为伊甸园区，如图中绿色部分，白色代表空闲区域</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230323221754791.png" alt="image-20230323221754791" style="zoom:33%;" /></p>
+<ul>
+<li>当伊甸园区域逐渐被占满，会触发新生代的垃圾回收，触发STW 但是时间较短 ，会将幸存的对象以复制算法放进幸存区</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230323221952240.png" alt="image-20230323221952240" style="zoom:33%;" /></p>
+<ul>
+<li>当幸存区逐渐被占满 再次触发新生代垃圾回收 触发STW  <strong>从新生到以及旧幸存区 拷贝幸存对象 到幸存区</strong>，幸存区超过一定年龄的会放进 老年代</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230323222032474.png" alt="image-20230323222032474" style="zoom:33%;" /></p>
+</blockquote>
+</li>
+</ul>
+<ul>
+<li><p>后两个阶段时当老年代到达 默认阈值 （45 %时触发）</p>
+</li>
+<li><p><strong>Young Collection + CM</strong> （新生代GC+并发标记）</p>
+<ul>
+<li>初试标记 ：在 Young GC 时会进行 GC Root 的初始标记</li>
+<li>并发标记 ：老年代占用堆空间比例达到阈值时，进行并发标记（不会 STW），<ul>
+<li><code>-XX:InitiatingHeapOccupancyPercent=percent</code> （默认45%）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>初试标记： <strong>在新生代 GC时就会发生</strong> 标记 GC Root</p>
+<p>并发标记：老年代占用整个堆空间比例达到阈值时 标记的同时不会影响工作线程，</p>
+</blockquote>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230323223613249.png" alt="image-20230323223613249" style="zoom:33%;" /></p>
+<ul>
+<li><p><strong>Mixed Collection</strong> （混合收集阶段）</p>
+<ul>
+<li><p>会对 E、S、O 进行全面垃圾回收</p>
+<ul>
+<li><p>最终标记（Remark）会 STW</p>
+<ul>
+<li>由于前面是CM 所以可能有一些 浮动垃圾 ，这里会标记浮动垃圾</li>
+</ul>
+</li>
+<li><p>拷贝存活（Evacuation）会 STW   ：具体步骤看下面</p>
+</li>
+</ul>
+</li>
+<li><p>-XX:MaxGCPauseMillis=ms</p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>拷贝存活步骤：</p>
+<ul>
+<li><p>新生代垃圾回收： 触发STW  </p>
+<ul>
+<li><strong>从新生到以及旧幸存区 拷贝 幸存对象 到幸存区，并晋升老对象</strong></li>
+</ul>
+</li>
+<li><p>老年代垃圾回收：  触发STW </p>
+<ul>
+<li><p>如果最大暂停时间充裕，将幸存区晋升的对象以及<strong>所有</strong>老年代的幸存对象 复制到新 老年代</p>
+</li>
+<li><p>如果最大暂停时间不足，将幸存区晋升的对象以及<strong>部分</strong>老年代的幸存对象赋值到 新的老年代</p>
+<p>而剩下的老年代依旧作为老年代，不用进行回收</p>
+</li>
+<li><p>挑选的条件是，挑选最具回收价值的老年代，也即能释放内存最多的老年代 （这也是 G1的由来）</p>
+</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230323223835960.png" alt="image-20230323223835960" style="zoom:33%;" /></p>
+<h3 id="4-5-什么时候-Full-GC？"><a href="#4-5-什么时候-Full-GC？" class="headerlink" title="4.5 什么时候 Full GC？"></a>4.5 什么时候 Full GC？</h3><ul>
+<li><p>SerialGC</p>
+<ul>
+<li><p>新生代内存不足发生的垃圾收集 - minor gc</p>
+</li>
+<li><p>老年代内存不足发生的垃圾收集 - full gc</p>
+</li>
+</ul>
+</li>
+<li><p>ParallelGC</p>
+<ul>
+<li><p>新生代内存不足发生的垃圾收集 - minor gc</p>
+</li>
+<li><p>老年代内存不足发生的垃圾收集 - full gc</p>
+</li>
+</ul>
+</li>
+<li><p>CMS</p>
+<ul>
+<li><p>新生代内存不足发生的垃圾收集 - minor gc</p>
+</li>
+<li><p>老年代内存不足 ，</p>
+<ul>
+<li>并发标记清除失败 时 Full GC</li>
+<li>没有失败 不会 Full GC</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>G1</p>
+<ul>
+<li><p>新生代内存不足发生的垃圾收集 - minor gc</p>
+</li>
+<li><p>老年代内存不足</p>
+<ul>
+<li>当老年代内存达到整个堆内存的45%（默认）以上时，触发 并发标记 以及 混合手机阶段</li>
+<li>这两个阶段 如果回收速度高于新产生的垃圾 这种情况不会 Full GC  只是三个阶段的大循环</li>
+<li>这两个阶段 如果回收速度慢于新产生的垃圾 这种情况会 退化为串型标记清除 Full GC 很慢</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-6-Young-Collection-跨代引用"><a href="#4-6-Young-Collection-跨代引用" class="headerlink" title="4.6  Young Collection 跨代引用"></a>4.6  <strong>Young Collection</strong> <strong>跨代引用</strong></h3><ul>
+<li><p>1、新生代回收的跨代引用（老年代引用新生代）问题</p>
+<ul>
+<li><p>背景 ，新生代在垃圾回收前， 找到根对象，根对象可达性分析，再复制到幸存区</p>
+</li>
+<li><p>由于根对象有一部分再老年代，如果遍历所有老年代找根对象优点不合理，效率很低</p>
+</li>
+<li><p>采用 <code>卡表</code> 技术进行优化，即 将老年代内部再进行细分 ， 分成一个个card</p>
+<blockquote>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230323231202227.png" alt="image-20230323231202227" style="zoom:33%;" /></p>
+<p>每一个card 分为 512k</p>
+<ul>
+<li><p>如果一个card 引用了 新生代的对象，那个这个对象所在的card 我们标记为脏card （dirty card）</p>
+</li>
+<li><p>这样的好处时，每次再老年代遍历GC root 时，不用遍历整个老年代，只用遍历脏 card 的 对象 减少搜索范围提升效率</p>
+</li>
+<li><p>最终减少 STW时间</p>
+</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230323231447940.png" alt="image-20230323231447940" style="zoom:33%;" /></p>
+<p>粉红色部分为脏card区域</p>
+<ul>
+<li><p>新生代中有一个Remember Set 用于记录 外部引用 也即脏card，每次GC</p>
+</li>
+<li><p>在引用变更时通过 post-write barrier + dirty card queue （异步操作）</p>
+</li>
+<li>concurrent refinement threads 更新 Remembered Set</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="垃圾回收调优"><a href="#垃圾回收调优" class="headerlink" title="垃圾回收调优"></a>垃圾回收调优</h2></article><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2022/07/22/java%E5%9F%BA%E7%A1%80%E7%AF%87%E7%BB%BC%E5%90%88/" title="java 基础篇 综合"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">java 基础篇 综合</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">taotaozi</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/differencer"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/differencer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:1359114644@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">最近的新任务是 ： 努力啊</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E5%AF%B9%E8%B1%A1%E5%8F%AF%E4%BB%A5%E5%9B%9E%E6%94%B6"><span class="toc-text">1 如何判断对象可以回收</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0%E6%B3%95"><span class="toc-text">1.1  引用计数法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E5%8F%AF%E8%BE%BE%E6%80%A7%E5%88%86%E6%9E%90%E7%AE%97%E6%B3%95"><span class="toc-text">1.2  可达性分析算法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%93%AA%E4%BA%9B%E5%AF%B9%E8%B1%A1%E5%8F%AF%E4%BB%A5%E4%BD%9C%E4%B8%BA-GC-Root"><span class="toc-text">哪些对象可以作为 GC Root ?</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E5%9B%9B%E7%A7%8D%E5%BC%95%E7%94%A8"><span class="toc-text">1.3 四种引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3%E5%93%8D%E5%BA%94%E6%97%B6%E9%97%B4%E4%BC%98%E5%85%88%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%EF%BC%88CMS%EF%BC%8C%E5%B9%B6%E5%8F%91%E6%A0%87%E8%AE%B0%E5%9E%83%E5%9C%BE%E6%B8%85%E9%99%A4%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%EF%BC%89"><span class="toc-text">4.3响应时间优先的垃圾回收器（CMS，并发标记垃圾清除垃圾回收器）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99-Full-GC%EF%BC%9F"><span class="toc-text">4.5 什么时候 Full GC？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-6-Young-Collection-%E8%B7%A8%E4%BB%A3%E5%BC%95%E7%94%A8"><span class="toc-text">4.6  Young Collection 跨代引用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E8%B0%83%E4%BC%98"><span class="toc-text">垃圾回收调优</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/03/23/JVM%E7%AC%94%E8%AE%B0-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6/" title="JVM笔记 垃圾回收机制">JVM笔记 垃圾回收机制</a><time datetime="2023-03-23T08:27:07.000Z" title="发表于 2023-03-23 16:27:07">2023-03-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/07/22/java%E5%9F%BA%E7%A1%80%E7%AF%87%E7%BB%BC%E5%90%88/" title="java 基础篇 综合">java 基础篇 综合</a><time datetime="2022-07-22T08:00:48.000Z" title="发表于 2022-07-22 16:00:48">2022-07-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/07/22/JVM%E7%AC%94%E8%AE%B0-JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/" title="JVM笔记-JVM内存结构">JVM笔记-JVM内存结构</a><time datetime="2022-07-22T08:00:48.000Z" title="发表于 2022-07-22 16:00:48">2022-07-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/06/22/java-%E5%9F%BA%E7%A1%80%E7%AF%87-String%E7%B1%BB/" title="java 基础篇 String类">java 基础篇 String类</a><time datetime="2022-06-22T05:53:45.000Z" title="发表于 2022-06-22 13:53:45">2022-06-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/06/01/%E8%AF%AD%E9%9F%B3%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%EF%BC%88%E5%85%AB%EF%BC%89%E7%AB%AF%E5%88%B0%E7%AB%AF%E8%AF%AD%E9%9F%B3%E5%88%86%E7%A6%BB%E4%B8%8E%E7%9B%AE%E6%A0%87%E8%AF%B4%E8%AF%9D%E4%BA%BA%E6%8A%BD%E5%8F%96/" title="语音信号处理（八）端到端语音分离与目标说话人抽取">语音信号处理（八）端到端语音分离与目标说话人抽取</a><time datetime="2022-06-01T13:21:34.000Z" title="发表于 2022-06-01 21:21:34">2022-06-01</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://differencer.oss-cn-beijing.aliyuncs.com/img/cover(1).jpg.webp')"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2023 By taotaozi</div><div class="footer_custom_text">世上最幸运的事就是喜欢上一个人</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>function loadGiscus () {
+  let nowTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+
+  const config = Object.assign({
+    src: 'https://giscus.app/client.js',
+    'data-repo': 'differencer/giscus',
+    'data-repo-id': 'R_kgDOJMrL1A',
+    'data-category-id': 'DIC_kwDOJMrL1M4CVC1y',
+    'data-mapping': 'pathname',
+    'data-theme': nowTheme,
+    'data-reactions-enabled': '1',
+    crossorigin: 'anonymous',
+    async: true
+  },null)
+
+  let ele = document.createElement('script')
+  for (let key in config) {
+    ele.setAttribute(key, config[key])
+  }
+  document.getElementById('giscus-wrap').insertAdjacentElement('afterbegin',ele)
+}
+
+function changeGiscusTheme () {
+  const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+
+  function sendMessage(message) {
+    const iframe = document.querySelector('iframe.giscus-frame');
+    if (!iframe) return;
+    iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+  }
+
+  sendMessage({
+    setConfig: {
+      theme: theme
+    }
+  });
+}
+
+if ('Giscus' === 'Giscus' || !false) {
+  if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+  else loadGiscus()
+} else {
+  function loadOtherComment () {
+    loadGiscus()
+  }
+}</script></div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="富强,民主,文明,和谐" data-fontsize="15px" data-random="true" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
