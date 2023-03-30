@@ -1,0 +1,291 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>java 线程状态 | tのblog</title><meta name="author" content="taotaozi"><meta name="copyright" content="taotaozi"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Q: 简述线程、程序、进程的基本概念。以及他们之间关系是什么?程序是含有指令和数据的文件，被存储在磁盘或其他数据存储设备中，也就是说程序是静态的代码。 进程是程序的⼀次执⾏过程，是系统运⾏程序的基本单位,系统运⾏⼀个程序即是⼀个进程从创建，运⾏到消亡的过程。 线程是进程划分成的更⼩的运⾏单位,线程是处理器任务调度和执行的基本单位。线程和进程最⼤的不同在于基本上各进程是独⽴的，⽽各线程则不⼀定，因为">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java 线程状态">
+<meta property="og:url" content="https://differencer.github.io/2022/07/12/java-%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81/index.html">
+<meta property="og:site_name" content="tのblog">
+<meta property="og:description" content="Q: 简述线程、程序、进程的基本概念。以及他们之间关系是什么?程序是含有指令和数据的文件，被存储在磁盘或其他数据存储设备中，也就是说程序是静态的代码。 进程是程序的⼀次执⾏过程，是系统运⾏程序的基本单位,系统运⾏⼀个程序即是⼀个进程从创建，运⾏到消亡的过程。 线程是进程划分成的更⼩的运⾏单位,线程是处理器任务调度和执行的基本单位。线程和进程最⼤的不同在于基本上各进程是独⽴的，⽽各线程则不⼀定，因为">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://differencer.github.io/img/avatar.png">
+<meta property="article:published_time" content="2022-07-12T13:59:23.000Z">
+<meta property="article:modified_time" content="2023-03-30T01:12:22.159Z">
+<meta property="article:author" content="taotaozi">
+<meta property="article:tag" content="线程状态">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://differencer.github.io/img/avatar.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://differencer.github.io/2022/07/12/java-%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"prismjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'java 线程状态',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-03-30 09:12:22'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/background.css"><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">27</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-book"></i><span> 文档</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fa fa-sitemap"></i><span> 关于我</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly/"><i class="fa-fw fa fa-heart"></i><span> 关于主题</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://differencer.oss-cn-beijing.aliyuncs.com/img/cover(1).jpg.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="tのblog"><span class="site-name">tのblog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-book"></i><span> 文档</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fa fa-sitemap"></i><span> 关于我</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly/"><i class="fa-fw fa fa-heart"></i><span> 关于主题</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">java 线程状态</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-07-12T13:59:23.000Z" title="发表于 2022-07-12 21:59:23">2022-07-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-03-30T01:12:22.159Z" title="更新于 2023-03-30 09:12:22">2023-03-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF/java/">java</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">665</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>2分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="java 线程状态"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h5 id="Q-简述线程、程序、进程的基本概念。以及他们之间关系是什么"><a href="#Q-简述线程、程序、进程的基本概念。以及他们之间关系是什么" class="headerlink" title="Q: 简述线程、程序、进程的基本概念。以及他们之间关系是什么?"></a>Q: 简述线程、程序、进程的基本概念。以及他们之间关系是什么?</h5><p>程序是含有指令和数据的文件，被存储在磁盘或其他数据存储设备中，也就是说程序是静态的代码。</p>
+<p><strong>进程</strong>是程序的⼀次执⾏过程，是<strong>系统运⾏程序的基本单位</strong>,系统运⾏⼀个程序即是⼀个进程从创建，运⾏到消亡的过程。</p>
+<p>线程是进程划分成的更⼩的运⾏单位,线程是处理器任务调度和执行的基本单位。线程和进程最⼤的不同在于基本上各<strong>进程是独⽴的</strong>，⽽各<strong>线程则不⼀定</strong>，因为同⼀进程中的线程极有可能会相互影响。</p>
+<h4 id="Q-java线程的状态状态"><a href="#Q-java线程的状态状态" class="headerlink" title="Q: java线程的状态状态"></a>Q: java线程的状态状态</h4><p>一种是将其分为6种一种是分为5种</p>
+<h6 id="6种-主要是从java代码的角度来进行划分。"><a href="#6种-主要是从java代码的角度来进行划分。" class="headerlink" title="6种(主要是从java代码的角度来进行划分。)"></a>6种(主要是从java代码的角度来进行划分。)</h6><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/22a2f59cc4ac491eac3cc4e6a6dbaa52.png" alt="img" style="zoom:33%;" /></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/6a02adfdfb96436da9273a899100d6d3.png" alt="在这里插入图片描述" style="zoom:50%;" /></p>
+<ol>
+<li><p>新建状态(NEW) ：</p>
+<blockquote>
+<p>使用new关键字创建一个thread对象，刚刚创建出的这个线程就处于新建状态。在这个状态的线程没有与操作系真正的线程产生关联，仅仅是一个java对象。</p>
+</blockquote>
+</li>
+<li><p>可运行(RUNABLE)：</p>
+<blockquote>
+<p>正在进行运行的线程，只有处于可运行状态的线程才会得到cpu资源。</p>
+</blockquote>
+</li>
+<li><p>阻塞(BLOCKED) ：</p>
+<blockquote>
+<p>在可运行阶段争抢锁失败的线程就会从可运行—-&gt;阻塞</p>
+</blockquote>
+</li>
+<li><p>等待(WAITING) ：</p>
+<blockquote>
+<p>可运行状态争抢锁成功，但是资源不满足，主动<strong>放弃锁</strong>（调用wait()方法）。条件满足后再恢复可运行状态（调用notiy()方法)</p>
+</blockquote>
+</li>
+<li><p>有时限等待(TIMED WAITING)：</p>
+<blockquote>
+<p>类似于等待，不过区别在于有一个等待的时间，到达等待时间后或者调用notiy()，都能恢复为可运行状态。</p>
+<p>有两种方式可以进入有时限等待：wait(Long)和sleep(Long)</p>
+</blockquote>
+</li>
+<li><p>终结 (TERMINATED)</p>
+<blockquote>
+<p>代码全部执行完毕后，会进入到终结状态，释放所有的资源。</p>
+</blockquote>
+</li>
+</ol>
+<h6 id="5种-：划分依据：从操作系统层面划分"><a href="#5种-：划分依据：从操作系统层面划分" class="headerlink" title="5种 ：划分依据：从操作系统层面划分"></a>5种 ：划分依据：从操作系统层面划分</h6><p>划分依据：从操作系统层面划分</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/1823d172fd074482a65b66484569cedd.png" alt="img" style="zoom:50%;" /></p>
+<ol>
+<li><p>新建 </p>
+<blockquote>
+<p>类似于六种，刚刚创建出的这个线程就处于新建状态。</p>
+</blockquote>
+</li>
+<li><p>就绪</p>
+<blockquote>
+<p>线程分到CPU时间运行代码，但是还没有运行。 </p>
+</blockquote>
+</li>
+<li><p>运行</p>
+<blockquote>
+<p>线程分到CPU时间运行代码，并且正在运行。</p>
+</blockquote>
+</li>
+<li><p>阻塞</p>
+<blockquote>
+<p>线程暂时没有分到时间运行代码，就会进入阻塞状态，包括以下四种情况：</p>
+<ul>
+<li><p>a. IO阻塞：不需要cpu资源（磁盘读写，网络读写）</p>
+</li>
+<li><p>b. BLOCKED</p>
+</li>
+<li><p>c. WAITING</p>
+</li>
+<li><p>d. TIMED_WAITING</p>
+</li>
+</ul>
+</blockquote>
+</li>
+<li><p>终结</p>
+<blockquote>
+<p>类似于代码全部执行完毕后，会进入到终结状态，释放所有的资源。</p>
+</blockquote>
+</li>
+</ol>
+</article><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81/">线程状态</a></div><div class="post_share"></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/07/22/java%E5%9F%BA%E7%A1%80%E7%AF%871/" title="java 基础篇1"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">java 基础篇1</div></div></a></div><div class="next-post pull-right"><a href="/2022/07/06/JVM%E7%AC%94%E8%AE%B0-JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/" title="JVM笔记-JVM内存结构"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">JVM笔记-JVM内存结构</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">taotaozi</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">27</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/differencer"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://blog.csdn.net/differencer?type=blog" target="_blank" title="Github"><i class="fab fa-CSDN"></i></a><a class="social-icon" href="https://space.bilibili.com/20713910" target="_blank" title="Bilibili"><i class="fab fa-bilibili"></i></a><a class="social-icon" href="/473439851" target="_blank" title="steam"><i class="fab fa-steam"></i></a><a class="social-icon" href="https://weibo.com/u/5856795355" target="_blank" title="Weibo"><i class="fab fa-weibo"></i></a><a class="social-icon" href="mailto:1359114644@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">最近的新任务是 ： 努力啊</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#Q-%E7%AE%80%E8%BF%B0%E7%BA%BF%E7%A8%8B%E3%80%81%E7%A8%8B%E5%BA%8F%E3%80%81%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E3%80%82%E4%BB%A5%E5%8F%8A%E4%BB%96%E4%BB%AC%E4%B9%8B%E9%97%B4%E5%85%B3%E7%B3%BB%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-text">Q: 简述线程、程序、进程的基本概念。以及他们之间关系是什么?</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q-java%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81%E7%8A%B6%E6%80%81"><span class="toc-text">Q: java线程的状态状态</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#6%E7%A7%8D-%E4%B8%BB%E8%A6%81%E6%98%AF%E4%BB%8Ejava%E4%BB%A3%E7%A0%81%E7%9A%84%E8%A7%92%E5%BA%A6%E6%9D%A5%E8%BF%9B%E8%A1%8C%E5%88%92%E5%88%86%E3%80%82"><span class="toc-text">6种(主要是从java代码的角度来进行划分。)</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#5%E7%A7%8D-%EF%BC%9A%E5%88%92%E5%88%86%E4%BE%9D%E6%8D%AE%EF%BC%9A%E4%BB%8E%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%B1%82%E9%9D%A2%E5%88%92%E5%88%86"><span class="toc-text">5种 ：划分依据：从操作系统层面划分</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/03/29/HashMap/" title="HashMap">HashMap</a><time datetime="2023-03-29T10:44:00.000Z" title="发表于 2023-03-29 18:44:00">2023-03-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/03/27/leetcode-Hot100/" title="leetcode Hot100">leetcode Hot100</a><time datetime="2023-03-27T07:33:23.000Z" title="发表于 2023-03-27 15:33:23">2023-03-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/03/26/JVM%E7%AC%94%E8%AE%B0-java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" title="JVM笔记 java内存模型">JVM笔记 java内存模型</a><time datetime="2023-03-26T02:33:29.000Z" title="发表于 2023-03-26 10:33:29">2023-03-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/01/23/ThreadLocal/" title="Java引用类型核ThreadLocal">Java引用类型核ThreadLocal</a><time datetime="2023-01-23T09:44:01.000Z" title="发表于 2023-01-23 17:44:01">2023-01-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/09/20/JVM%E7%AC%94%E8%AE%B0-%E7%BC%96%E8%AF%91%E6%9C%9F%E9%97%B4%E5%A4%84%E7%90%86%E5%92%8C%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%B5%81%E7%A8%8B%E5%8F%8A%E4%BC%98%E5%8C%96/" title="JVM笔记 编译期间处理和类加载流程及优化">JVM笔记 编译期间处理和类加载流程及优化</a><time datetime="2022-09-20T02:55:11.000Z" title="发表于 2022-09-20 10:55:11">2022-09-20</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://differencer.oss-cn-beijing.aliyuncs.com/img/cover(1).jpg.webp')"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2023 By taotaozi</div><div class="footer_custom_text">世上最幸运的事就是喜欢上一个人</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>function loadGiscus () {
+  let nowTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+
+  const config = Object.assign({
+    src: 'https://giscus.app/client.js',
+    'data-repo': 'differencer/giscus',
+    'data-repo-id': 'R_kgDOJMrL1A',
+    'data-category-id': 'DIC_kwDOJMrL1M4CVC1y',
+    'data-mapping': 'pathname',
+    'data-theme': nowTheme,
+    'data-reactions-enabled': '1',
+    crossorigin: 'anonymous',
+    async: true
+  },null)
+
+  let ele = document.createElement('script')
+  for (let key in config) {
+    ele.setAttribute(key, config[key])
+  }
+  document.getElementById('giscus-wrap').insertAdjacentElement('afterbegin',ele)
+}
+
+function changeGiscusTheme () {
+  const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+
+  function sendMessage(message) {
+    const iframe = document.querySelector('iframe.giscus-frame');
+    if (!iframe) return;
+    iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+  }
+
+  sendMessage({
+    setConfig: {
+      theme: theme
+    }
+  });
+}
+
+if ('Giscus' === 'Giscus' || !false) {
+  if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+  else loadGiscus()
+} else {
+  function loadOtherComment () {
+    loadGiscus()
+  }
+}</script></div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="富强,民主,文明,和谐" data-fontsize="15px" data-random="true" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
