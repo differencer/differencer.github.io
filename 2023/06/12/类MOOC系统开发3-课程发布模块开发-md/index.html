@@ -1,0 +1,1465 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>类MOOC系统开发3-课程发布模块开发.md | tのblog</title><meta name="author" content="taotaozi"><meta name="copyright" content="taotaozi"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="模块功能介绍1、（机构段）课程预览 2、（平台端）课程审核（机构请求发布，自动审核，后台审核—&gt;发布成功）发布成功，用户端可查看发布的课程 3、（用户端）查看发布课程 课程预览课程预览是一个单独的门户页面 结构  说明如下： 1、点击课程预览，通过Nginx、后台服务网关请求内容管理服务进行课程预览。 2、内容管理服务查询课程相关信息进行整合，并通过模板引擎技术在服务端渲染生成页面，返回给浏">
+<meta property="og:type" content="article">
+<meta property="og:title" content="类MOOC系统开发3-课程发布模块开发.md">
+<meta property="og:url" content="https://differencer.github.io/2023/06/12/%E7%B1%BBMOOC%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%913-%E8%AF%BE%E7%A8%8B%E5%8F%91%E5%B8%83%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91-md/index.html">
+<meta property="og:site_name" content="tのblog">
+<meta property="og:description" content="模块功能介绍1、（机构段）课程预览 2、（平台端）课程审核（机构请求发布，自动审核，后台审核—&gt;发布成功）发布成功，用户端可查看发布的课程 3、（用户端）查看发布课程 课程预览课程预览是一个单独的门户页面 结构  说明如下： 1、点击课程预览，通过Nginx、后台服务网关请求内容管理服务进行课程预览。 2、内容管理服务查询课程相关信息进行整合，并通过模板引擎技术在服务端渲染生成页面，返回给浏">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://differencer.oss-cn-beijing.aliyuncs.com/img/20230612133618.png">
+<meta property="article:published_time" content="2023-06-12T05:35:38.000Z">
+<meta property="article:modified_time" content="2023-06-14T06:10:38.179Z">
+<meta property="article:author" content="taotaozi">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://differencer.oss-cn-beijing.aliyuncs.com/img/20230612133618.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://differencer.github.io/2023/06/12/%E7%B1%BBMOOC%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%913-%E8%AF%BE%E7%A8%8B%E5%8F%91%E5%B8%83%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91-md/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"prismjs","highlightCopy":true,"highlightLang":false,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '类MOOC系统开发3-课程发布模块开发.md',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-06-14 14:10:38'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/background.css"><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.1.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">64</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-book"></i><span> 文档</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fa fa-sitemap"></i><span> 关于我</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly/"><i class="fa-fw fa fa-heart"></i><span> 关于主题</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://differencer.oss-cn-beijing.aliyuncs.com/img/20230612133618.png')"><nav id="nav"><span id="blog-info"><a href="/" title="tのblog"><span class="site-name">tのblog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-book"></i><span> 文档</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fa fa-sitemap"></i><span> 关于我</span></a></li><li><a class="site-page child" target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly/"><i class="fa-fw fa fa-heart"></i><span> 关于主题</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">类MOOC系统开发3-课程发布模块开发.md</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-06-12T05:35:38.000Z" title="发表于 2023-06-12 13:35:38">2023-06-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-06-14T06:10:38.179Z" title="更新于 2023-06-14 14:10:38">2023-06-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF/%E9%A1%B9%E7%9B%AE/">项目</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">11.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>42分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="类MOOC系统开发3-课程发布模块开发.md"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="模块功能介绍"><a href="#模块功能介绍" class="headerlink" title="模块功能介绍"></a>模块功能介绍</h1><p>1、（机构段）课程预览</p>
+<p>2、（平台端）课程审核（机构请求发布，自动审核，后台审核—&gt;发布成功）发布成功，用户端可查看发布的课程</p>
+<p>3、（用户端）查看发布课程</p>
+<h1 id="课程预览"><a href="#课程预览" class="headerlink" title="课程预览"></a>课程预览</h1><p>课程预览是一个单独的门户页面</p>
+<p>结构</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612134810185.png" alt="image-20230612134810185"></p>
+<p>说明如下：</p>
+<p>1、点击课程预览，通过Nginx、后台服务网关请求内容管理服务进行课程预览。</p>
+<p>2、内容管理服务查询课程相关信息进行整合，并通过模板引擎技术在服务端渲染生成页面，返回给浏览器。</p>
+<p>3、通过课程预览页面点击”马上学习“打开视频播放页面。</p>
+<p>4、视频播放页面通过Nginx请求后台服务网关，查询课程信息展示课程计划目录，请求媒资服务查询课程计划绑定的视频文件地址，在线浏览播放视频。</p>
+<h2 id="模板引擎Freemarker"><a href="#模板引擎Freemarker" class="headerlink" title="模板引擎Freemarker"></a>模板引擎Freemarker</h2><p>可以看到，根据前边的数据模型分析，课程预览就是把课程的相关信息进行整合，在课程预览界面进行展示，课程预览界面与课程发布的课程详情界面一致。</p>
+<p>项目采用模板引擎技术实现课程预览界面。什么是模板引擎？</p>
+<p>早期我们采用的jsp技术就是一种模板引擎技术，简单来说就是通过jsp浏览的页面的框架以及搭好，需要后端渲染（渲染的过程就是填充数据-模型的过程）</p>
+<p>所以模板引擎就是：模板+数据=输出，<strong>Jsp页面就是模板</strong>，页面中嵌入的<strong>jsp标签就是数据</strong>（模型），两者相结合输出html网页。</p>
+<p>可以说<strong>这种模式就不是前后端分离了，后端直接返回的是整个界面</strong>。</p>
+<p>常用的java模板引擎还有哪些？</p>
+<p>Jsp、Freemarker、Thymeleaf 、Velocity 等。</p>
+<p>本项目采用Freemarker作为模板引擎技术。</p>
+<p>Freemarker官方地址：<a target="_blank" rel="noopener" href="http://freemarker.foofun.cn/">http://freemarker.foofun.cn/</a></p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>在<strong>内容管理接口工层</strong> 添加Freemarker与SpringBoot的整合包</p>
+<pre class="line-numbers language-xml" data-language="xml"><code class="language-xml"><span class="token comment">&lt;!-- Spring Boot 对结果视图 Freemarker 集成 --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-starter-freemarker<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在nacos为内容管理接口层配置freemarker，公用配置组新加一个freemarker-config-dev.yaml (资料中已做)</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612140736811.png" alt="image-20230612140736811"></p>
+<p>那么现在就是看配置信息：</p>
+<p>template-loader-path: classpath:/templates/   #页面模板位置(默认为 classpath:/templates/)</p>
+<p>这里规定了模板加载（存放）的位置，类路径也就是resources路径，那么我们再这个路径下新建templates文件夹</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612140927653.png" alt="image-20230612140927653" style="zoom:50%;" /></p>
+<p>再微服务的配置文件中引入 freemarker-config-dev.yaml  配置，则：</p>
+<p>在内容管理的api工程中引入共享配置</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612141058408.png" alt="image-20230612141058408"></p>
+<h3 id="添加模板"><a href="#添加模板" class="headerlink" title="添加模板"></a>添加模板</h3><p>添加模板，在resources下创建templates目录，添加test.ftl模板文件</p>
+<pre class="line-numbers language-html" data-language="html"><code class="language-html"><span class="token doctype"><span class="token punctuation">&lt;!</span><span class="token doctype-tag">DOCTYPE</span> <span class="token name">html</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">charset</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>utf-8<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">></span></span>Hello World!<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span>
+Hello $&#123;name&#125;!
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="填充数据"><a href="#填充数据" class="headerlink" title="填充数据"></a>填充数据</h3><p>编写controller方法，准备模型数据</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>xuecheng<span class="token punctuation">.</span>content<span class="token punctuation">.</span>api</span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">Map</span><span class="token punctuation">;</span>
+
+<span class="token annotation punctuation">@Controller</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">FreemarkerController</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/testfreemarker"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token class-name">ModelAndView</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+        <span class="token class-name">ModelAndView</span> modelAndView <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ModelAndView</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//设置模型数据</span>
+        modelAndView<span class="token punctuation">.</span><span class="token function">addObject</span><span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">,</span><span class="token string">"小明"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//设置模板名称</span>
+        modelAndView<span class="token punctuation">.</span><span class="token function">setViewName</span><span class="token punctuation">(</span><span class="token string">"test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 刚才的模板名称</span>
+        <span class="token keyword">return</span> modelAndView<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>启动内容管理接口工程，访问<a target="_blank" rel="noopener" href="http://localhost:63040/content/testfreemarker">http://localhost:63040/content/testfreemarker</a></p>
+<p>freemarker提供很多指令用于解析各种类型的数据模型，参考地址：<a target="_blank" rel="noopener" href="http://freemarker.foofun.cn/ref_directives.html">http://freemarker.foofun.cn/ref_directives.html</a></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612143206866.png" alt="image-20230612143206866"></p>
+<p>成功</p>
+<h2 id="静态资源"><a href="#静态资源" class="headerlink" title="静态资源"></a>静态资源</h2><h3 id="配置主站"><a href="#配置主站" class="headerlink" title="配置主站"></a>配置主站</h3><p>在课程预览界面上要加载css、js、图片等内容，这里部署nginx来访问这些静态资源，对于SpringBoot服务的动态资源由Nginx去代理请求，如下图：</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="C:/Users/admin/AppData/Roaming/Typora/typora-user-images/image-20230612183230186.png" alt="image-20230612183230186" style="zoom: 50%;" /></p>
+<ol>
+<li><p>本机安装Nginx，直接用黑马提供的资料</p>
+</li>
+<li><p>运行nginx.exe，访问localhost，可以看到Nginx默认页面则启动成功（若失败，请检查是否存在中文目录或者端口占用情况）</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612184506591.png" alt="image-20230612184506591"></p>
+</li>
+<li><p>前端资源：解压黑马提供的xc-ui-pc-static-portal.zip文件，并记录解压的位置，在第5步修改Nginx配置时，需要指定其所在目录</p>
+</li>
+<li><p>现在我们要实现：输入域名能够访问门户网址，这其实还涉及了 DNS解析，为了演示，我们仅修改host文件：</p>
+<p>这就相当于一个简单的DNS过程，当浏览器访问上面的几个网址时，全部将域名解析为本地主机</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612185253407.png" alt="image-20230612185253407"></p>
+</li>
+<li><p>在Nginx的conf/nginx.conf文件中配置如下内容</p>
+<p>解释 ：一个server相当于一个虚拟主机</p>
+<p>是主机就需要配置域名，如果什么都不配置，代理的就是localhost 端口</p>
+<p>配置生效：方法1、进入任务管理器，杀死nginx的两个进程 重启  方法 2、命令行 nginx.exe -s reload</p>
+</li>
+</ol>
+<ul>
+<li>server_name www.51xuecheng.cn localhost;  </li>
+<li><h1 id="浏览器访问任意一个域名都能进入nignx-请求网站资源"><a href="#浏览器访问任意一个域名都能进入nignx-请求网站资源" class="headerlink" title="浏览器访问任意一个域名都能进入nignx 请求网站资源"></a>浏览器访问任意一个域名都能进入nignx 请求网站资源</h1></li>
+<li><h1 id="默认输入域名后访问的时nignx-目录下-html-下的资源"><a href="#默认输入域名后访问的时nignx-目录下-html-下的资源" class="headerlink" title="默认输入域名后访问的时nignx 目录下 /html/下的资源"></a>默认输入域名后访问的时nignx 目录下 /html/下的资源</h1></li>
+</ul>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json">http <span class="token punctuation">&#123;</span>
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    sendfile        on;
+    keepalive_timeout  <span class="token number">65</span>;
+
+    
+#外界访问 访问了一个端口号为<span class="token number">80</span>的虚拟主机，
+    server <span class="token punctuation">&#123;</span>  		
+        listen       <span class="token number">80</span>;
+ 		server_name  www.51xuecheng.cn  localhost;  
+		#浏览器访问任意一个域名都能进入nignx 请求网站资源
+        ssi on;
+    	# 把页头页尾放进主页
+        ssi_silent_errors on;
+
+        location / <span class="token punctuation">&#123;</span>
+            alias   E<span class="token operator">:</span>/homework/practice/CodePractice/JAVA/XCProj/xc-ui-pc-static-portal/;
+            index  index.html index.htm;
+        <span class="token punctuation">&#125;</span>
+        #静态资源
+        location /static/img/ <span class="token punctuation">&#123;</span>  
+                alias  E<span class="token operator">:</span>/homework/practice/CodePractice/JAVA/XCProj/xc-ui-pc-static-portal/img/;
+        <span class="token punctuation">&#125;</span> 
+        location /static/css/ <span class="token punctuation">&#123;</span>  
+                alias   E<span class="token operator">:</span>/homework/practice/CodePractice/JAVA/XCProj/xc-ui-pc-static-portal/css/;
+        <span class="token punctuation">&#125;</span> 
+        location /static/js/ <span class="token punctuation">&#123;</span>  
+                alias   E<span class="token operator">:</span>/homework/practice/CodePractice/JAVA/XCProj/xc-ui-pc-static-portal/js/;
+        <span class="token punctuation">&#125;</span> 
+        location /static/plugins/ <span class="token punctuation">&#123;</span>  
+                alias   E<span class="token operator">:</span>/homework/practice/CodePractice/JAVA/XCProj/xc-ui-pc-static-portal/plugins/;
+                add_header Access-Control-Allow-Origin http<span class="token operator">:</span><span class="token comment">//ucenter.51xuecheng.cn;  </span>
+                add_header Access-Control-Allow-Credentials <span class="token boolean">true</span>;  
+                add_header Access-Control-Allow-Methods GET;
+        <span class="token punctuation">&#125;</span> 
+        location /plugins/ <span class="token punctuation">&#123;</span>  
+                alias   E<span class="token operator">:</span>/homework/practice/CodePractice/JAVA/XCProj/xc-ui-pc-static-portal/plugins/;
+        <span class="token punctuation">&#125;</span> 
+        error_page   <span class="token number">500</span> <span class="token number">502</span> <span class="token number">503</span> <span class="token number">504</span>  /50x.html;
+        location = /50x.html <span class="token punctuation">&#123;</span>
+            root   html;
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+
+    <span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这样访问 本机80端口就能访问静态界面啦</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612211729708.png" alt="image-20230612211729708"></p>
+<h3 id="访问课程详情页"><a href="#访问课程详情页" class="headerlink" title="访问课程详情页"></a>访问课程详情页</h3><p><a target="_blank" rel="noopener" href="http://localhost/course/course_template.html">http://localhost/course/course_template.html</a></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612212923928.png" alt="image-20230612212923928"></p>
+<p>访问的其实时尚未被后端渲染的数据。</p>
+<h3 id="文件服务器"><a href="#文件服务器" class="headerlink" title="文件服务器"></a><strong>文件服务器</strong></h3><p>在进行课程预览时需要展示课程的图片，在线插放课程视频，课程图片、视频这些都在MinIO文件系统存储，下边统一由Nginx代理，通过文件服务域名统一访问。如下图：</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612213649158.png" alt="image-20230612213649158" style="zoom:50%;" /></p>
+<p>host文件添加 127.0.0.1 www.51xuecheng.cn file.51xuecheng.cn</p>
+<p>在nginx.conf中配置文件<strong>服务器的代理地址</strong></p>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"># server 上面加 
+#文件服务 被代理的网址
+upstream fileserver<span class="token punctuation">&#123;</span>
+   server <span class="token number">192.168</span>.<span class="token number">101.65</span><span class="token operator">:</span><span class="token number">9000</span> weight=<span class="token number">10</span>;
+<span class="token punctuation">&#125;</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里支配了一台机器，如果以后有多台机器，可以这样</p>
+<pre class="line-numbers language-none"><code class="language-none">upstream fileserver&#123;
+   server 192.168.101.65:9000 weight&#x3D;10;
+   server 192.168.101.64:9001 weight&#x3D;10;
+   server 192.168.101.65:9002 weight&#x3D;10;
+&#125; <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">server <span class="token punctuation">&#123;</span>
+     listen       <span class="token number">80</span><span class="token punctuation">;</span>
+     server_name  file<span class="token punctuation">.</span><span class="token number">51</span>xuecheng<span class="token punctuation">.</span>cn<span class="token punctuation">;</span> # 外界访问的域名，文件服务的域名
+     #charset koi8<span class="token operator">-</span>r<span class="token punctuation">;</span>
+     ssi on<span class="token punctuation">;</span>
+     ssi_silent_errors on<span class="token punctuation">;</span>
+     #access_log  logs<span class="token operator">/</span>host<span class="token punctuation">.</span>access<span class="token punctuation">.</span>log  main<span class="token punctuation">;</span>
+     location <span class="token operator">/</span>video <span class="token punctuation">&#123;</span>  # 根据下属规则，当请求 域名<span class="token operator">/</span>video 时 其实nignx将请求转发给 fileserver fileserver在上面
+         proxy_pass   http<span class="token operator">:</span><span class="token operator">/</span><span class="token operator">/</span>fileserver<span class="token punctuation">;</span>
+     <span class="token punctuation">&#125;</span>
+
+     location <span class="token operator">/</span>mediafiles <span class="token punctuation">&#123;</span>
+         proxy_pass   http<span class="token operator">:</span><span class="token operator">/</span><span class="token operator">/</span>fileserver<span class="token punctuation">;</span>
+     <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>访问通过 指定域名访问 文件是文件系统里面的视频</p>
+<p><a target="_blank" rel="noopener" href="http://file.51xuecheng.cn/video/5/4/54489cc0c00c054824a9006e0c07e5e6/54489cc0c00c054824a9006e0c07e5e6.mp4">http://file.51xuecheng.cn/video/5/4/54489cc0c00c054824a9006e0c07e5e6/54489cc0c00c054824a9006e0c07e5e6.mp4</a></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612215846516.png" alt="image-20230612215846516"></p>
+<p>正常访问！</p>
+<h3 id="视频播放页面"><a href="#视频播放页面" class="headerlink" title="视频播放页面"></a><strong>视频播放页面</strong></h3><p>进入课程详情页面，点击马上学习或课程目录下的小节的名称将打开视频播放页面。</p>
+<p>首先在nginx.conf中配置视频播放页面的地址</p>
+<pre><code>location /course/preview/learning.html &#123;
+     alias D:/itcast2022/xc_edu3.0/code_1/xc-ui-pc-static-portal/course/learning.html;
+ &#125; 
+ location /course/search.html &#123; 
+     root  D:/itcast2022/xc_edu3.0/code_1/xc-ui-pc-static-portal;
+ &#125; 
+ location /course/learning.html &#123; 
+     root  D:/itcast2022/xc_edu3.0/code_1/xc-ui-pc-static-portal;
+ &#125; 
+</code></pre><p>下边需要配置learning.html页面的视频播放路径来测试视频播放页面，找到learning.html页面中videoObject对象的定义处，配置视频的播放地址。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612220932419.png" alt="image-20230612220932419"></p>
+<p>这样点击详情视频就能播放绑定的视频了</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612221034708.png" alt="image-20230612221034708"></p>
+<h2 id="课程预览界面接口"><a href="#课程预览界面接口" class="headerlink" title="课程预览界面接口"></a><strong>课程预览界面接口</strong></h2><p>将课程详情页作为一个模板，往里面填充数据。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612222648493.png" alt="image-20230612222648493"></p>
+<h3 id="准备模板"><a href="#准备模板" class="headerlink" title="准备模板"></a>准备模板</h3><p>响应页面到浏览器使用freemarker模板引擎技术实现，首先从课程资料目录下获取课程预览页面course_template.html，拷贝至内容管理的接口工程的resources/templates下，并将其在本目录复制一份命名为course_template.ftl</p>
+<h3 id="定义接口"><a href="#定义接口" class="headerlink" title="定义接口"></a>定义接口</h3><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/coursepreview/&#123;courseId&#125;"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">ModelAndView</span> <span class="token function">preview</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathVariable</span><span class="token punctuation">(</span><span class="token string">"courseId"</span><span class="token punctuation">)</span> <span class="token class-name">Long</span> courseId<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+
+     <span class="token class-name">ModelAndView</span> modelAndView <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ModelAndView</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     modelAndView<span class="token punctuation">.</span><span class="token function">addObject</span><span class="token punctuation">(</span><span class="token string">"model"</span><span class="token punctuation">,</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     modelAndView<span class="token punctuation">.</span><span class="token function">setViewName</span><span class="token punctuation">(</span><span class="token string">"course_template"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">return</span> modelAndView<span class="token punctuation">;</span>
+ <span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>简单访问一下：</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612222924727.png" alt="image-20230612222924727"></p>
+<p>发现能简单访问到，但是没有样式，样式都在门户网站里的静态资源里面</p>
+<p>F12 发现 他访问静态资源直接访问本服域名路径下的静态资源；也就是说访问静态资源的域名和远端访问的域名绑定了</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612223115344.png" alt="image-20230612223115344"></p>
+<p>如何访问呢？统一使用门户网站网址访问所有资源</p>
+<h3 id="反向代理"><a href="#反向代理" class="headerlink" title="反向代理"></a>反向代理</h3><p>可以用niginx代理内容管理的地址，实际访问门户网站（被代理）</p>
+<p>怎么实现呢？</p>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json">  #后台网关
+ upstream gatewayserver<span class="token punctuation">&#123;</span>
+   server <span class="token number">127.0</span>.<span class="token number">0.1</span><span class="token operator">:</span><span class="token number">63010</span> weight=<span class="token number">10</span>;
+ <span class="token punctuation">&#125;</span> 
+
+#门户虚拟主机
+ server <span class="token punctuation">&#123;</span>
+       listen       <span class="token number">80</span>;
+       server_name  www.51xuecheng.cn localhost;
+       ....
+       #api
+       location /api/ <span class="token punctuation">&#123;</span>
+               proxy_pass http<span class="token operator">:</span><span class="token comment">//gatewayserver/;</span>
+       <span class="token punctuation">&#125;</span> 
+       ....
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>重启</p>
+<p>访问:<a target="_blank" rel="noopener" href="http://www.51xuecheng.cn/api/content/coursepreview/124">http://www.51xuecheng.cn/api/content/coursepreview/124</a></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612224324833.png" alt="image-20230612224324833"></p>
+<p>可以正常加载样式了。</p>
+<h3 id="接口开发"><a href="#接口开发" class="headerlink" title="接口开发"></a>接口开发</h3><p>在使用freemarker渲染生成视图时需要数据模型，此数据模型包括了基本信息、营销信息、课程计划、师资等信息。</p>
+<p>所以首先定义一个数据模型类：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"> <span class="token annotation punctuation">@Data</span>
+ <span class="token annotation punctuation">@ToString</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">CoursePreviewDto</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token comment">//课程基本信息,课程营销信息</span>
+    <span class="token class-name">CourseBaseInfoDto</span> courseBase<span class="token punctuation">;</span>
+
+
+    <span class="token comment">//课程计划信息</span>
+    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">TeachplanDto</span><span class="token punctuation">></span></span> teachplans<span class="token punctuation">;</span>
+    
+    <span class="token comment">//师资信息暂时不加...</span>
+
+
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>Service接口</strong></p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">CoursePublishService</span> <span class="token punctuation">&#123;</span>
+
+
+   <span class="token keyword">public</span> <span class="token class-name">CoursePreviewDto</span> <span class="token function">getCoursePreviewInfo</span><span class="token punctuation">(</span><span class="token class-name">Long</span> courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>接口实现如下</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Service</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">CoursePublishServiceImpl</span> <span class="token keyword">implements</span> <span class="token class-name">CoursePublishService</span> <span class="token punctuation">&#123;</span>
+
+ <span class="token annotation punctuation">@Autowired</span>
+ <span class="token class-name">CourseBaseInfoService</span> courseBaseInfoService<span class="token punctuation">;</span>
+
+ <span class="token annotation punctuation">@Autowired</span>
+ <span class="token class-name">TeachplanService</span> teachplanService<span class="token punctuation">;</span>
+
+
+ <span class="token annotation punctuation">@Override</span>
+ <span class="token keyword">public</span> <span class="token class-name">CoursePreviewDto</span> <span class="token function">getCoursePreviewInfo</span><span class="token punctuation">(</span><span class="token class-name">Long</span> courseId<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+
+  <span class="token comment">//课程基本信息、营销信息</span>
+  <span class="token class-name">CourseBaseInfoDto</span> courseBaseInfo <span class="token operator">=</span> courseBaseInfoService<span class="token punctuation">.</span><span class="token function">getCourseBaseInfo</span><span class="token punctuation">(</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">//课程计划信息</span>
+  <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">TeachplanDto</span><span class="token punctuation">></span></span> teachplanTree<span class="token operator">=</span> teachplanService<span class="token punctuation">.</span><span class="token function">findTeachplanTree</span><span class="token punctuation">(</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token class-name">CoursePreviewDto</span> coursePreviewDto <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CoursePreviewDto</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  coursePreviewDto<span class="token punctuation">.</span><span class="token function">setCourseBase</span><span class="token punctuation">(</span>courseBaseInfo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  coursePreviewDto<span class="token punctuation">.</span><span class="token function">setTeachplans</span><span class="token punctuation">(</span>teachplanTree<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> coursePreviewDto<span class="token punctuation">;</span>
+ <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>接口层完善</strong></p>
+<pre class="line-numbers language-none"><code class="language-none">@Autowired
+CoursePublishService coursePublishService;
+
+
+@GetMapping(&quot;&#x2F;coursepreview&#x2F;&#123;courseId&#125;&quot;)
+public ModelAndView preview(@PathVariable(&quot;courseId&quot;) Long courseId)&#123;
+
+    &#x2F;&#x2F;获取课程预览信息
+    CoursePreviewDto coursePreviewInfo &#x3D; coursePublishService.getCoursePreviewInfo(courseId);
+
+    ModelAndView modelAndView &#x3D; new ModelAndView();
+    modelAndView.addObject(&quot;model&quot;,coursePreviewInfo);
+    modelAndView.setViewName(&quot;course_template&quot;);
+    return modelAndView;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><strong>前后端联调</strong></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612225347264.png" alt="image-20230612225347264"></p>
+<p>重启前端工程，</p>
+<p>进入课程列表点击”预览”按钮，</p>
+<p>正常打开课程预览页面<a target="_blank" rel="noopener" href="http://www.51xuecheng.cn/api/content/coursepreview/124">http://www.51xuecheng.cn/api/content/coursepreview/124</a></p>
+<h3 id="编写模板"><a href="#编写模板" class="headerlink" title="编写模板"></a><strong>编写模板</strong></h3><p>模型数据准备好后下一步将模型数据填充到course_template.ftl上，填充时注意不要一次填充太多，一边填充一边刷新调试。</p>
+<p>完整的course_template.ftl模板在课程资料目录下，差不多学会了freemarker标签的使用方法，将课程资料下的course_template.ftl覆盖自己的工程下的course_template.ftl。</p>
+<ul>
+<li>freemarker提供了很多指令用于解析各种类型的数据模型，还有if等标签，参考地址：<a target="_blank" rel="noopener" href="http://freemarker.foofun.cn/ref_directives.html">http://freemarker.foofun.cn/ref_directives.html</a></li>
+<li>修改模板后需要编译</li>
+<li></li>
+</ul>
+<p>测试成功！</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612232426308.png" alt="image-20230612232426308"></p>
+<h2 id="视频播放页面接口"><a href="#视频播放页面接口" class="headerlink" title="视频播放页面接口"></a><strong>视频播放页面接口</strong></h2><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612232822405.png" alt="image-20230612232822405"></p>
+<p>在此页面需要从后台获取课程信息、根据课程计划获取对应的视频地址，下边编写这两个接口：</p>
+<p>获取课程信息接口：/open/content/course/whole/{courseId}</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"> <span class="token operator">/</span><span class="token keyword">open</span><span class="token operator">/</span>content<span class="token operator">/</span>course<span class="token operator">/</span>whole<span class="token operator">/</span>课程id      
+
+响应：同课程预览service接口返回数据  <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>根据课程计划获取视频地址接口：/open/media/preview/{mediaId}</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token operator">/</span><span class="token keyword">open</span><span class="token operator">/</span>media<span class="token operator">/</span>preview<span class="token operator">/</span>课程计划id
+
+响应：
+<span class="token punctuation">&#123;</span><span class="token string">"code"</span><span class="token operator">:</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token string">"msg"</span><span class="token operator">:</span><span class="token string">"success"</span><span class="token punctuation">,</span><span class="token string">"result"</span><span class="token operator">:</span><span class="token string">"视频的url"</span><span class="token punctuation">,</span><span class="token string">"successful"</span><span class="token operator">:</span><span class="token boolean">true</span><span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>1、在nginx配置如下地址</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#openapi</span>
+location /open/content/ <span class="token punctuation">&#123;</span>
+        proxy_pass http://gatewayserver/content/open/<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span> 
+location /open/media/ <span class="token punctuation">&#123;</span>
+        proxy_pass http://gatewayserver/media/open/<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span> 
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>配置运行nginx.exe -s reload加载nginx的配置文件 </p>
+<h3 id="接口定义"><a href="#接口定义" class="headerlink" title="接口定义"></a>接口定义</h3><p>内容管理</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Api</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"课程公开查询接口"</span><span class="token punctuation">,</span>tags <span class="token operator">=</span> <span class="token string">"课程公开查询接口"</span><span class="token punctuation">)</span>
+ <span class="token annotation punctuation">@RestController</span>
+ <span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/open"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">CourseOpenController</span> <span class="token punctuation">&#123;</span>
+
+ <span class="token annotation punctuation">@Autowired</span>
+ <span class="token keyword">private</span> <span class="token class-name">CourseBaseInfoService</span> courseBaseInfoService<span class="token punctuation">;</span>
+
+ <span class="token annotation punctuation">@Autowired</span>
+ <span class="token keyword">private</span> <span class="token class-name">CoursePublishService</span> coursePublishService<span class="token punctuation">;</span>
+
+
+<span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/course/whole/&#123;courseId&#125;"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">CoursePreviewDto</span> <span class="token function">getPreviewInfo</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathVariable</span><span class="token punctuation">(</span><span class="token string">"courseId"</span><span class="token punctuation">)</span> <span class="token class-name">Long</span> courseId<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">//获取课程预览信息</span>
+    <span class="token class-name">CoursePreviewDto</span> coursePreviewInfo <span class="token operator">=</span> coursePublishService<span class="token punctuation">.</span><span class="token function">getCoursePreviewInfo</span><span class="token punctuation">(</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> coursePreviewInfo<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>媒资管理</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Api</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"媒资文件管理接口"</span><span class="token punctuation">,</span>tags <span class="token operator">=</span> <span class="token string">"媒资文件管理接口"</span><span class="token punctuation">)</span>
+ <span class="token annotation punctuation">@RestController</span>
+ <span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/open"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MediaOpenController</span> <span class="token punctuation">&#123;</span>
+
+  <span class="token annotation punctuation">@Autowired</span>
+  <span class="token class-name">MediaFileService</span> mediaFileService<span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"预览文件"</span><span class="token punctuation">)</span>
+    <span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/preview/&#123;mediaId&#125;"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token class-name">RestResponse</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">></span></span> <span class="token function">getPlayUrlByMediaId</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathVariable</span> <span class="token class-name">String</span> mediaId<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+
+        <span class="token class-name">MediaFiles</span> mediaFiles <span class="token operator">=</span> mediaFileService<span class="token punctuation">.</span><span class="token function">getFileById</span><span class="token punctuation">(</span>mediaId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>mediaFiles <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">||</span> <span class="token class-name">StringUtils</span><span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span>mediaFiles<span class="token punctuation">.</span><span class="token function">getUrl</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+            <span class="token class-name">XueChengPlusException</span><span class="token punctuation">.</span><span class="token function">cast</span><span class="token punctuation">(</span><span class="token string">"视频还没有转码处理"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">return</span> <span class="token class-name">RestResponse</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span>mediaFiles<span class="token punctuation">.</span><span class="token function">getUrl</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token punctuation">&#125;</span>
+
+
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h3><p>定义好后，启动内容管理、媒资管理、后台服务网关服务，测试视频播放页面是否可以正常获取课程计划，点击具体的课程计划是否正常可以播放视频。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230612234007238.png" alt="image-20230612234007238"></p>
+<h2 id="面试"><a href="#面试" class="headerlink" title="面试"></a>面试</h2><ul>
+<li><p>为什么要用Freemarker静态化？如何做的？</p>
+</li>
+<li><p>页面静态化是指使用模板引擎技术将一个动态网页生成html静态页面，满足以下条件可以考虑使用静态化</p>
+<ol>
+<li>该页面被访问频率高，例如：商品信息展示、讲师介绍页面</li>
+<li>页面上数据变化频率低，例如：商品发布后对商品信息的修改频率低、讲师介绍信息修改频率低</li>
+</ol>
+</li>
+<li>静态化的技术很多，Freemarker是一个成熟的开源的模板引擎工具，简单易用，功能强大，本项目使用Freemarker将课程信息静态化<ol>
+<li>使用Freemarker的标签编写课程信息的模板</li>
+<li>调用接口获取木板上需要的模型数据</li>
+<li>调用Freemarker的API生成静态页面</li>
+<li>生成的静态页面最终会上传到文件系统方便访问</li>
+</ol>
+</li>
+</ul>
+<h1 id="提交审核"><a href="#提交审核" class="headerlink" title="提交审核"></a>提交审核</h1><h2 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h2><p>根据模块需求分析，课程发布前先要审核，审核通过方可发布。下图是课程审核及发布的流程图</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/ppksNjg.png" alt="img"></p>
+<ol>
+<li>一门课程新增后，它的审核状态为<code>未提交</code>，发布状态为<code>未发布</code></li>
+<li>课程信息编辑完成，教学机构人员进行<code>提交审核</code>操作，此时课程的审核状态为<code>已提交</code></li>
+<li>当课程状态为<code>已提交</code>时，运营平台人员对课程进行审核</li>
+<li>运营平台人员审核课程，结果有两个：审核通过、审核不通过</li>
+<li>课程审核后不管状态是否通过，教学机构都可以再次修改课程并提交审核，此时课程状态为<code>已提交</code>，运营平台人员再次审核课程</li>
+<li>课程审核通过，教学机构人员可以发布课程，发布成功后，课程的发布状态为<code>已发布</code></li>
+<li>课程发布后，通过<code>下架</code>操作可以更改课程发布状态为<code>下架</code></li>
+<li>课程下架后，通过<code>上架</code>操作可以再次发布课程，上架后课程发布状态为<code>发布</code></li>
+</ol>
+<h3 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h3><p>通过业务流程分析，现在我们思考：课程提交审核后，还允许修改课程吗？</p>
+<ul>
+<li>如果允许修改，可能会引发冲突 （审核的课程和修改的课程时同一份），本来审核完毕了，但是机构修改了课程（加了一些不合规的内容，这样倒霉的就是平台人员）</li>
+<li>如果不允许修改，大部分审核周期都很长，想修改只能等到这一轮审核完，效率低</li>
+</ul>
+<ul>
+<li>解决方案：<ul>
+<li>提供一个预发布表（相当于sql的快照读一样）：审核人员审核的是快照；审核通过后，机构发布的也是快照（预发布表的内容）</li>
+<li>如果审核过程中，机构修改了课程信息，那么修改的不是预发布表。而是原始表的信息，当再次提交时，<strong>如果平台正在审核，就暂时不能提交。</strong> 载体提交时还是将基本表信息转到预发布表，将审核状态改为审核中，发布状态改为未发布</li>
+<li>审核通过需要1、将预发布表发表以及课程基本信息状态为审核通过 。 发布时，发布的不是原始表而是快照表，修改不影响快照</li>
+</ul>
+</li>
+</ul>
+<h2 id="接口定义-1"><a href="#接口定义-1" class="headerlink" title="接口定义"></a>接口定义</h2><p>提交审核</p>
+<pre class="line-numbers language-none"><code class="language-none">请求网址: http:&#x2F;&#x2F;localhost:8601&#x2F;api&#x2F;content&#x2F;courseaudit&#x2F;commit&#x2F;1
+请求方法: POST<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<ul>
+<li>请求路径：/content/courseaudit/commit/{courseId}</li>
+<li>请求方式：POST</li>
+<li>从请求路径可以看出，该接口需要定义在content-api下</li>
+</ul>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@PostMapping</span><span class="token punctuation">(</span><span class="token string">"/courseaudit/commit/&#123;courseId&#125;"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">commitAudit</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathVariable</span> <span class="token class-name">Long</span> courseId<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="接口开发-1"><a href="#接口开发-1" class="headerlink" title="接口开发"></a>接口开发</h2><p><strong>DAO开发</strong></p>
+<ul>
+<li>使用自动生成的Mapper即可</li>
+<li>通过上面的分析，我们要查询的内容如下<ol>
+<li>根据传入的courseId，查询课程基本信息、课程营销信息、课程计划信息，并汇总成课程预发布信息</li>
+<li>向课程预发布表中插入我们汇总好的信息，如果已经存在，则更新，并状态为<code>已提交</code></li>
+<li>更新课程基本信息表的审核状态为<code>已提交</code></li>
+</ol>
+</li>
+<li>约束<ol>
+<li>未提交或审核完后，方可提交审核</li>
+<li>本机构只允许提交本机构的课程</li>
+<li>没有上传图片，不允许提交审核</li>
+<li>没有添加课程计划，不允许提交审核</li>
+</ol>
+</li>
+</ul>
+<p><strong>service</strong></p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">commitAudit</span><span class="token punctuation">(</span><span class="token class-name">Long</span> companyId<span class="token punctuation">,</span><span class="token class-name">Long</span> courseId<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>实现</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">commitAudit</span><span class="token punctuation">(</span><span class="token class-name">Long</span> companyId<span class="token punctuation">,</span> <span class="token class-name">Long</span> courseId<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+
+ <span class="token comment">//约束校验</span>
+ <span class="token class-name">CourseBase</span> courseBase <span class="token operator">=</span> courseBaseMapper<span class="token punctuation">.</span><span class="token function">selectById</span><span class="token punctuation">(</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token comment">//课程审核状态</span>
+ <span class="token class-name">String</span> auditStatus <span class="token operator">=</span> courseBase<span class="token punctuation">.</span><span class="token function">getAuditStatus</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token comment">//当前审核状态为已提交不允许再次提交</span>
+ <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token string">"202003"</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>auditStatus<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+  <span class="token class-name">XuechengPlusException</span><span class="token punctuation">.</span><span class="token function">cast</span><span class="token punctuation">(</span><span class="token string">"当前为等待审核状态，审核完成可以再次提交。"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">&#125;</span>
+ <span class="token comment">//本机构只允许提交本机构的课程</span>
+ <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span>courseBase<span class="token punctuation">.</span><span class="token function">getCompanyId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>companyId<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+  <span class="token class-name">XuechengPlusException</span><span class="token punctuation">.</span><span class="token function">cast</span><span class="token punctuation">(</span><span class="token string">"不允许提交其它机构的课程。"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">&#125;</span>
+
+ <span class="token comment">//课程图片是否填写</span>
+ <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token class-name">StringUtils</span><span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span>courseBase<span class="token punctuation">.</span><span class="token function">getPic</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+  <span class="token class-name">XuechengPlusException</span><span class="token punctuation">.</span><span class="token function">cast</span><span class="token punctuation">(</span><span class="token string">"提交失败，请上传课程图片"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">&#125;</span>
+
+ <span class="token comment">//添加课程预发布记录</span>
+ <span class="token class-name">CoursePublishPre</span> coursePublishPre <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CoursePublishPre</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token comment">//课程基本信息加部分营销信息</span>
+ <span class="token class-name">CourseBaseInfoDto</span> courseBaseInfo <span class="token operator">=</span> courseBaseInfoService<span class="token punctuation">.</span><span class="token function">getCourseBaseInfo</span><span class="token punctuation">(</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token class-name">BeanUtils</span><span class="token punctuation">.</span><span class="token function">copyProperties</span><span class="token punctuation">(</span>courseBaseInfo<span class="token punctuation">,</span>coursePublishPre<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token comment">//课程营销信息</span>
+ <span class="token class-name">CourseMarket</span> courseMarket <span class="token operator">=</span> courseMarketMapper<span class="token punctuation">.</span><span class="token function">selectById</span><span class="token punctuation">(</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token comment">//转为json</span>
+ <span class="token class-name">String</span> courseMarketJson <span class="token operator">=</span> JSON<span class="token punctuation">.</span><span class="token function">toJSONString</span><span class="token punctuation">(</span>courseMarket<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token comment">//将课程营销信息json数据放入课程预发布表</span>
+ coursePublishPre<span class="token punctuation">.</span><span class="token function">setMarket</span><span class="token punctuation">(</span>courseMarketJson<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+ <span class="token comment">//查询课程计划信息</span>
+ <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">TeachplanDto</span><span class="token punctuation">></span></span> teachplanTree <span class="token operator">=</span> teachplanService<span class="token punctuation">.</span><span class="token function">findTeachplanTree</span><span class="token punctuation">(</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token keyword">if</span><span class="token punctuation">(</span>teachplanTree<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">&lt;=</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+  <span class="token class-name">XuechengPlusException</span><span class="token punctuation">.</span><span class="token function">cast</span><span class="token punctuation">(</span><span class="token string">"提交失败，还没有添加课程计划"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">&#125;</span>
+ <span class="token comment">//转json</span>
+ <span class="token class-name">String</span> teachplanTreeString <span class="token operator">=</span> JSON<span class="token punctuation">.</span><span class="token function">toJSONString</span><span class="token punctuation">(</span>teachplanTree<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ coursePublishPre<span class="token punctuation">.</span><span class="token function">setTeachplan</span><span class="token punctuation">(</span>teachplanTreeString<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+ <span class="token comment">//设置预发布记录状态,已提交</span>
+ coursePublishPre<span class="token punctuation">.</span><span class="token function">setStatus</span><span class="token punctuation">(</span><span class="token string">"202003"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token comment">//教学机构id</span>
+ coursePublishPre<span class="token punctuation">.</span><span class="token function">setCompanyId</span><span class="token punctuation">(</span>companyId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token comment">//提交时间</span>
+ coursePublishPre<span class="token punctuation">.</span><span class="token function">setCreateDate</span><span class="token punctuation">(</span><span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token class-name">CoursePublishPre</span> coursePublishPreUpdate <span class="token operator">=</span> coursePublishPreMapper<span class="token punctuation">.</span><span class="token function">selectById</span><span class="token punctuation">(</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token keyword">if</span><span class="token punctuation">(</span>coursePublishPreUpdate <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+  <span class="token comment">//添加课程预发布记录</span>
+  coursePublishPreMapper<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span>coursePublishPre<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">&#125;</span><span class="token keyword">else</span><span class="token punctuation">&#123;</span>
+  coursePublishPreMapper<span class="token punctuation">.</span><span class="token function">updateById</span><span class="token punctuation">(</span>coursePublishPre<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">&#125;</span>
+
+ <span class="token comment">//更新课程基本表的审核状态</span>
+ courseBase<span class="token punctuation">.</span><span class="token function">setAuditStatus</span><span class="token punctuation">(</span><span class="token string">"202003"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ courseBaseMapper<span class="token punctuation">.</span><span class="token function">updateById</span><span class="token punctuation">(</span>courseBase<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>完善</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"> <span class="token annotation punctuation">@ResponseBody</span>
+<span class="token annotation punctuation">@PostMapping</span> <span class="token punctuation">(</span><span class="token string">"/courseaudit/commit/&#123;courseId&#125;"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">commitAudit</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathVariable</span><span class="token punctuation">(</span><span class="token string">"courseId"</span><span class="token punctuation">)</span> <span class="token class-name">Long</span> courseId<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+     <span class="token class-name">Long</span> companyId <span class="token operator">=</span> <span class="token number">1232141425L</span><span class="token punctuation">;</span>
+     coursePublishService<span class="token punctuation">.</span><span class="token function">commitAudit</span><span class="token punctuation">(</span>companyId<span class="token punctuation">,</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+ <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="课程发布"><a href="#课程发布" class="headerlink" title="课程发布"></a>课程发布</h1><p>在网站上展示课程信息需要解决课程信息显示的性能问题，如果速度慢(排除网速)会影响用户的体验性。</p>
+<p>如何去快速搜索课程？</p>
+<p>打开课程详情页面仍然去查询数据库可行吗？</p>
+<p>为了提高网站的速度需要将课程信息进行缓存，并且要将课程信息加入<strong>ES索引库</strong> 方便搜索，下图显示了课程发布后课程信息的流转情况</p>
+<p>1、向内容管理数据库的课程发布表存储课程发布信息，更新课程基本信息表中发布状态为已发布。</p>
+<p>2、向Redis存储课程缓存信息。</p>
+<p>3、向Elasticsearch存储课程索引信息。</p>
+<p>4、请求分布文件系统存储课程静态化页面(即html页面)，实现快速浏览课程详情页面。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230613094307307.png" alt="image-20230613094307307" style="zoom:50%;" /></p>
+<p>课程发布表的数据来源于课程预发布表，它们的结构基本一样，只是课程发布表中的状态是课程发布状态，如下图：</p>
+<p>redis中的课程缓存信息是将课程发布表中的数据转为json进行存储。</p>
+<p>elasticsearch中的课程索引信息是根据搜索需要将课程名称、课程介绍等信息进行索引存储。</p>
+<p>MinIO中存储了课程的静态化页面文件（html网页），查看课程详情是通过文件系统去浏览课程详情页面。</p>
+<h2 id="分布式事务框架搭建"><a href="#分布式事务框架搭建" class="headerlink" title="分布式事务框架搭建"></a>分布式事务框架搭建</h2><h3 id="分布式事务技术方案"><a href="#分布式事务技术方案" class="headerlink" title="分布式事务技术方案"></a><strong>分布式事务技术方案</strong></h3><p>什么是分布式事务？</p>
+<p>现在的需求是课程发布操作后将数据写入数据库、redis、elasticsearch、MinIO四个地方，这四个地方已经不限制在一个数据库内，是由四个分散的服务去提供，与这四个服务去通信需要网络通信，而网络存在不可到达性，这种分布式系统环境下，通过与不同的服务进行网络通信去完成事务称之为<strong>分布式事务。</strong></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">begin transaction； 
+    //1.本地数据库操作：张三减少金额 
+    //2.远程调用：让李四增加金额 
+commit transation<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以设想，当远程调用让李四增加金额成功了，</p>
+<p>由于网络问题远程调用并没有返回，</p>
+<p>此时<strong>本地事务以为提交失败</strong>（其实成功了）就回滚了张三减少金额的操作，</p>
+<p>此时张三和李四的数据就不一致了。 </p>
+<p>说白了就是远程调用是网络出问题了，这种情况</p>
+<h4 id="什么是CAP理论"><a href="#什么是CAP理论" class="headerlink" title="什么是CAP理论"></a><strong>什么是CAP理论</strong></h4><p>CAP是 Consistency、Availability、Partition tolerance三个词语的缩写，分别表示一致性、可用性、分区容忍性。</p>
+<p>CAP理论要强调的是在分布式系统中这三点不可能全部满足，由于是分布式系统就要满足分区容忍性，因为服务之间难免出现网络异常，不能因为局部网络异常导致整个系统不可用。</p>
+<p>满足P那么C和A不能同时满足：</p>
+<p>比如我们添加一个用户小明的信息，该信息先添加到结点1中，再同步到结点2中，如下图：</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230613094918104.png" alt="image-20230613094918104" style="zoom:50%;" /></p>
+<p>如果要满足C一致性，必须等待小明的信息同步完成系统才可用（否则会出现请求到结点2时查询不到数据，违反了一致性），在信息同步过程中系统是不可用的，所以满足C的同时无法满足A。</p>
+<p>如果要满足A可用性，要时刻保证系统可用就不用等待信息同步完成，此时系统的一致性无法满足。</p>
+<p>所以在分布式系统中进行分布式事务控制，要么保证CP、要么保证AP。</p>
+<p>CP的场景：满足C舍弃A，强调一致性（绝对安全。一般是转账）。</p>
+<p>跨行转账：一次转账请求要等待双方银行系统都完成整个事务才算完成，只要其中一个失败另一方执行回滚操作。</p>
+<p>开户操作：在业务系统开户同时要在运营商开户，任何一方开户失败该用户都不可使用，所以要满足CP。</p>
+<p>AP的场景：满足A舍弃C，强调可用性。</p>
+<p>订单退款，今日退款成功，明日账户到账，只要用户可以接受在一定时间内到账即可。</p>
+<p>注册送积分，注册成功积分在24分到账。</p>
+<p>在实际应用中符合AP的场景较多，其实虽然AP舍弃C一致性，实际上最终数据还是达到了一致，也就满足了最终一致性，所以业界定义了BASE理论。</p>
+<p>什么是BASE理论？</p>
+<p>BASE 是 Basically Available(基本可用)、Soft state(软状态)和 Eventually consistent (最终一致性)三个短语的缩写。</p>
+<p>分布式事务控制有哪些常用的技术方案？</p>
+<p>实现CP就是要实现强一致性:</p>
+<p>使用Seata框架基于AT模式实现</p>
+<p>使用Seata框架基于TCC模式实现。</p>
+<p>实现AP则要保证最终数据一致性:</p>
+<p>使用消息队列通知的方式去实现，通知失败自动重试，达到最大失败次数需要人工处理；</p>
+<p>使用任务调度的方案，启动任务调度将课程信息由数据库同步到elasticsearch、MinIO、redis中。</p>
+<h3 id="课程发布的事务控制方案"><a href="#课程发布的事务控制方案" class="headerlink" title="课程发布的事务控制方案"></a><strong>课程发布的事务控制方案</strong></h3><p>学习了这么多的理论，回到课程发布，执行课程发布操作后要向数据库、redis、elasticsearch、MinIO写四份数据，这个场景用哪种方案？</p>
+<p>应该强调可用性AP，最终保证一致性即可</p>
+<p>课程发布操作后，先更新数据库中的课程发布状态，更新后向redis、elasticsearch、MinIO写课程信息，只要在一定时间内最终向redis、elasticsearch、MinIO写数据成功即可。</p>
+<p>步骤：</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230613130528562.png" alt="image-20230613130528562"></p>
+<p>方案名称： 本地消息表+定时任务调度的方案来实现最终数据的一致性。</p>
+<p>1、执行发布操作，内容管理服务存储课程<strong>发布表</strong>的同时向<strong>消息表</strong>添加一条“课程发布任务”。这里使用本地事务保证课程发布信息保存成功，同时消息表也保存成功。</p>
+<p>2、<strong>任务调度服务定时调度</strong>内容管理服务<strong>扫描消息表</strong>，由于课程发布操作后向消息表插入一条课程发布任务，此时扫描到一条任务。</p>
+<p>3、拿到任务开始执行任务，分别向redis、elasticsearch及文件系统存储数据。</p>
+<p>4、任务完成后<strong>删除</strong>消息表记录。</p>
+<h3 id="发布接口定义"><a href="#发布接口定义" class="headerlink" title="发布接口定义"></a>发布接口定义</h3><p>根据课程发布的分布式事务控制方案，课程发布操作首先通过本地事务向课程发布表写入课程发布信息并向消息表插入一条消息，这里定义的课程发布接口要实现该功能。</p>
+<p>在内容管理接口工程中定义课程发布接口。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"课程发布"</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@ResponseBody</span>
+<span class="token annotation punctuation">@PostMapping</span> <span class="token punctuation">(</span><span class="token string">"/coursepublish/&#123;courseId&#125;"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">coursepublish</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathVariable</span><span class="token punctuation">(</span><span class="token string">"courseId"</span><span class="token punctuation">)</span> <span class="token class-name">Long</span> courseId<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="接口开发（消息-任务表同步）"><a href="#接口开发（消息-任务表同步）" class="headerlink" title="接口开发（消息/任务表同步）"></a>接口开发（消息/任务表同步）</h3><p>课程发布操作对<strong>数据库操</strong>作如下（整体是一个事务）：</p>
+<p>1、向课程发布表course_publish插入一条记录,记录来源于课程预发布表，如果存在则更新，发布状态为：已发布。</p>
+<p>2、更新course_base表的课程发布状态为：已发布</p>
+<p>3、删除课程预发布表的对应记录。</p>
+<p>4、向mq_message消息表插入一条消息，消息类型为：course_publish</p>
+<p>后续就是 向 redis ES MinIO插入数据，<strong>xxljob循环遍历定时任务来保证最终一致性，这里如果出现问题就是运维的事情了</strong></p>
+<p>约束：</p>
+<p>1、课程审核通过方可发布。</p>
+<p>2、本机构只允许发布本机构的课程。</p>
+<p>service</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">publish</span><span class="token punctuation">(</span><span class="token class-name">Long</span> companyId<span class="token punctuation">,</span><span class="token class-name">Long</span> courseId<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>实现</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Transactional</span>
+<span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">publish</span><span class="token punctuation">(</span><span class="token class-name">Long</span> companyId<span class="token punctuation">,</span> <span class="token class-name">Long</span> courseId<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+
+ <span class="token comment">//约束校验</span>
+ <span class="token comment">//查询课程预发布表</span>
+ <span class="token class-name">CoursePublishPre</span> coursePublishPre <span class="token operator">=</span> coursePublishPreMapper<span class="token punctuation">.</span><span class="token function">selectById</span><span class="token punctuation">(</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token keyword">if</span><span class="token punctuation">(</span>coursePublishPre <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+  <span class="token class-name">XuechengPlusException</span><span class="token punctuation">.</span><span class="token function">cast</span><span class="token punctuation">(</span><span class="token string">"请先提交课程审核，审核通过才可以发布"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">&#125;</span>
+ <span class="token comment">//本机构只允许提交本机构的课程</span>
+ <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span>coursePublishPre<span class="token punctuation">.</span><span class="token function">getCompanyId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>companyId<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+  <span class="token class-name">XuechengPlusException</span><span class="token punctuation">.</span><span class="token function">cast</span><span class="token punctuation">(</span><span class="token string">"不允许提交其它机构的课程。"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">&#125;</span>
+
+
+ <span class="token comment">//课程审核状态</span>
+ <span class="token class-name">String</span> auditStatus <span class="token operator">=</span> coursePublishPre<span class="token punctuation">.</span><span class="token function">getStatus</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token comment">//审核通过方可发布</span>
+ <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token string">"202004"</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>auditStatus<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+  <span class="token class-name">XuechengPlusException</span><span class="token punctuation">.</span><span class="token function">cast</span><span class="token punctuation">(</span><span class="token string">"操作失败，课程审核通过方可发布。"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">&#125;</span>
+
+ <span class="token comment">//保存课程发布信息</span>
+ <span class="token function">saveCoursePublish</span><span class="token punctuation">(</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+ <span class="token comment">//保存消息表</span>
+ <span class="token function">saveCoursePublishMessage</span><span class="token punctuation">(</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+ <span class="token comment">//删除课程预发布表对应记录</span>
+ coursePublishPreMapper<span class="token punctuation">.</span><span class="token function">deleteById</span><span class="token punctuation">(</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">&#125;</span>
+
+
+<span class="token comment">/**
+ * @description 保存课程发布信息
+ * @param courseId  课程id
+ * @return void
+ * @author Mr.M
+ * @date 2022/9/20 16:32
+ */</span>
+<span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">saveCoursePublish</span><span class="token punctuation">(</span><span class="token class-name">Long</span> courseId<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+ <span class="token comment">//整合课程发布信息</span>
+ <span class="token comment">//查询课程预发布表</span>
+ <span class="token class-name">CoursePublishPre</span> coursePublishPre <span class="token operator">=</span> coursePublishPreMapper<span class="token punctuation">.</span><span class="token function">selectById</span><span class="token punctuation">(</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token keyword">if</span><span class="token punctuation">(</span>coursePublishPre <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+  <span class="token class-name">XuechengPlusException</span><span class="token punctuation">.</span><span class="token function">cast</span><span class="token punctuation">(</span><span class="token string">"课程预发布数据为空"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">&#125;</span>
+
+ <span class="token class-name">CoursePublish</span> coursePublish <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CoursePublish</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+ <span class="token comment">//拷贝到课程发布对象</span>
+ <span class="token class-name">BeanUtils</span><span class="token punctuation">.</span><span class="token function">copyProperties</span><span class="token punctuation">(</span>coursePublishPre<span class="token punctuation">,</span>coursePublish<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ coursePublish<span class="token punctuation">.</span><span class="token function">setStatus</span><span class="token punctuation">(</span><span class="token string">"203002"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token class-name">CoursePublish</span> coursePublishUpdate <span class="token operator">=</span> coursePublishMapper<span class="token punctuation">.</span><span class="token function">selectById</span><span class="token punctuation">(</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token keyword">if</span><span class="token punctuation">(</span>coursePublishUpdate <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+  coursePublishMapper<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span>coursePublish<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">&#125;</span><span class="token keyword">else</span><span class="token punctuation">&#123;</span>
+  coursePublishMapper<span class="token punctuation">.</span><span class="token function">updateById</span><span class="token punctuation">(</span>coursePublish<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">&#125;</span>
+ <span class="token comment">//更新课程基本表的发布状态</span>
+ <span class="token class-name">CourseBase</span> courseBase <span class="token operator">=</span> courseBaseMapper<span class="token punctuation">.</span><span class="token function">selectById</span><span class="token punctuation">(</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ courseBase<span class="token punctuation">.</span><span class="token function">setStatus</span><span class="token punctuation">(</span><span class="token string">"203002"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ courseBaseMapper<span class="token punctuation">.</span><span class="token function">updateById</span><span class="token punctuation">(</span>courseBase<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">&#125;</span>
+<span class="token comment">/**
+ * @description 保存消息表记录，稍后实现
+ * @param courseId  课程id
+ * @return void
+ * @author Mr.M
+ * @date 2022/9/20 16:32
+ */</span>
+<span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">saveCoursePublishMessage</span><span class="token punctuation">(</span><span class="token class-name">Long</span> courseId<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>完善</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"> <span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"课程发布"</span><span class="token punctuation">)</span>
+ <span class="token annotation punctuation">@ResponseBody</span>
+ <span class="token annotation punctuation">@PostMapping</span> <span class="token punctuation">(</span><span class="token string">"/coursepublish/&#123;courseId&#125;"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">coursepublish</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathVariable</span><span class="token punctuation">(</span><span class="token string">"courseId"</span><span class="token punctuation">)</span> <span class="token class-name">Long</span> courseId<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+     <span class="token class-name">Long</span> companyId <span class="token operator">=</span> <span class="token number">1232141425L</span><span class="token punctuation">;</span>
+     coursePublishService<span class="token punctuation">.</span><span class="token function">publish</span><span class="token punctuation">(</span>companyId<span class="token punctuation">,</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+ <span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>先测试约束条件：</p>
+<p>1、在未提交审核时进行课程发布测试。</p>
+<p>2、在课程未审核通过时进行发布。</p>
+<p>正常流程测试：</p>
+<p>1、提交审核课程</p>
+<p>2、手动修改课程预发布表与课程基本信息的审核状态为审核通过。</p>
+<p>3、执行课程发布</p>
+<p>4、观察课程发布表记录是否正常，课程预发布表记录已经删除，课程基本信息表与课程发布表的发布状态为”发布“。</p>
+<p>使用前后端联调方式测试。</p>
+<h3 id="消息处理SDK（分布式任务框架搭建）"><a href="#消息处理SDK（分布式任务框架搭建）" class="headerlink" title="消息处理SDK（分布式任务框架搭建）"></a>消息处理SDK（分布式任务框架搭建）</h3><p>在发布任务，将一个任务放进消息表后，后续xxljob调用其他三个任务组件处理消息，有关于消息处理的步骤有哪些?</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s1.ax1x.com/2023/03/04/ppAjK8P.png" alt="img"></p>
+<ol>
+<li>新增消息表</li>
+<li>扫描消息表</li>
+<li>更新消息表</li>
+<li>删除消息表</li>
+</ol>
+<p>本质上，所有这种需要满足AP（可用性优先、但要满足最终一致性）的，使用 本地消息表+任务调度的方式 都需要这些消息处理步骤，那么</p>
+<ul>
+<li>如果在每个地方都实现一套针对消息定时扫描、处理的逻辑，基本上都是重复的，软件的复用性太低、成本太高</li>
+<li>如何解决这个问题？<ul>
+<li>我们可以将消息处理相关的逻辑做成一个通用的东西，如果将消息处理做成一个SDK工具包，相比较通用服务，不仅可以解决将消息处理通用化的需求，还可以降低成本</li>
+</ul>
+</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s1.ax1x.com/2023/03/04/ppAjUCq.png" alt="img"></p>
+<ul>
+<li>拿课程发布任务举例，执行课程发布任务是要向Redis、索引库等同步数据，其他任务的执行逻辑是不同的，所以执行任务在SDK中不用实现，只需要提供一个抽象方法由具体的执行任务方去实现</li>
+</ul>
+<ul>
+<li><p>在视频处理章节介绍的视频处理的<strong>幂等性</strong>方案，这里可以采用类似方案</p>
+<ul>
+<li>任务执行完成后，从消息表删除</li>
+<li>如果消息表的状态是完成或不存在，则无需执行</li>
+</ul>
+</li>
+<li><p>如何保证任务<strong>不重复执行</strong>？</p>
+<ul>
+<li>任务调度采用分片广播，根据分片参数去获取处理任务，配置调度过期策略为<code>忽略</code>，配置任务阻塞处理策略为<code>丢弃后续调度</code></li>
+</ul>
+</li>
+<li>例如课程发布任务需要执行3个同步操作：存储课程到Redis、存储课程到索引库、存储课程页面到MinIO。如果其中一个小任务已经完成，也不应该去重复执行这个小任务，那么该如何设计呢？（顺序性？）<ul>
+<li>将小任务作为任务的不同阶段，在消息表中设立阶段状态</li>
+<li>每完成一个阶段，就在对应的阶段状态字段打上标记，即使大任务还没有完成，重新执行大任务时，也会跳过执行完毕了的小任务</li>
+</ul>
+</li>
+</ul>
+<p>综上所述，除了消息表的基本的增、删、改、查的接口外，消息SDK还具有如下接口功能：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>xuecheng<span class="token punctuation">.</span>messagesdk<span class="token punctuation">.</span>service</span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token namespace">com<span class="token punctuation">.</span>baomidou<span class="token punctuation">.</span>mybatisplus<span class="token punctuation">.</span>extension<span class="token punctuation">.</span>service<span class="token punctuation">.</span></span><span class="token class-name">IService</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">com<span class="token punctuation">.</span>xuecheng<span class="token punctuation">.</span>messagesdk<span class="token punctuation">.</span>model<span class="token punctuation">.</span>po<span class="token punctuation">.</span></span><span class="token class-name">MqMessage</span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">List</span><span class="token punctuation">;</span>
+
+<span class="token comment">/**
+ * &lt;p>
+ *  服务类
+ * &lt;/p>
+ *
+ * @author Mr.M
+ * @since 2022-09-21
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">MqMessageService</span> <span class="token keyword">extends</span> <span class="token class-name">IService</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">MqMessage</span><span class="token punctuation">></span></span> <span class="token punctuation">&#123;</span>
+
+    <span class="token comment">/**
+     * @description 扫描消息表记录，采用与扫描视频处理表相同的思路
+     * @param shardIndex 分片序号
+     * @param shardTotal 分片总数
+     * @param count 扫描记录数
+     * @return java.util.List 消息记录
+     */</span>
+    <span class="token keyword">public</span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">MqMessage</span><span class="token punctuation">></span></span> <span class="token function">getMessageList</span><span class="token punctuation">(</span><span class="token keyword">int</span> shardIndex<span class="token punctuation">,</span> <span class="token keyword">int</span> shardTotal<span class="token punctuation">,</span>  <span class="token class-name">String</span> messageType<span class="token punctuation">,</span><span class="token keyword">int</span> count<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">MqMessage</span> <span class="token function">addMessage</span><span class="token punctuation">(</span><span class="token class-name">String</span> messageType<span class="token punctuation">,</span><span class="token class-name">String</span> businessKey1<span class="token punctuation">,</span><span class="token class-name">String</span> businessKey2<span class="token punctuation">,</span><span class="token class-name">String</span> businessKey3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token keyword">public</span> <span class="token keyword">int</span> <span class="token function">completed</span><span class="token punctuation">(</span><span class="token keyword">long</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+
+    <span class="token keyword">public</span> <span class="token keyword">int</span> <span class="token function">completedStageOne</span><span class="token punctuation">(</span><span class="token keyword">long</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token keyword">int</span> <span class="token function">completedStageTwo</span><span class="token punctuation">(</span><span class="token keyword">long</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token keyword">int</span> <span class="token function">completedStageThree</span><span class="token punctuation">(</span><span class="token keyword">long</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token keyword">int</span> <span class="token function">completedStageFour</span><span class="token punctuation">(</span><span class="token keyword">long</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+
+    <span class="token keyword">public</span> <span class="token keyword">int</span> <span class="token function">getStageOne</span><span class="token punctuation">(</span><span class="token keyword">long</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token keyword">int</span> <span class="token function">getStageTwo</span><span class="token punctuation">(</span><span class="token keyword">long</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token keyword">int</span> <span class="token function">getStageThree</span><span class="token punctuation">(</span><span class="token keyword">long</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token keyword">int</span> <span class="token function">getStageFour</span><span class="token punctuation">(</span><span class="token keyword">long</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230613203418916.png" alt="image-20230613203418916"></p>
+<p>这些SDK已经写好了，我们仅需将资料中的SDK微服务拷贝到 项目代码目录下</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230613134509308.png" alt="image-20230613134509308"></p>
+<p>消息SDK提供消息处理抽象类，此抽象类供使用方去继承使用，</p>
+<p>首先谁用谁添加依赖</p>
+<p>如在内容管理服务用</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230613134826637.png" alt="image-20230613134826637"></p>
+<p>那么刚才往消息表里面写数据可以用sdk工具包的内容,补全往课程发布表添加项目的函数</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">saveCoursePublishMessage</span><span class="token punctuation">(</span><span class="token class-name">Long</span> courseId<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+ <span class="token class-name">MqMessage</span> mqMessage <span class="token operator">=</span> mqMessageService<span class="token punctuation">.</span><span class="token function">addMessage</span><span class="token punctuation">(</span><span class="token string">"course_publish"</span><span class="token punctuation">,</span> <span class="token class-name">String</span><span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>courseId<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token keyword">if</span><span class="token punctuation">(</span>mqMessage<span class="token operator">==</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+  <span class="token class-name">XueChengPlusException</span><span class="token punctuation">.</span><span class="token function">cast</span><span class="token punctuation">(</span><span class="token class-name">CommonError</span><span class="token punctuation">.</span>UNKOWN_ERROR<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>ok 插入消息完成</p>
+<p>后面该处理消息了</p>
+<h4 id="课程发布任务处理"><a href="#课程发布任务处理" class="headerlink" title="课程发布任务处理"></a><strong>课程发布任务处理</strong></h4><p>关于消息的处理，SDK工具包也帮我们写了一部分</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>xuecheng<span class="token punctuation">.</span>messagesdk<span class="token punctuation">.</span>service</span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token namespace">com<span class="token punctuation">.</span>xuecheng<span class="token punctuation">.</span>messagesdk<span class="token punctuation">.</span>model<span class="token punctuation">.</span>po<span class="token punctuation">.</span></span><span class="token class-name">MqMessage</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">lombok<span class="token punctuation">.</span>extern<span class="token punctuation">.</span>slf4j<span class="token punctuation">.</span></span><span class="token class-name">Slf4j</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>beans<span class="token punctuation">.</span>factory<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">Autowired</span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">List</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>concurrent<span class="token punctuation">.</span></span><span class="token operator">*</span><span class="token punctuation">;</span>
+
+<span class="token comment">/**
+ * @author Mr.M
+ * @version 1.0
+ * @description 消息处理抽象类
+ * @date 2022/9/21 19:44
+ */</span>
+<span class="token annotation punctuation">@Slf4j</span>
+<span class="token annotation punctuation">@Data</span>
+<span class="token keyword">public</span> <span class="token keyword">abstract</span> <span class="token keyword">class</span> <span class="token class-name">MessageProcessAbstract</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token class-name">MqMessageService</span> mqMessageService<span class="token punctuation">;</span>
+
+
+    <span class="token comment">/**
+     * @param mqMessage 执行任务内容
+     * @return boolean true:处理成功，false处理失败
+     * @description 任务处理
+     * @author Mr.M
+     * @date 2022/9/21 19:47
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">abstract</span> <span class="token keyword">boolean</span> <span class="token function">execute</span><span class="token punctuation">(</span><span class="token class-name">MqMessage</span> mqMessage<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+
+    <span class="token comment">/**
+     * @description 扫描消息表多线程执行任务
+     * @param shardIndex 分片序号
+     * @param shardTotal 分片总数
+     * @param messageType  消息类型
+     * @param count  一次取出任务总数
+     * @param timeout 预估任务执行时间,到此时间如果任务还没有结束则强制结束 单位秒
+     * @return void
+     * @author Mr.M
+     * @date 2022/9/21 20:35
+    */</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">process</span><span class="token punctuation">(</span><span class="token keyword">int</span> shardIndex<span class="token punctuation">,</span> <span class="token keyword">int</span> shardTotal<span class="token punctuation">,</span>  <span class="token class-name">String</span> messageType<span class="token punctuation">,</span><span class="token keyword">int</span> count<span class="token punctuation">,</span><span class="token keyword">long</span> timeout<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+
+        <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+            <span class="token comment">//扫描消息表获取任务清单</span>
+            <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">MqMessage</span><span class="token punctuation">></span></span> messageList <span class="token operator">=</span> mqMessageService<span class="token punctuation">.</span><span class="token function">getMessageList</span><span class="token punctuation">(</span>shardIndex<span class="token punctuation">,</span> shardTotal<span class="token punctuation">,</span>messageType<span class="token punctuation">,</span> count<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">//任务个数</span>
+            <span class="token keyword">int</span> size <span class="token operator">=</span> messageList<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            log<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"取出待处理消息"</span><span class="token operator">+</span>size<span class="token operator">+</span><span class="token string">"条"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span><span class="token punctuation">(</span>size<span class="token operator">&lt;=</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+                <span class="token keyword">return</span> <span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+            <span class="token comment">//创建线程池</span>
+            <span class="token class-name">ExecutorService</span> threadPool <span class="token operator">=</span> <span class="token class-name">Executors</span><span class="token punctuation">.</span><span class="token function">newFixedThreadPool</span><span class="token punctuation">(</span>size<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">//计数器</span>
+            <span class="token class-name">CountDownLatch</span> countDownLatch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CountDownLatch</span><span class="token punctuation">(</span>size<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            messageList<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>message <span class="token operator">-></span> <span class="token punctuation">&#123;</span>
+                threadPool<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token punctuation">&#123;</span>
+                    log<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"开始任务:&#123;&#125;"</span><span class="token punctuation">,</span>message<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token comment">//处理任务</span>
+                    <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+                        <span class="token keyword">boolean</span> result <span class="token operator">=</span> <span class="token function">execute</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        <span class="token keyword">if</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+                            log<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"任务执行成功:&#123;&#125;)"</span><span class="token punctuation">,</span>message<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                            <span class="token comment">//更新任务状态,删除消息表记录,添加到历史表</span>
+                            <span class="token keyword">int</span> completed <span class="token operator">=</span> mqMessageService<span class="token punctuation">.</span><span class="token function">completed</span><span class="token punctuation">(</span>message<span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                            <span class="token keyword">if</span> <span class="token punctuation">(</span>completed<span class="token operator">></span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+                                log<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"任务执行成功:&#123;&#125;"</span><span class="token punctuation">,</span>message<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                            <span class="token punctuation">&#125;</span><span class="token keyword">else</span><span class="token punctuation">&#123;</span>
+                                log<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"任务执行失败:&#123;&#125;"</span><span class="token punctuation">,</span>message<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                            <span class="token punctuation">&#125;</span>
+                        <span class="token punctuation">&#125;</span>
+                    <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                        e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        log<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"任务出现异常:&#123;&#125;,任务:&#123;&#125;"</span><span class="token punctuation">,</span>e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>message<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token punctuation">&#125;</span>
+                    <span class="token comment">//计数</span>
+                    countDownLatch<span class="token punctuation">.</span><span class="token function">countDown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    log<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"结束任务:&#123;&#125;"</span><span class="token punctuation">,</span>message<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+                <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">//等待,给一个充裕的超时时间,防止无限等待，到达超时时间还没有处理完成则结束任务</span>
+            countDownLatch<span class="token punctuation">.</span><span class="token function">await</span><span class="token punctuation">(</span>timeout<span class="token punctuation">,</span><span class="token class-name">TimeUnit</span><span class="token punctuation">.</span>SECONDS<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"结束...."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+           e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token punctuation">&#125;</span>
+
+    <span class="token punctuation">&#125;</span>
+
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以看到，执行逻辑（任务分配逻辑）和之前的处理视频一致，只不过，这里的execute（）函数就是具体的执行过程，需要我们自己取编写，</p>
+<p>所以秩序继承这个抽象类作为一个模板来重写他的具体任务执行逻辑即可</p>
+<p>现在我们来直接编写执行器任务</p>
+<p>service工程导入xxljob依赖</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token generics"><span class="token punctuation">&lt;</span>dependency<span class="token punctuation">></span></span>
+    <span class="token generics"><span class="token punctuation">&lt;</span>groupId<span class="token punctuation">></span></span>com<span class="token punctuation">.</span>xuxueli<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span>
+    <span class="token generics"><span class="token punctuation">&lt;</span>artifactId<span class="token punctuation">></span></span>xxl<span class="token operator">-</span>job<span class="token operator">-</span>core<span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>dependency<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在内容service下新建jobhandler（存放任务）</p>
+<p>编写任务需要继承刚才的抽象类MessageProcessAbstract（抽象类帮我们分配任务）</p>
+<p>下面简单写一下三个小任务的伪代码（具体实现后面再写）</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Slf4j</span>
+<span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">CoursePublishTask</span> <span class="token keyword">extends</span> <span class="token class-name">MessageProcessAbstract</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token comment">//课程发布任务处理</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">execute</span><span class="token punctuation">(</span><span class="token class-name">MqMessage</span> mqMessage<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">//获取消息相关的业务信息</span>
+        <span class="token class-name">String</span> businessKey1 <span class="token operator">=</span> mqMessage<span class="token punctuation">.</span><span class="token function">getBusinessKey1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">long</span> courseId <span class="token operator">=</span> <span class="token class-name">Int</span><span class="token punctuation">.</span><span class="token function">parseInt</span><span class="token punctuation">(</span>businessKey1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//1、课程静态化 将课程预览静态资源放在MinIO</span>
+        <span class="token function">generateCourseHtml</span><span class="token punctuation">(</span>mqMessage<span class="token punctuation">,</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//2、将课程信息存储在 ES 索引库里面</span>
+        <span class="token function">saveCourseIndex</span><span class="token punctuation">(</span>mqMessage<span class="token punctuation">,</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//3、将课程信息存储在 Redis里面</span>
+        <span class="token function">saveCourseCache</span><span class="token punctuation">(</span>mqMessage<span class="token punctuation">,</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+
+    <span class="token comment">//生成课程静态化页面并上传至文件系统</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">generateCourseHtml</span><span class="token punctuation">(</span><span class="token class-name">MqMessage</span> mqMessage<span class="token punctuation">,</span><span class="token keyword">long</span> courseId<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+
+        log<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"开始进行课程静态化,课程id:&#123;&#125;"</span><span class="token punctuation">,</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//消息id</span>
+        <span class="token class-name">Long</span> id <span class="token operator">=</span> mqMessage<span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//消息处理的service</span>
+        <span class="token class-name">MqMessageService</span> mqMessageService <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getMqMessageService</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//消息幂等性处理(设置该阶段的状态)</span>
+        <span class="token keyword">int</span> stageOne <span class="token operator">=</span> mqMessageService<span class="token punctuation">.</span><span class="token function">getStageOne</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>stageOne <span class="token operator">></span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+            log<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"课程静态化已处理直接返回，课程id:&#123;&#125;"</span><span class="token punctuation">,</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> <span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">TimeUnit</span><span class="token punctuation">.</span>SECONDS<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token comment">//保存第一阶段状态</span>
+        mqMessageService<span class="token punctuation">.</span><span class="token function">completedStageOne</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token comment">//将课程信息缓存至redis</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">saveCourseCache</span><span class="token punctuation">(</span><span class="token class-name">MqMessage</span> mqMessage<span class="token punctuation">,</span><span class="token keyword">long</span> courseId<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+        log<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"将课程信息缓存至redis,课程id:&#123;&#125;"</span><span class="token punctuation">,</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">TimeUnit</span><span class="token punctuation">.</span>SECONDS<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">//保存课程索引信息</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">saveCourseIndex</span><span class="token punctuation">(</span><span class="token class-name">MqMessage</span> mqMessage<span class="token punctuation">,</span><span class="token keyword">long</span> courseId<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+        log<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"保存课程索引信息,课程id:&#123;&#125;"</span><span class="token punctuation">,</span>courseId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">TimeUnit</span><span class="token punctuation">.</span>SECONDS<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+
+    <span class="token punctuation">&#125;</span>
+
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>添加调度入口：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//任务调度入口</span>
+ <span class="token annotation punctuation">@XxlJob</span><span class="token punctuation">(</span><span class="token string">"CoursePublishJobHandler"</span><span class="token punctuation">)</span>
+ <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">coursePublishJobHandler</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">&#123;</span>
+     <span class="token comment">// 分片参数</span>
+     <span class="token keyword">int</span> shardIndex <span class="token operator">=</span> <span class="token class-name">XxlJobHelper</span><span class="token punctuation">.</span><span class="token function">getShardIndex</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">int</span> shardTotal <span class="token operator">=</span> <span class="token class-name">XxlJobHelper</span><span class="token punctuation">.</span><span class="token function">getShardTotal</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     log<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"shardIndex="</span><span class="token operator">+</span>shardIndex<span class="token operator">+</span><span class="token string">",shardTotal="</span><span class="token operator">+</span>shardTotal<span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token comment">//参数:分片序号、分片总数、消息类型、一次最多取到的任务数量、一次任务调度执行的超时时间</span>
+     <span class="token function">process</span><span class="token punctuation">(</span>shardIndex<span class="token punctuation">,</span>shardTotal<span class="token punctuation">,</span><span class="token string">"course_publish"</span><span class="token punctuation">,</span><span class="token number">30</span><span class="token punctuation">,</span><span class="token number">60</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="在xxl-job配置任务"><a href="#在xxl-job配置任务" class="headerlink" title="在xxl-job配置任务"></a>在xxl-job配置任务</h4><p>nacos配置xxljob执行器信息，才能被发现</p>
+<pre class="line-numbers language-yml" data-language="yml"><code class="language-yml">xxl:
+  job:
+    admin: 
+      addresses: http:&#x2F;&#x2F;192.168.101.65:18088&#x2F;xxl-job-admin&#x2F;
+    executor:
+      appname: course-publish-job
+      address:
+      ip:
+      port: 10999
+      logpath: &#x2F;data&#x2F;applogs&#x2F;xxl-job-jobhandler
+      logretentiondays: 30
+    accessToken: default_token<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>xxljob还有个config，直接复制 mediaservice里面的</p>
+<p>添加课程发布执行器</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230613214639403.png" alt="image-20230613214639403"></p>
+<p>捯饬了半天终于上报成功了</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230613222952451.png" alt="image-20230613222952451"></p>
+<p>在xxl-job添加任务</p>
+<ul>
+<li>JobHandler中填写@XxlJob注解中的内容</li>
+</ul>
+<p>启动任务测试，控制台可以看到<code>发布任务执行中...</code>字样</p>
+<p>当然记得在发布表上添加数据哈</p>
+<p>测试成功</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230613223744557.png" alt="image-20230613223744557"></p>
+<p>至此，分布式事务的大体框架搭建完成</p>
+<p>下面开始编写分布式任务的具体任务</p>
+<h2 id="子任务：页面静态化"><a href="#子任务：页面静态化" class="headerlink" title="子任务：页面静态化"></a>子任务：页面静态化</h2><h3 id="页面静态化介绍"><a href="#页面静态化介绍" class="headerlink" title="页面静态化介绍"></a><strong>页面静态化</strong>介绍</h3><p>课程预览功能通过模板引擎技术在页面模板中填充数据，生成html页面，这个过程是当客户端请求服务器时服务器才开始渲染生成html页面，最后响应给浏览器，<strong>服务端渲染的并发能力</strong>是<strong>有限</strong>的。</p>
+<p><strong>页面静态化</strong>则强调将生成html页面的过程提前，<strong>提前使用模板引擎技术生成html页面</strong>，当客户端请求时直接请求html页面，由于是静态页面可以<strong>使用nginx</strong>、apache等高性能的web服务器<strong>访问</strong>，并发性能高。（<strong>就不用请求web服务器了</strong>）</p>
+<p><strong>什么时候能用页面静态化技术？</strong></p>
+<p>当数据<strong>变化不频繁</strong>，一旦生成静态页面很长一段时间内很少变化，此时可以使用页面静态化。因为如果数据变化频繁，一旦改变就需要重新生成静态页面，导致维护静态页面的工作量很大。</p>
+<p>根据课程发布的业务需求，虽然课程发布后仍可以修改课程信息，但需要经过课程审核，且修改频度不大，所以适合使用页面静态化。</p>
+<h3 id="静态化测试"><a href="#静态化测试" class="headerlink" title="静态化测试"></a><strong>静态化测试</strong></h3><p>下边使用freemarker技术对页面静态化生成html页面。</p>
+<p>在内容管理service工程中添加freemarker依赖</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token generics"><span class="token punctuation">&lt;</span>dependency<span class="token punctuation">></span></span>
+    <span class="token generics"><span class="token punctuation">&lt;</span>groupId<span class="token punctuation">></span></span>org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>boot<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span>
+    <span class="token generics"><span class="token punctuation">&lt;</span>artifactId<span class="token punctuation">></span></span>spring<span class="token operator">-</span>boot<span class="token operator">-</span>starter<span class="token operator">-</span>freemarker<span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>dependency<span class="token operator">></span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>编写测试方法</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>xuecheng<span class="token punctuation">.</span>content</span><span class="token punctuation">;</span>
+
+<span class="token annotation punctuation">@SpringBootTest</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">FreemarkerTest</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token class-name">CoursePublishService</span> coursePublishService<span class="token punctuation">;</span>
+
+
+    <span class="token comment">//测试页面静态化</span>
+    <span class="token annotation punctuation">@Test</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testGenerateHtmlByTemplate</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">IOException</span><span class="token punctuation">,</span> <span class="token class-name">TemplateException</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">//配置freemarker</span>
+        <span class="token class-name">Configuration</span> configuration <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Configuration</span><span class="token punctuation">(</span><span class="token class-name">Configuration</span><span class="token punctuation">.</span><span class="token function">getVersion</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">//加载模板</span>
+        <span class="token comment">//选指定模板路径,classpath下templates下</span>
+        <span class="token comment">//得到classpath路径</span>
+        <span class="token class-name">String</span> classpath <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getResource</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getPath</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        configuration<span class="token punctuation">.</span><span class="token function">setDirectoryForTemplateLoading</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">File</span><span class="token punctuation">(</span>classpath <span class="token operator">+</span> <span class="token string">"/templates/"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//设置字符编码</span>
+        configuration<span class="token punctuation">.</span><span class="token function">setDefaultEncoding</span><span class="token punctuation">(</span><span class="token string">"utf-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">//指定模板文件名称</span>
+        <span class="token class-name">Template</span> template <span class="token operator">=</span> configuration<span class="token punctuation">.</span><span class="token function">getTemplate</span><span class="token punctuation">(</span><span class="token string">"course_template.ftl"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">//准备数据</span>
+        <span class="token class-name">CoursePreviewDto</span> coursePreviewInfo <span class="token operator">=</span> coursePublishService<span class="token punctuation">.</span><span class="token function">getCoursePreviewInfo</span><span class="token punctuation">(</span><span class="token number">2L</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">></span></span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"model"</span><span class="token punctuation">,</span> coursePreviewInfo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">//静态化</span>
+        <span class="token comment">//参数1：模板，参数2：数据模型</span>
+        <span class="token class-name">String</span> content <span class="token operator">=</span> <span class="token class-name">FreeMarkerTemplateUtils</span><span class="token punctuation">.</span><span class="token function">processTemplateIntoString</span><span class="token punctuation">(</span>template<span class="token punctuation">,</span> map<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>content<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//将静态化内容输出到文件中</span>
+        <span class="token class-name">InputStream</span> inputStream <span class="token operator">=</span> <span class="token class-name">IOUtils</span><span class="token punctuation">.</span><span class="token function">toInputStream</span><span class="token punctuation">(</span>content<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//输出流</span>
+        <span class="token class-name">FileOutputStream</span> outputStream <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileOutputStream</span><span class="token punctuation">(</span><span class="token string">"D:\\develop\\test.html"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">IOUtils</span><span class="token punctuation">.</span><span class="token function">copy</span><span class="token punctuation">(</span>inputStream<span class="token punctuation">,</span> outputStream<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token punctuation">&#125;</span>
+
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>185行报错了，明天醒过来在改bug吧</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230614004035910.png" alt="image-20230614004035910"></p>
+<p>又又又发现了新bug，通过nignx访问<a target="_blank" rel="noopener" href="http://www.51xuecheng.cn/api/content/coursepreview/1#发现无法访问了">http://www.51xuecheng.cn/api/content/coursepreview/1#发现无法访问了</a></p>
+<p>最后发现，原因是开了梯子之后改了我的代理</p>
+<p>把这个取消勾选即可</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230614113038443.png" alt="image-20230614113038443"></p>
+<p>太蠢了。</p>
+<p>但原来的bug还是没有解决。</p>
+<p>解决：</p>
+<p>报错信息来看是：由于在模板的第183行中的表达式<code>$&#123;secondNode.teachplanMedia.teachplanId!&#39;&#39;&#125;</code>中的<code>secondNode.teachplanMedia</code>为null或不存在所导致的。</p>
+<p>存在，并采取相应的处理措施。你可以在<code>$&#123;secondNode.teachplanMedia.teachplanId!&#39;&#39;&#125;</code>表达式之前添加一个条件检查，例如：</p>
+<pre class="line-numbers language-html" data-language="html"><code class="language-html">perlCopy code<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>#if</span> <span class="token attr-name">secondNode.teachplanMedia??</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>a</span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.51xuecheng.cn/course/preview/learning.html?id=$&#123;model.courseBase.id!<span class="token punctuation">'</span><span class="token punctuation">'</span>&#125;&amp;chapter=$&#123;secondNode.teachplanMedia.teachplanId!<span class="token punctuation">'</span><span class="token punctuation">'</span>&#125;<span class="token punctuation">"</span></span> <span class="token attr-name">target</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>_blank<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>$&#123;secondNode.pname!''&#125;<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>a</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>#if</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>这样，如果<code>secondNode.teachplanMedia</code>为null或不存在，整个<code>&lt;li&gt;</code>元素将被跳过，避免出现空指针异常。</p>
+<p>终于通了，哭了</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230614121646244.png" alt="image-20230614121646244"></p>
+<p>成功生成静态页面：</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230614121929708.png" alt="image-20230614121929708"></p>
+<h3 id="上传文件测试（内容管理任务远程调用媒资管理上传服务）"><a href="#上传文件测试（内容管理任务远程调用媒资管理上传服务）" class="headerlink" title="上传文件测试（内容管理任务远程调用媒资管理上传服务）"></a><strong>上传文件测试</strong>（内容管理任务远程调用媒资管理上传服务）</h3><p>微服务之间难免会存在远程调用，在Spring Cloud中可以使用Feign进行远程调用，</p>
+<p>Feign是一个声明式的http客户端，官方地址：<a target="_blank" rel="noopener" href="https://github.com/OpenFeign/feign">https://github.com/OpenFeign/feign</a></p>
+<p>其作用就是帮助我们优雅的实现http请求的发送，解决上面提到的问题。</p>
+<p>下边先准备Feign的开发环境:</p>
+<p>1、在内容管理content-service工程添加依赖：</p>
+<p>注意，只是openfeign还不能支持文件参数，还需要导入一个组件才能支持 multipart传参</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token generics"><span class="token punctuation">&lt;</span>dependency<span class="token punctuation">></span></span>
+    <span class="token generics"><span class="token punctuation">&lt;</span>groupId<span class="token punctuation">></span></span>com<span class="token punctuation">.</span>alibaba<span class="token punctuation">.</span>cloud<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span>
+    <span class="token generics"><span class="token punctuation">&lt;</span>artifactId<span class="token punctuation">></span></span>spring<span class="token operator">-</span>cloud<span class="token operator">-</span>starter<span class="token operator">-</span>alibaba<span class="token operator">-</span>nacos<span class="token operator">-</span>discovery<span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>dependency<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">!</span><span class="token operator">--</span> <span class="token class-name">Spring</span> <span class="token class-name">Cloud</span> 微服务远程调用 <span class="token operator">--</span><span class="token operator">></span>
+<span class="token generics"><span class="token punctuation">&lt;</span>dependency<span class="token punctuation">></span></span>
+    <span class="token generics"><span class="token punctuation">&lt;</span>groupId<span class="token punctuation">></span></span>org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>cloud<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span>
+    <span class="token generics"><span class="token punctuation">&lt;</span>artifactId<span class="token punctuation">></span></span>spring<span class="token operator">-</span>cloud<span class="token operator">-</span>starter<span class="token operator">-</span>openfeign<span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>dependency<span class="token operator">></span>
+<span class="token generics"><span class="token punctuation">&lt;</span>dependency<span class="token punctuation">></span></span>
+    <span class="token generics"><span class="token punctuation">&lt;</span>groupId<span class="token punctuation">></span></span>io<span class="token punctuation">.</span>github<span class="token punctuation">.</span>openfeign<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span>
+    <span class="token generics"><span class="token punctuation">&lt;</span>artifactId<span class="token punctuation">></span></span>feign<span class="token operator">-</span>httpclient<span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>dependency<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">!</span><span class="token operator">--</span>feign支持<span class="token class-name">Multipart</span>格式传参<span class="token operator">--</span><span class="token operator">></span>
+<span class="token generics"><span class="token punctuation">&lt;</span>dependency<span class="token punctuation">></span></span>
+    <span class="token generics"><span class="token punctuation">&lt;</span>groupId<span class="token punctuation">></span></span>io<span class="token punctuation">.</span>github<span class="token punctuation">.</span>openfeign<span class="token punctuation">.</span>form<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span>
+    <span class="token generics"><span class="token punctuation">&lt;</span>artifactId<span class="token punctuation">></span></span>feign<span class="token operator">-</span>form<span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span>
+    <span class="token generics"><span class="token punctuation">&lt;</span>version<span class="token punctuation">></span></span><span class="token number">3.8</span><span class="token number">.0</span><span class="token operator">&lt;</span><span class="token operator">/</span>version<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>dependency<span class="token operator">></span>
+<span class="token generics"><span class="token punctuation">&lt;</span>dependency<span class="token punctuation">></span></span>
+    <span class="token generics"><span class="token punctuation">&lt;</span>groupId<span class="token punctuation">></span></span>io<span class="token punctuation">.</span>github<span class="token punctuation">.</span>openfeign<span class="token punctuation">.</span>form<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span>
+    <span class="token generics"><span class="token punctuation">&lt;</span>artifactId<span class="token punctuation">></span></span>feign<span class="token operator">-</span>form<span class="token operator">-</span>spring<span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span>
+    <span class="token generics"><span class="token punctuation">&lt;</span>version<span class="token punctuation">></span></span><span class="token number">3.8</span><span class="token number">.0</span><span class="token operator">&lt;</span><span class="token operator">/</span>version<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>dependency<span class="token operator">></span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>解释一下，discovery 是将自己的服务像上报，以及<strong>获取其他实例地址</strong>，后面的不用解释</p>
+<p>2、远程调用时可能发生熔断（下级服务宕机），需要打开熔断开关</p>
+<p>单独定义一个文件，在nacos配置feign-dev.yaml公用配置文件</p>
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">feign</span><span class="token punctuation">:</span>
+  <span class="token key atrule">hystrix</span><span class="token punctuation">:</span>
+    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+  <span class="token key atrule">circuitbreaker</span><span class="token punctuation">:</span>
+    <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+<span class="token key atrule">hystrix</span><span class="token punctuation">:</span>
+  <span class="token key atrule">command</span><span class="token punctuation">:</span>
+    <span class="token key atrule">default</span><span class="token punctuation">:</span>
+      <span class="token key atrule">execution</span><span class="token punctuation">:</span>
+        <span class="token key atrule">isolation</span><span class="token punctuation">:</span>
+          <span class="token key atrule">thread</span><span class="token punctuation">:</span>
+            <span class="token key atrule">timeoutInMilliseconds</span><span class="token punctuation">:</span> <span class="token number">30000</span>  <span class="token comment">#熔断超时时间</span>
+<span class="token key atrule">ribbon</span><span class="token punctuation">:</span>
+  <span class="token key atrule">ConnectTimeout</span><span class="token punctuation">:</span> <span class="token number">60000</span> <span class="token comment">#连接超时时间</span>
+  <span class="token key atrule">ReadTimeout</span><span class="token punctuation">:</span> <span class="token number">60000</span> <span class="token comment">#读超时时间</span>
+  <span class="token key atrule">MaxAutoRetries</span><span class="token punctuation">:</span> <span class="token number">0</span> <span class="token comment">#重试次数</span>
+  <span class="token key atrule">MaxAutoRetriesNextServer</span><span class="token punctuation">:</span> <span class="token number">1</span> <span class="token comment">#切换实例的重试次数</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>3、在调用方（centent service ）以及配调用方 （media api） 都引入共享配置</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">shared<span class="token operator">-</span>configs<span class="token operator">:</span>
+  <span class="token operator">-</span> data<span class="token operator">-</span>id<span class="token operator">:</span> feign<span class="token operator">-</span>$<span class="token punctuation">&#123;</span>spring<span class="token punctuation">.</span>profiles<span class="token punctuation">.</span>active<span class="token punctuation">&#125;</span><span class="token punctuation">.</span>yaml
+    group<span class="token operator">:</span> xuecheng<span class="token operator">-</span>plus<span class="token operator">-</span>common
+    refresh<span class="token operator">:</span> <span class="token boolean">true</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>4、在内容管理service工程配置feign支持Multipart，拷贝课程资料下的MultipartSupportConfig 到content-service工程下的config包下。</p>
+<h4 id="被调用方"><a href="#被调用方" class="headerlink" title="被调用方"></a>被调用方</h4><p>现在需要将课程的静态文件上传到minio，</p>
+<p>但仅仅使用 上传图片接口是不行的，他的储存方式是 按照年月日存储</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230614125317484.png" alt="image-20230614125317484"></p>
+<p>现在呢，我想单独存储到course目录下objectname为”课程id.html”，那么</p>
+<p>在原有的上传文件接口需要增加一个参数 objectname。</p>
+<p>方案一： 可以在原来上传文件的基础上 增加一个参数，增加objectname （@RequestParam required =false），判断不为空就传到指定路径</p>
+<p>如果为空，那就按照年月日格式上传。</p>
+<p>方案二：可以重新编写一个函数</p>
+<p>那么对原来的接口做如下改变（方案1）</p>
+<pre class="line-numbers language-none"><code class="language-none">@ApiOperation(&quot;上传文件&quot;)
+@RequestMapping(value &#x3D; &quot;&#x2F;upload&#x2F;coursefile&quot;,consumes &#x3D; MediaType.MULTIPART_FORM_DATA_VALUE)
+public UploadFileResultDto upload(@RequestPart(&quot;filedata&quot;) MultipartFile filedata,
+                                  @RequestParam(value&#x3D; &quot;objectName&quot;,required&#x3D;false) String objectName) throws IOException&#123;
+                                  &#x2F;&#x2F;....
+ &#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>service接口也增加一个参数：</p>
+<pre class="line-numbers language-none"><code class="language-none">public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath,String objectName);<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230614130339396.png" alt="image-20230614130339396"></p>
+<p>实现：</p>
+<p>修改原有uploadFile方法，判断如果objectName为空则采取年月日样式的路径方式。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">//存储到minio中的对象名(带目录)</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token class-name">StringUtils</span><span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span>objectName<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    objectName <span class="token operator">=</span>  defaultFolderPath <span class="token operator">+</span> fileMd5 <span class="token operator">+</span> extension<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token comment">//        String objectName = defaultFolderPath + fileMd5 + extension;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="调用方"><a href="#调用方" class="headerlink" title="调用方"></a>调用方</h4><h5 id="编写远程调用接口"><a href="#编写远程调用接口" class="headerlink" title="编写远程调用接口"></a><strong>编写远程调用接口</strong></h5><p>在contentservice 下创建feignclient 包，用于存放调用方接口函数</p>
+<p>创建接口</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230614134339772.png" alt="image-20230614134339772" style="zoom: 67%;" /></p>
+<p>如果相信远程调用，首先在接口上加 feignclient相关注解</p>
+<p>1、调用方需要知道要调用的接口是什么？</p>
+<p>当然是这个</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"上传文件"</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"/upload/coursefile"</span><span class="token punctuation">,</span>consumes <span class="token operator">=</span> <span class="token class-name">MediaType</span><span class="token punctuation">.</span>MULTIPART_FORM_DATA_VALUE<span class="token punctuation">)</span>
+<span class="token annotation punctuation">@ResponseBody</span>
+<span class="token keyword">public</span> <span class="token class-name">UploadFileResultDto</span> <span class="token function">upload</span><span class="token punctuation">(</span><span class="token annotation punctuation">@RequestPart</span><span class="token punctuation">(</span><span class="token string">"filedata"</span><span class="token punctuation">)</span> <span class="token class-name">MultipartFile</span> filedata<span class="token punctuation">,</span>
+                                  <span class="token annotation punctuation">@RequestParam</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"folder"</span><span class="token punctuation">,</span>required<span class="token operator">=</span><span class="token boolean">false</span><span class="token punctuation">)</span> <span class="token class-name">String</span> folder<span class="token punctuation">,</span>
+                                  <span class="token annotation punctuation">@RequestParam</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"objectName"</span><span class="token punctuation">,</span>required<span class="token operator">=</span><span class="token boolean">false</span><span class="token punctuation">)</span> <span class="token class-name">String</span> objectName<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>把这个接口函数复制到调用接口里面，后续修改。</p>
+<p>1.1、补全请求路径，@RequestMapping 路径改为 “media/upload/coursefile” ,因为原来微服务配置里面帮忙在前面加了，但是在理作为被调用方，不会自动加</p>
+<p>1.2、在接口上面添加@FeignClient()  注解，并在参数中指定调用的微服务名称@FeignClient(“media-api”)</p>
+<p>2、原始的Feign不支持Multipart格式的传参，所以还需要加上配置类configuration = MultipartSupportConfig.class</p>
+<p>最终接口上的注解应该为 @FeignClient(value = “media-api”,configuration = MultipartSupportConfig.class)</p>
+<p>完整应该长这样</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230614133244027.png" alt="image-20230614133244027"></p>
+<p>发现返回值爆红，是因为还没导报，我们暂时先不导，将其转成String</p>
+<h5 id="编写一个调用类（测试）"><a href="#编写一个调用类（测试）" class="headerlink" title="编写一个调用类（测试）"></a>编写一个调用类（测试）</h5><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@SpringBootTest</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">FeignUploadTest</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token class-name">MediaServiceClient</span> mediaServiceClient<span class="token punctuation">;</span>
+
+    <span class="token comment">//远程调用，上传文件</span>
+    <span class="token annotation punctuation">@Test</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    
+        <span class="token class-name">MultipartFile</span> multipartFile <span class="token operator">=</span> <span class="token class-name">MultipartSupportConfig</span><span class="token punctuation">.</span><span class="token function">getMultipartFile</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">File</span><span class="token punctuation">(</span><span class="token string">"D:\\develop\\test.html"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        mediaServiceClient<span class="token punctuation">.</span><span class="token function">uploadFile</span><span class="token punctuation">(</span>multipartFile<span class="token punctuation">,</span><span class="token string">"course"</span><span class="token punctuation">,</span><span class="token string">"test.html"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>最后执行还要在启动类上加上@EnableFeignClients注解！！！</p>
+<p>因为这里是单元测试，只需要在 service test里面的启动类加上即可</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@SpringBootApplication</span>
+<span class="token annotation punctuation">@EnableFeignClients</span><span class="token punctuation">(</span>basePackages<span class="token operator">=</span><span class="token punctuation">&#123;</span><span class="token string">"com.xuecheng.content.feignclient"</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">XC_ContentServiceApplication</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">SpringApplication</span><span class="token punctuation">.</span><span class="token function">run</span><span class="token punctuation">(</span><span class="token class-name">XC_ContentServiceApplication</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span>args<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>报错，说找不到服务</p>
+<p>1、排查配置：</p>
+<p>调用方和被调用方都需要将自己的服务上报。（配置discovery 以及 config）</p>
+<p>2、依赖</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230614135435018.png" alt="image-20230614135435018"></p>
+<p>测试成功</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230614135458242.png" alt="image-20230614135458242"></p>
+<p>然后我们试试直接访问资源</p>
+<p>输入网址</p>
+<p><a target="_blank" rel="noopener" href="http://192.168.101.65:9000/mediafiles/course/test124.html">http://192.168.101.65:9000/mediafiles/course/test124.html</a></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230614135636969.png" alt="image-20230614135636969"></p>
+<p>可以的，但是没有样式，要想访问样式只能从主站走，那么</p>
+<p>试着用nignx访问</p>
+<p>那么需要增加一个主站下的代理</p>
+<pre class="line-numbers language-conf" data-language="conf"><code class="language-conf"># 课程详情页的静态界面
+# www.51xuecheng.cn&#x2F;course&#x2F;test124.html -&gt;file.51xuecheng.cn&#x2F;mediafiles&#x2F;course&#x2F;test124.html
+location &#x2F;course&#x2F; &#123;
+       proxy_pass 	http:&#x2F;&#x2F;fileserver&#x2F;mediafiles&#x2F;course&#x2F;; # 后面的斜杠一定不能少！！！！！
+&#125; <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>成功！！！！（又遇到梯子把我的代理给屏蔽了的情况，气死我了）</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230614141003584.png" alt="image-20230614141003584"></p>
+</article><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/06/01/%E7%B1%BBMOOC%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%912-%E5%AA%92%E8%B5%84%E7%AE%A1%E7%90%86%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/" title="类MOOC系统开发2-媒资管理模块开发"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/20230601152807.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">类MOOC系统开发2-媒资管理模块开发</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">taotaozi</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">64</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/differencer"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://blog.csdn.net/differencer?type=blog" target="_blank" title="Github"><i class="fab fa-CSDN"></i></a><a class="social-icon" href="https://space.bilibili.com/20713910" target="_blank" title="Bilibili"><i class="fab fa-bilibili"></i></a><a class="social-icon" href="/473439851" target="_blank" title="steam"><i class="fab fa-steam"></i></a><a class="social-icon" href="https://weibo.com/u/5856795355" target="_blank" title="Weibo"><i class="fab fa-weibo"></i></a><a class="social-icon" href="mailto:1359114644@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">最近的新任务是 ： 努力啊</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D"><span class="toc-text">模块功能介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%BE%E7%A8%8B%E9%A2%84%E8%A7%88"><span class="toc-text">课程预览</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8EFreemarker"><span class="toc-text">模板引擎Freemarker</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-text">配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E6%A8%A1%E6%9D%BF"><span class="toc-text">添加模板</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A1%AB%E5%85%85%E6%95%B0%E6%8D%AE"><span class="toc-text">填充数据</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95"><span class="toc-text">测试</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90"><span class="toc-text">静态资源</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%BB%E7%AB%99"><span class="toc-text">配置主站</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%AE%BF%E9%97%AE%E4%BB%BB%E6%84%8F%E4%B8%80%E4%B8%AA%E5%9F%9F%E5%90%8D%E9%83%BD%E8%83%BD%E8%BF%9B%E5%85%A5nignx-%E8%AF%B7%E6%B1%82%E7%BD%91%E7%AB%99%E8%B5%84%E6%BA%90"><span class="toc-text">浏览器访问任意一个域名都能进入nignx 请求网站资源</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%BB%98%E8%AE%A4%E8%BE%93%E5%85%A5%E5%9F%9F%E5%90%8D%E5%90%8E%E8%AE%BF%E9%97%AE%E7%9A%84%E6%97%B6nignx-%E7%9B%AE%E5%BD%95%E4%B8%8B-html-%E4%B8%8B%E7%9A%84%E8%B5%84%E6%BA%90"><span class="toc-text">默认输入域名后访问的时nignx 目录下 &#x2F;html&#x2F;下的资源</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE%E8%AF%BE%E7%A8%8B%E8%AF%A6%E6%83%85%E9%A1%B5"><span class="toc-text">访问课程详情页</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-text">文件服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E9%A1%B5%E9%9D%A2"><span class="toc-text">视频播放页面</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%BE%E7%A8%8B%E9%A2%84%E8%A7%88%E7%95%8C%E9%9D%A2%E6%8E%A5%E5%8F%A3"><span class="toc-text">课程预览界面接口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E6%A8%A1%E6%9D%BF"><span class="toc-text">准备模板</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E6%8E%A5%E5%8F%A3"><span class="toc-text">定义接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="toc-text">反向代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91"><span class="toc-text">接口开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E5%86%99%E6%A8%A1%E6%9D%BF"><span class="toc-text">编写模板</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E9%A1%B5%E9%9D%A2%E6%8E%A5%E5%8F%A3"><span class="toc-text">视频播放页面接口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E5%AE%9A%E4%B9%89"><span class="toc-text">接口定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95-1"><span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%A2%E8%AF%95"><span class="toc-text">面试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8F%90%E4%BA%A4%E5%AE%A1%E6%A0%B8"><span class="toc-text">提交审核</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90"><span class="toc-text">需求分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="toc-text">数据模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E5%AE%9A%E4%B9%89-1"><span class="toc-text">接口定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91-1"><span class="toc-text">接口开发</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%BE%E7%A8%8B%E5%8F%91%E5%B8%83"><span class="toc-text">课程发布</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E6%A1%86%E6%9E%B6%E6%90%AD%E5%BB%BA"><span class="toc-text">分布式事务框架搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E6%8A%80%E6%9C%AF%E6%96%B9%E6%A1%88"><span class="toc-text">分布式事务技术方案</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFCAP%E7%90%86%E8%AE%BA"><span class="toc-text">什么是CAP理论</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BE%E7%A8%8B%E5%8F%91%E5%B8%83%E7%9A%84%E4%BA%8B%E5%8A%A1%E6%8E%A7%E5%88%B6%E6%96%B9%E6%A1%88"><span class="toc-text">课程发布的事务控制方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%91%E5%B8%83%E6%8E%A5%E5%8F%A3%E5%AE%9A%E4%B9%89"><span class="toc-text">发布接口定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91%EF%BC%88%E6%B6%88%E6%81%AF-%E4%BB%BB%E5%8A%A1%E8%A1%A8%E5%90%8C%E6%AD%A5%EF%BC%89"><span class="toc-text">接口开发（消息&#x2F;任务表同步）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%88%E6%81%AF%E5%A4%84%E7%90%86SDK%EF%BC%88%E5%88%86%E5%B8%83%E5%BC%8F%E4%BB%BB%E5%8A%A1%E6%A1%86%E6%9E%B6%E6%90%AD%E5%BB%BA%EF%BC%89"><span class="toc-text">消息处理SDK（分布式任务框架搭建）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%BE%E7%A8%8B%E5%8F%91%E5%B8%83%E4%BB%BB%E5%8A%A1%E5%A4%84%E7%90%86"><span class="toc-text">课程发布任务处理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%A8xxl-job%E9%85%8D%E7%BD%AE%E4%BB%BB%E5%8A%A1"><span class="toc-text">在xxl-job配置任务</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%90%E4%BB%BB%E5%8A%A1%EF%BC%9A%E9%A1%B5%E9%9D%A2%E9%9D%99%E6%80%81%E5%8C%96"><span class="toc-text">子任务：页面静态化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B5%E9%9D%A2%E9%9D%99%E6%80%81%E5%8C%96%E4%BB%8B%E7%BB%8D"><span class="toc-text">页面静态化介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%8C%96%E6%B5%8B%E8%AF%95"><span class="toc-text">静态化测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E6%B5%8B%E8%AF%95%EF%BC%88%E5%86%85%E5%AE%B9%E7%AE%A1%E7%90%86%E4%BB%BB%E5%8A%A1%E8%BF%9C%E7%A8%8B%E8%B0%83%E7%94%A8%E5%AA%92%E8%B5%84%E7%AE%A1%E7%90%86%E4%B8%8A%E4%BC%A0%E6%9C%8D%E5%8A%A1%EF%BC%89"><span class="toc-text">上传文件测试（内容管理任务远程调用媒资管理上传服务）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A2%AB%E8%B0%83%E7%94%A8%E6%96%B9"><span class="toc-text">被调用方</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E6%96%B9"><span class="toc-text">调用方</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%BC%96%E5%86%99%E8%BF%9C%E7%A8%8B%E8%B0%83%E7%94%A8%E6%8E%A5%E5%8F%A3"><span class="toc-text">编写远程调用接口</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E8%B0%83%E7%94%A8%E7%B1%BB%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89"><span class="toc-text">编写一个调用类（测试）</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/06/12/%E7%B1%BBMOOC%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%913-%E8%AF%BE%E7%A8%8B%E5%8F%91%E5%B8%83%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91-md/" title="类MOOC系统开发3-课程发布模块开发.md"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/20230612133618.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="类MOOC系统开发3-课程发布模块开发.md"/></a><div class="content"><a class="title" href="/2023/06/12/%E7%B1%BBMOOC%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%913-%E8%AF%BE%E7%A8%8B%E5%8F%91%E5%B8%83%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91-md/" title="类MOOC系统开发3-课程发布模块开发.md">类MOOC系统开发3-课程发布模块开发.md</a><time datetime="2023-06-12T05:35:38.000Z" title="发表于 2023-06-12 13:35:38">2023-06-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/06/01/%E7%B1%BBMOOC%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%912-%E5%AA%92%E8%B5%84%E7%AE%A1%E7%90%86%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/" title="类MOOC系统开发2-媒资管理模块开发"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/20230601152807.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="类MOOC系统开发2-媒资管理模块开发"/></a><div class="content"><a class="title" href="/2023/06/01/%E7%B1%BBMOOC%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%912-%E5%AA%92%E8%B5%84%E7%AE%A1%E7%90%86%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/" title="类MOOC系统开发2-媒资管理模块开发">类MOOC系统开发2-媒资管理模块开发</a><time datetime="2023-06-01T07:27:10.000Z" title="发表于 2023-06-01 15:27:10">2023-06-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/05/25/%E7%B1%BBMOOC%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%911-%E5%86%85%E5%AE%B9%E7%AE%A1%E7%90%86%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/" title="类MOOC系统开发1-内容管理模块开发"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/20230525224811.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="类MOOC系统开发1-内容管理模块开发"/></a><div class="content"><a class="title" href="/2023/05/25/%E7%B1%BBMOOC%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%911-%E5%86%85%E5%AE%B9%E7%AE%A1%E7%90%86%E6%A8%A1%E5%9D%97%E5%BC%80%E5%8F%91/" title="类MOOC系统开发1-内容管理模块开发">类MOOC系统开发1-内容管理模块开发</a><time datetime="2023-05-25T14:46:56.000Z" title="发表于 2023-05-25 22:46:56">2023-05-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/05/22/%E7%AE%97%E6%B3%95_%E5%8D%95%E8%B0%83%E6%A0%88%E9%97%AE%E9%A2%98/" title="算法:单调栈问题"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/20230522212237.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="算法:单调栈问题"/></a><div class="content"><a class="title" href="/2023/05/22/%E7%AE%97%E6%B3%95_%E5%8D%95%E8%B0%83%E6%A0%88%E9%97%AE%E9%A2%98/" title="算法:单调栈问题">算法:单调栈问题</a><time datetime="2023-05-22T13:20:06.000Z" title="发表于 2023-05-22 21:20:06">2023-05-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/05/22/%E7%B1%BBMOOC%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%910-%E9%A1%B9%E7%9B%AE%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="类MOOC系统开发0-项目基础环境搭建"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/20230522110116.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="类MOOC系统开发0-项目基础环境搭建"/></a><div class="content"><a class="title" href="/2023/05/22/%E7%B1%BBMOOC%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%910-%E9%A1%B9%E7%9B%AE%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="类MOOC系统开发0-项目基础环境搭建">类MOOC系统开发0-项目基础环境搭建</a><time datetime="2023-05-22T02:59:45.000Z" title="发表于 2023-05-22 10:59:45">2023-05-22</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://differencer.oss-cn-beijing.aliyuncs.com/img/20230612133618.png')"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2023 By taotaozi</div><div class="footer_custom_text">世上最幸运的事就是喜欢上一个人</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>function loadGiscus () {
+  let nowTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+
+  const config = Object.assign({
+    src: 'https://giscus.app/client.js',
+    'data-repo': 'differencer/giscus',
+    'data-repo-id': 'R_kgDOJMrL1A',
+    'data-category-id': 'DIC_kwDOJMrL1M4CVC1y',
+    'data-mapping': 'pathname',
+    'data-theme': nowTheme,
+    'data-reactions-enabled': '1',
+    crossorigin: 'anonymous',
+    async: true
+  },null)
+
+  let ele = document.createElement('script')
+  for (let key in config) {
+    ele.setAttribute(key, config[key])
+  }
+  document.getElementById('giscus-wrap').insertAdjacentElement('afterbegin',ele)
+}
+
+function changeGiscusTheme () {
+  const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'
+
+  function sendMessage(message) {
+    const iframe = document.querySelector('iframe.giscus-frame');
+    if (!iframe) return;
+    iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+  }
+
+  sendMessage({
+    setConfig: {
+      theme: theme
+    }
+  });
+}
+
+if ('Giscus' === 'Giscus' || !false) {
+  if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+  else loadGiscus()
+} else {
+  function loadOtherComment () {
+    loadGiscus()
+  }
+}</script></div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="true" data-text="富强,民主,文明,和谐" data-fontsize="15px" data-random="true" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
