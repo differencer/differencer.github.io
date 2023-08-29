@@ -1160,18 +1160,18 @@ commit transation<span class="token punctuation">;</span><span aria-hidden="true
  <span class="token punctuation">&#125;</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h4 id="在xxl-job配置任务"><a href="#在xxl-job配置任务" class="headerlink" title="在xxl-job配置任务"></a>在xxl-job配置任务</h4><p>nacos配置xxljob执行器信息，才能被发现</p>
-<pre class="line-numbers language-yml" data-language="yml"><code class="language-yml"><span class="token key atrule">xxl</span><span class="token punctuation">:</span>
-  <span class="token key atrule">job</span><span class="token punctuation">:</span>
-    <span class="token key atrule">admin</span><span class="token punctuation">:</span> 
-      <span class="token key atrule">addresses</span><span class="token punctuation">:</span> http<span class="token punctuation">:</span>//192.168.101.65<span class="token punctuation">:</span>18088/xxl<span class="token punctuation">-</span>job<span class="token punctuation">-</span>admin/
-    <span class="token key atrule">executor</span><span class="token punctuation">:</span>
-      <span class="token key atrule">appname</span><span class="token punctuation">:</span> course<span class="token punctuation">-</span>publish<span class="token punctuation">-</span>job
-      <span class="token key atrule">address</span><span class="token punctuation">:</span>
-      <span class="token key atrule">ip</span><span class="token punctuation">:</span>
-      <span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">10999</span>
-      <span class="token key atrule">logpath</span><span class="token punctuation">:</span> /data/applogs/xxl<span class="token punctuation">-</span>job<span class="token punctuation">-</span>jobhandler
-      <span class="token key atrule">logretentiondays</span><span class="token punctuation">:</span> <span class="token number">30</span>
-    <span class="token key atrule">accessToken</span><span class="token punctuation">:</span> default_token<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-yml" data-language="yml"><code class="language-yml">xxl:
+  job:
+    admin: 
+      addresses: http:&#x2F;&#x2F;192.168.101.65:18088&#x2F;xxl-job-admin&#x2F;
+    executor:
+      appname: course-publish-job
+      address:
+      ip:
+      port: 10999
+      logpath: &#x2F;data&#x2F;applogs&#x2F;xxl-job-jobhandler
+      logretentiondays: 30
+    accessToken: default_token<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>xxljob还有个config，直接复制 mediaservice里面的</p>
 <p>添加课程发布执行器</p>
 <p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://differencer.oss-cn-beijing.aliyuncs.com/img/image-20230613214639403.png" alt="image-20230613214639403"></p>
